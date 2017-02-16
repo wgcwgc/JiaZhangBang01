@@ -80,7 +80,7 @@ public class Welcome extends Activity
 				name = name_editText.getText().toString();
 				mobilePhoneNumber = phoneNumber_editText.getText().toString();
 				Intent intent = new Intent();
-				intent.setClass(Welcome.this ,MainActivity.class);
+				intent.setClass(getApplicationContext() ,MainActivity.class);
 				intent.putExtra("selected" ,selected);
 				Log.d("LOG" ,"name: " + name + " class: " + selected + " phoneNumber: " + mobilePhoneNumber);
 

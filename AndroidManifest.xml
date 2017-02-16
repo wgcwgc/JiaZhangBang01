@@ -42,6 +42,10 @@
 
         <activity android:name="com.runcom.jiazhangbang.mainActivity.MainActivity" >
         </activity>
+        <activity android:name="com.runcom.jiazhangbang.Chinese.Chinese" >
+        </activity>
+        <activity android:name="com.runcom.jiazhangbang.listenText.ListenText" >
+        </activity>
     </application>
 
 </manifest>

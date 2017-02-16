@@ -1,6 +1,7 @@
 package com.runcom.jiazhangbang.mainActivity;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -9,9 +10,11 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.runcom.jiazhangbang.R;
+import com.runcom.jiazhangbang.Chinese.Chinese;
 import com.umeng.analytics.MobclickAgent;
 
 public class MainActivity extends Activity
@@ -23,6 +26,10 @@ public class MainActivity extends Activity
 	int selected;
 
 	private ImageView Chinese_imageView , math_imageView , English_imageView;
+
+	private TextView Chinese_textView , math_textView , English_textView;
+
+	private TextView course_textView , animation_textView , story_textView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState )
@@ -38,6 +45,14 @@ public class MainActivity extends Activity
 		spinner.setAdapter(arrayAdapter);
 		selected = getIntent().getIntExtra("selected" ,0);
 		spinner.setSelection(selected);
+		++ selected;
+
+		Chinese_textView = (TextView) findViewById(R.id.Chinese_textView);
+		math_textView = (TextView) findViewById(R.id.math_textView);
+		English_textView = (TextView) findViewById(R.id.English_textView);
+		Chinese_textView.setText(selected + "年级语文");
+		math_textView.setText(selected + "年级数学");
+		English_textView.setText(selected + "年级英语");
 
 		spinner.setOnItemSelectedListener(new OnItemSelectedListener()
 		{
@@ -46,7 +61,10 @@ public class MainActivity extends Activity
 			public void onItemSelected(AdapterView < ? > arg0 , View arg1 , int arg2 , long arg3 )
 			{
 				// TODO Auto-generated method stub
-				selected = arg2;
+				selected = arg2 + 1;
+				Chinese_textView.setText(selected + "年级语文");
+				math_textView.setText(selected + "年级数学");
+				English_textView.setText(selected + "年级英语");
 			}
 
 			@Override
@@ -61,7 +79,6 @@ public class MainActivity extends Activity
 		math_imageView = (ImageView) findViewById(R.id.math_imageView);
 		English_imageView = (ImageView) findViewById(R.id.English_imageView);
 
-		++ selected;
 		Chinese_imageView.setOnClickListener(new OnClickListener()
 		{
 
@@ -70,6 +87,12 @@ public class MainActivity extends Activity
 			{
 				// TODO Auto-generated method stub
 				Toast.makeText(getApplicationContext() ,selected + "年级语文" ,Toast.LENGTH_SHORT).show();
+
+				Intent intent = new Intent();
+				intent.setClass(getApplicationContext() ,Chinese.class);
+				intent.putExtra("selected" ,selected);
+
+				startActivity(intent);
 			}
 		});
 
@@ -94,6 +117,41 @@ public class MainActivity extends Activity
 				// TODO Auto-generated method stub
 				Toast.makeText(getApplicationContext() ,selected + "年级英语" ,Toast.LENGTH_SHORT).show();
 
+			}
+		});
+
+		course_textView = (TextView) findViewById(R.id.course_textView);
+		animation_textView = (TextView) findViewById(R.id.animation_textView);
+		story_textView = (TextView) findViewById(R.id.story_textView);
+
+		course_textView.setOnClickListener(new OnClickListener()
+		{
+
+			@Override
+			public void onClick(View v )
+			{
+				// TODO Auto-generated method stub
+				Toast.makeText(getApplicationContext() ,"培训课程..." ,Toast.LENGTH_SHORT).show();
+			}
+		});
+		animation_textView.setOnClickListener(new OnClickListener()
+		{
+
+			@Override
+			public void onClick(View v )
+			{
+				// TODO Auto-generated method stub
+				Toast.makeText(getApplicationContext() ,"动画配音..." ,Toast.LENGTH_SHORT).show();
+			}
+		});
+		story_textView.setOnClickListener(new OnClickListener()
+		{
+
+			@Override
+			public void onClick(View v )
+			{
+				// TODO Auto-generated method stub
+				Toast.makeText(getApplicationContext() ,"听故事..." ,Toast.LENGTH_SHORT).show();
 			}
 		});
 

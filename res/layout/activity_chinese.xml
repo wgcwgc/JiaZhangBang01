@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <TableLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="10dp"
+        android:layout_span="2"
+        android:shrinkColumns="*"
+        android:stretchColumns="*" >
+
+        <TableRow>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="157dp"
+                android:onClick="ListenText"
+                android:text="听课文" >
+            </Button>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="157dp"
+                android:onClick="ListenAndWrite"
+                android:text="听写" >
+            </Button>
+        </TableRow>
+
+        <TableRow>
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="157dp"
+                android:onClick="ReciteText"
+                android:text="背课文" >
+            </Button>
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="157dp"
+                android:onClick="Repeat"
+                android:text="跟读" >
+            </Button>
+        </TableRow>
+
+        <TableRow>
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="157dp"
+                android:onClick="FindNewWords"
+                android:text="查生词" >
+            </Button>
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="157dp"
+                android:onClick="ComingSoon"
+                android:text="敬请期待" />
+        </TableRow>
+    </TableLayout>
+
+</LinearLayout>
