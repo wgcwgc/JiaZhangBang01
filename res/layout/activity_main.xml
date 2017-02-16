@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <Spinner
+        android:id="@+id/main_spinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true" >
+    </Spinner>
+
+    <ImageView
+        android:id="@+id/Chinese_imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignTop="@+id/math_imageView"
+        android:layout_marginLeft="28dp"
+        android:contentDescription="语文"
+        android:src="@drawable/ic_launcher" />
+
+    <ImageView
+        android:id="@+id/math_imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/main_spinner"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="29dp"
+        android:contentDescription="数学"
+        android:src="@drawable/ic_launcher" />
+
+    <ImageView
+        android:id="@+id/English_imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@+id/Chinese_imageView"
+        android:layout_marginRight="14dp"
+        android:contentDescription="英语"
+        android:src="@drawable/ic_launcher" />
+
+</RelativeLayout>
