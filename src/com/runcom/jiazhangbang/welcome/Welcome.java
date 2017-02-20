@@ -95,7 +95,6 @@ public class Welcome extends Activity
 
 		});
 
-		MobclickAgent.openActivityDurationTrack(false);
 	}
 
 	private boolean judge(String name , String mobilePhoneNumber )

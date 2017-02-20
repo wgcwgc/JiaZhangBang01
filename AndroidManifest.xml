@@ -42,9 +42,15 @@
 
         <activity android:name="com.runcom.jiazhangbang.mainActivity.MainActivity" >
         </activity>
-        <activity android:name="com.runcom.jiazhangbang.Chinese.Chinese" >
+        <activity
+            android:name="com.runcom.jiazhangbang.Chinese.Chinese"
+            android:icon="@drawable/ic_come_back"
+            android:parentActivityName="com.runcom.jiazhangbang.mainActivity.MainActivity" >
         </activity>
-        <activity android:name="com.runcom.jiazhangbang.listenText.ListenText" >
+        <activity
+            android:name="com.runcom.jiazhangbang.listenText.Play"
+            android:icon="@drawable/ic_come_back"
+            android:parentActivityName="com.runcom.jiazhangbang.Chinese.Chinese" >
         </activity>
     </application>
 
