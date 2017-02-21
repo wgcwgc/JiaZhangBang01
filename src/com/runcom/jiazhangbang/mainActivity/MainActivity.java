@@ -87,7 +87,8 @@ public class MainActivity extends Activity
 			public void onClick(View v )
 			{
 				// TODO Auto-generated method stub
-				Toast.makeText(getApplicationContext() ,selected + "年级语文" ,Toast.LENGTH_SHORT).show();
+				// Toast.makeText(getApplicationContext() ,selected + "年级语文"
+				// ,Toast.LENGTH_SHORT).show();
 
 				Intent intent = new Intent();
 				intent.setClass(getApplicationContext() ,Chinese.class);

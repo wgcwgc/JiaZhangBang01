@@ -41,9 +41,9 @@ public class Play extends Activity implements Runnable , OnCompletionListener , 
 	private SeekBar seekBar;
 	private ImageButton btnPlay;
 	private TextView tv_currTime , tv_totalTime , tv_showName;
-	private List < String > play_list = new ArrayList < String >();
+	List < String > play_list = new ArrayList < String >();
 	public MediaPlayer mp;
-	private int currIndex = 0;// 表示当前播放的音乐索引
+	int currIndex = 0;// 表示当前播放的音乐索引
 	private boolean seekBarFlag = true;// 控制进度条线程标记
 
 	// 定义当前播放器的状态
@@ -73,6 +73,7 @@ public class Play extends Activity implements Runnable , OnCompletionListener , 
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.audio_play);
+
 		intent = getIntent();
 
 		selected = intent.getIntExtra("selected" ,0);
@@ -80,9 +81,8 @@ public class Play extends Activity implements Runnable , OnCompletionListener , 
 		// lyric : 'http://172.16.0.63:24680/wgcwgc/lrc/001.lrc' ,
 		// name : '12PEP Unit'
 		// source = intent.getStringExtra("source");
-		// source =
-		// "http://172.16.0.63:24680/wgcwgc/mp3/001.mp3#http://172.16.0.63:24680/wgcwgc/mp3/003.mp3";
-		source = "http://172.16.0.63:24680/wgcwgc/mp3/001.mp3";
+		source = "http://172.16.0.63:24680/wgcwgc/mp3/001.mp3#http://172.16.0.63:24680/wgcwgc/mp3/003.mp3";
+		// source = "http://172.16.0.63:24680/wgcwgc/mp3/001.mp3";
 		// lyricsPath = intent.getStringExtra("lyric");
 		lyricsPath = "http://172.16.0.63:24680/wgcwgc/lrc/001.lrc";
 		// name = intent.getStringExtra("name");
@@ -197,14 +197,15 @@ public class Play extends Activity implements Runnable , OnCompletionListener , 
 		mp.setOnErrorListener(this);
 		mp.setOnBufferingUpdateListener(this);
 		mp.setLooping(true);
-		play_list.add(source);
-		// play_list.add(source.substring(0 ,source.indexOf("#")));
-		// play_list.add(source.substring(source.indexOf("#") + 1));
+		// play_list.add(source);
+		play_list.add(source.substring(0 ,source.indexOf("#")));
+		play_list.add(source.substring(source.indexOf("#") + 1));
 		// Log.d("LOG" ,"source:" + source.substring(0 ,source.indexOf("#")) +
 		// "*\n*" + source.substring(source.indexOf("#") + 1) + "*" +
 		// play_list.size());
 		// Log.d("LOG" ,"source: " + source);
-		Log.d("LOG" ,"*" + play_list.get(0) + "*\n*" + play_list.get(1) + "*");
+		// Log.d("LOG" ,"*" + play_list.get(0) + "*\n*" + play_list.get(1) +
+		// "*");
 		initLyric();
 		start();
 	}
@@ -225,8 +226,9 @@ public class Play extends Activity implements Runnable , OnCompletionListener , 
 	};
 
 	// 开始播放
-	protected void start()
+	public void start()
 	{
+		Log.d("LOG" ,"start()" + currIndex + ":" + currState + ":" + play_list.size());
 		if(play_list.size() > 0 && currIndex < play_list.size())
 		{
 			String SongPath = play_list.get(currIndex);
@@ -279,10 +281,10 @@ public class Play extends Activity implements Runnable , OnCompletionListener , 
 		previous();
 	}
 
-	protected void previous()
+	public void previous()
 	{
 		Log.d("LOG" ,currIndex + "");
-		if((currIndex - 1) >= 0 && play_list.size() > 0)
+		if(currIndex >= 1 && play_list.size() > 1)
 		{
 			currIndex -- ;
 			start();
@@ -294,7 +296,7 @@ public class Play extends Activity implements Runnable , OnCompletionListener , 
 			}
 			else
 			{
-				Toast.makeText(getApplicationContext() ,"当前已经是第一首歌曲了" ,Toast.LENGTH_SHORT).show();
+				Toast.makeText(getApplicationContext() ,"当前已经是第一首了" ,Toast.LENGTH_SHORT).show();
 			}
 	}
 
@@ -304,10 +306,10 @@ public class Play extends Activity implements Runnable , OnCompletionListener , 
 		next();
 	}
 
-	protected void next()
+	public void next()
 	{
 		Log.d("LOG" ,currIndex + "");
-		if(currIndex + 1 < play_list.size() && play_list.size() > 1)
+		if(currIndex < play_list.size() - 1)
 		{
 			currIndex ++ ;
 			start();
@@ -318,33 +320,30 @@ public class Play extends Activity implements Runnable , OnCompletionListener , 
 				Toast.makeText(getApplicationContext() ,"播放列表为空" ,Toast.LENGTH_SHORT).show();
 			}
 			else
-				if(currIndex + 1 == play_list.size())
+				if(currIndex == play_list.size() - 1)
 				{
-					Toast.makeText(getApplicationContext() ,"当前已经是最后一首歌曲了" ,Toast.LENGTH_SHORT).show();
-					currIndex = -1;
-					next();
+					Toast.makeText(getApplicationContext() ,"当前已经是最后一首了" ,Toast.LENGTH_SHORT).show();
+					// currIndex = -1;
+					// next();
 				}
 				else
 				{
-					currIndex = -1;
-					next();
-					Toast.makeText(getApplicationContext() ,"当前已经是最后一首歌曲了lelele" ,Toast.LENGTH_SHORT).show();
-
+					Toast.makeText(getApplicationContext() ,"当前已经是最后一首了lelele" ,Toast.LENGTH_SHORT).show();
+					// currIndex = -1;
+					// next();
 				}
 	}
 
 	// 监听器，当当前歌曲播放完时触发，播放下一首
 	public void onCompletion(MediaPlayer mp )
 	{
-		if(play_list.size() > 0)
+		if(currIndex < play_list.size() - 1)
 		{
 			next();
 		}
 		else
 		{
-			tv_showName.setText("");
-			tv_currTime.setText("00:00");
-			// initSeekBar();
+//			initSeekBar();
 			Toast.makeText(this ,"播放完毕" ,Toast.LENGTH_SHORT).show();
 		}
 	}
@@ -359,6 +358,8 @@ public class Play extends Activity implements Runnable , OnCompletionListener , 
 	// 初始化SeekBar
 	private void initSeekBar()
 	{
+		tv_showName.setText("");
+		tv_currTime.setText("00:00");
 		seekBar.setMax(mp.getDuration());
 		seekBar.setProgress(0);
 		tv_totalTime.setText(toTime(mp.getDuration()));

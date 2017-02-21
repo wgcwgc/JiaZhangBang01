@@ -68,7 +68,7 @@
         <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="previous"
+            android:onClick="previousText"
             android:src="@drawable/play_previous" />
 
         <ImageButton
