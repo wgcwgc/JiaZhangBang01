@@ -4,44 +4,48 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <com.runcom.jiazhangbang.listenText.LyricView
-        android:id="@+id/LyricShow"
+    <Spinner
+        android:id="@+id/listenText_spinner"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/tv_showName"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentLeft="true"
+        android:layout_height="66dp"
+        android:background="#696969" />
+
+    <com.runcom.jiazhangbang.listenText.LyricView
+        android:id="@+id/listenText_lyricShow"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/listenText_textView_showName"
         android:layout_alignParentRight="true"
         android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
+        android:layout_below="@+id/listenText_spinner"
         android:background="#969696"
         android:enabled="true" />
 
     <LinearLayout
-        android:id="@+id/linearLayout2"
+        android:id="@+id/listenText_linearLayout_seekbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/linearLayout1"
-        android:layout_alignLeft="@+id/linearLayout1"
-        android:layout_alignStart="@+id/linearLayout1"
+        android:layout_above="@+id/listenText_linearLayout_control"
+        android:layout_alignLeft="@+id/listenText_linearLayout_control"
+        android:layout_alignStart="@+id/listenText_linearLayout_control"
         android:gravity="center" >
 
         <TextView
-            android:id="@+id/textView1_curr_time"
+            android:id="@+id/listenText_textView_curr_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="5dp"
             android:layout_marginRight="5dp" />
 
         <SeekBar
-            android:id="@+id/seekBar1"
+            android:id="@+id/listenText_seekBar"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:max="100" />
 
         <TextView
-            android:id="@+id/textView1_total_time"
+            android:id="@+id/listenText_textView_total_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
@@ -49,17 +53,17 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/tv_showName"
+        android:id="@+id/listenText_textView_showName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/linearLayout2"
-        android:layout_alignLeft="@+id/linearLayout2"
-        android:layout_alignStart="@+id/linearLayout2"
+        android:layout_above="@+id/listenText_linearLayout_seekbar"
+        android:layout_alignLeft="@+id/listenText_linearLayout_seekbar"
+        android:layout_alignStart="@+id/listenText_linearLayout_seekbar"
         android:gravity="center"
         android:text="@string/hello_world" />
 
     <LinearLayout
-        android:id="@+id/linearLayout1"
+        android:id="@+id/listenText_linearLayout_control"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -83,7 +87,6 @@
             android:layout_height="wrap_content"
             android:onClick="nextText"
             android:src="@drawable/play_next" />
-
     </LinearLayout>
 
 </RelativeLayout>
