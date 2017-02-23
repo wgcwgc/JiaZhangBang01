@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -28,6 +30,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
+import android.widget.PopupMenu;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.Spinner;
@@ -47,8 +50,11 @@ public class ListenText extends Activity implements Runnable , OnCompletionListe
 	// seekbar
 	private SeekBar seekBar;
 	private ImageButton btnPlay;
+	@SuppressWarnings("unused")
 	private TextView tv_currTime , tv_totalTime , tv_showName;
 	List < String > play_list = new ArrayList < String >();
+	List < String > play_list_copy = new ArrayList < String >();
+
 	public MediaPlayer mp;
 	int currIndex = 0;// 表示当前播放的音乐索引
 	private boolean seekBarFlag = true;// 控制进度条线程标记
@@ -74,6 +80,8 @@ public class ListenText extends Activity implements Runnable , OnCompletionListe
 	private int CurrentTime = 0;
 	private int CountTime = 0;
 	private List < LyricContent > LyricList = new ArrayList < LyricContent >();
+
+	int selectedId = 0;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState )
@@ -213,35 +221,52 @@ public class ListenText extends Activity implements Runnable , OnCompletionListe
 		mp.setOnBufferingUpdateListener(this);
 		// mp.setLooping(true);
 		play_list.add(source1);
+		play_list_copy.add(getName(source1));
 		play_list.add(source2);
+		play_list_copy.add(getName(source2));
 		play_list.add(source3);
+		play_list_copy.add(getName(source3));
 		play_list.add(source4);
+		play_list_copy.add(getName(source4));
 
-		ArrayAdapter < String > adapter = new ArrayAdapter < String >(getApplicationContext() , R.layout.spinner_item , R.id.spinnerItem_textView , play_list);
+		ArrayAdapter < String > adapter;
+		adapter = new ArrayAdapter < String >(getApplicationContext() , R.layout.spinner_item , R.id.spinnerItem_textView , play_list_copy);
+		// adapter = new ArrayAdapter < String >(getApplicationContext() ,
+		// android.R.layout.simple_spinner_dropdown_item , play_list_copy);
+
+		// adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
 		spinner.setAdapter(adapter);
 		spinner.setPrompt("测试");
 		spinner.setOnItemSelectedListener(new OnItemSelectedListener()
 		{
 
 			@Override
-            public void onItemSelected(AdapterView < ? > arg0 , View arg1 , int arg2 , long arg3 )
-            {
-	            // TODO Auto-generated method stub
-				Toast.makeText(getApplicationContext() ,"您选择了" + arg0.getItemAtPosition(arg2).toString() ,Toast.LENGTH_SHORT).show();
-	            
-            }
+			public void onItemSelected(AdapterView < ? > arg0 , View arg1 , int arg2 , long arg3 )
+			{
+				// TODO Auto-generated method stub
+				Toast.makeText(getApplicationContext() ,"您选择了" + arg0.getItemAtPosition(arg2).toString() + ":" + arg2 ,Toast.LENGTH_SHORT).show();
+				currIndex = arg2;
+				start();
+			}
 
 			@Override
-            public void onNothingSelected(AdapterView < ? > arg0 )
-            {
-	            // TODO Auto-generated method stub
-	            
-            }
+			public void onNothingSelected(AdapterView < ? > arg0 )
+			{
+				// TODO Auto-generated method stub
+
+			}
 		});
-		
+
 		// Log.d("LOG" ,"source: " + source);
 		initLyric();
-		start();
+		// start();
+	}
+
+	public String getName(String url )
+	{
+		return url.substring(url.lastIndexOf("/") + 1 ,url.lastIndexOf("."));
+
 	}
 
 	public Handler hander = new Handler()
@@ -258,6 +283,89 @@ public class ListenText extends Activity implements Runnable , OnCompletionListe
 			}
 		};
 	};
+
+	public void settingFinishTime(long time )
+	{
+		// Toast.makeText(getApplicationContext() ,time + "秒后自动关闭"
+		// ,Toast.LENGTH_LONG).show();
+
+		final Timer timer = new Timer();
+		TimerTask task = new TimerTask()
+		{
+			@Override
+			public void run()
+			{
+				// MainActivity.this.startActivity(intent);
+				mp.stop();
+				finish();
+			}
+		};
+		timer.schedule(task ,1000 * time);// 打死都不能删除的
+	}
+
+	public void detailSetting(View v )
+	{
+		// 创建PopupMenu对象
+		PopupMenu popup = new PopupMenu(this , v);
+		// 将R.menu.popup_menu菜单资源加载到popup菜单中
+		getMenuInflater().inflate(R.menu.time_setting ,popup.getMenu());
+		// 为popup菜单的菜单项单击事件绑定事件监听器
+		// int selectedId = 0;
+		popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener()
+		{
+			@Override
+			public boolean onMenuItemClick(MenuItem item )
+			{
+				switch(item.getItemId())
+				{
+					case R.id.action_5:
+						// 隐藏该对话框
+						// popup.dismiss();
+						settingFinishTime(5 * 60);
+						// Toast.makeText(getApplicationContext() ,"【" +
+						// item.getTitle() + "】" ,Toast.LENGTH_SHORT).show();
+						// item.setChecked(true);
+//						selectedId = R.id.action_5;
+//						break;
+
+					case R.id.action_15:
+						settingFinishTime(15 * 60);
+						// item.setChecked(true);
+//						selectedId = R.id.action_15;
+//						break;
+
+					case R.id.action_30:
+						settingFinishTime(30 * 60);
+						// item.setChecked(true);
+//						selectedId = R.id.action_30;
+						// Toast.makeText(getApplicationContext() ,"【" +
+						// item.getTitle() + "】" ,Toast.LENGTH_SHORT).show();
+//						break;
+
+					case R.id.action_60:
+						settingFinishTime(60 * 60);
+						// item.setChecked(true);
+//						selectedId = R.id.action_60;
+//						break;
+
+//					default:
+						Toast.makeText(getApplicationContext() ,"【" + item.getTitle() + "】" ,Toast.LENGTH_SHORT).show();
+						Toast.makeText(getApplicationContext() ,"【" + item.getTitle() + "】" ,Toast.LENGTH_SHORT).show();
+						item.setChecked(true);
+//						break;
+				}
+				// TODO Auto-generated method stub
+				return true;
+			}
+
+		});
+		// Toast.makeText(getApplicationContext() ,"【" +
+		// popup.getMenu().findItem(selectedId).getTitle() + "】"
+		// ,Toast.LENGTH_SHORT).show();
+//		Toast.makeText(getApplicationContext() ,selectedId ,Toast.LENGTH_SHORT).show();
+		// popup.getMenu().findItem(selectedId).setChecked(true);
+		popup.show();
+	}
 
 	// 播放按钮
 	public void playText(View v )
@@ -365,7 +473,7 @@ public class ListenText extends Activity implements Runnable , OnCompletionListe
 				Log.d("LOG" ,SongPath);
 				initSeekBar();
 				es.execute(this);
-				tv_showName.setText(name);
+				// tv_showName.setText(name);
 				btnPlay.setImageResource(R.drawable.play_start);
 				currState = PAUSE;
 			}
@@ -393,7 +501,7 @@ public class ListenText extends Activity implements Runnable , OnCompletionListe
 		else
 		{
 			// initSeekBar();
-			tv_showName.setText("");
+			// tv_showName.setText("");
 			tv_currTime.setText("00:00");
 			Toast.makeText(this ,"播放完毕" ,Toast.LENGTH_SHORT).show();
 		}
@@ -513,7 +621,7 @@ public class ListenText extends Activity implements Runnable , OnCompletionListe
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu )
 	{
-		// getMenuInflater().inflate(R.menu.main ,menu);
+		// getMenuInflater().inflate(R.menu.time_setting ,menu);
 		return super.onCreateOptionsMenu(menu);
 	}
 

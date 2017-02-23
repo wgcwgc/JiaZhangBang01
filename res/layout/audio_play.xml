@@ -4,27 +4,42 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <Spinner
-        android:id="@+id/listenText_spinner"
-        android:layout_width="wrap_content"
-        android:layout_height="66dp"
-        android:background="#696969" />
+    <RelativeLayout
+        android:id="@+id/listenText_topLinearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="57dp"
+        android:background="#696969" >
+
+        <Spinner
+            android:id="@+id/listenText_spinner"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:background="#696969"
+            android:gravity="center_horizontal|center_vertical" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/listenText_spinner"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/listen_text_down" />
+    </RelativeLayout>
 
     <com.runcom.jiazhangbang.listenText.LyricView
         android:id="@+id/listenText_lyricShow"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_above="@+id/listenText_textView_showName"
+        android:layout_above="@+id/listenText_linearLayout_seekbar"
         android:layout_alignParentRight="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/listenText_spinner"
+        android:layout_below="@+id/listenText_topLinearLayout"
         android:background="#969696"
         android:enabled="true" />
 
     <LinearLayout
         android:id="@+id/listenText_linearLayout_seekbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="57dp"
         android:layout_above="@+id/listenText_linearLayout_control"
         android:layout_alignLeft="@+id/listenText_linearLayout_control"
         android:layout_alignStart="@+id/listenText_linearLayout_control"
@@ -65,28 +80,34 @@
     <LinearLayout
         android:id="@+id/listenText_linearLayout_control"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="57dp"
         android:layout_alignParentBottom="true"
         android:gravity="center" >
 
         <ImageButton
-            android:layout_width="wrap_content"
+            android:layout_width="57dp"
             android:layout_height="wrap_content"
             android:onClick="previousText"
-            android:src="@drawable/play_previous" />
+            android:src="@drawable/listen_text_previous_text" />
 
         <ImageButton
             android:id="@+id/media_play"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="play"
+            android:onClick="playText"
             android:src="@drawable/play_pause" />
 
         <ImageButton
-            android:layout_width="wrap_content"
+            android:layout_width="57dp"
             android:layout_height="wrap_content"
             android:onClick="nextText"
-            android:src="@drawable/play_next" />
+            android:src="@drawable/listen_text_next_text" />
+
+        <ImageButton
+            android:layout_width="57dp"
+            android:layout_height="wrap_content"
+            android:onClick="detailSetting"
+            android:src="@drawable/listen_text_detail" />
     </LinearLayout>
 
 </RelativeLayout>

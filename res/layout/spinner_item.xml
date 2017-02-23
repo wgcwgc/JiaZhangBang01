@@ -8,12 +8,10 @@
         android:id="@+id/spinnerItem_textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:drawableLeft="@drawable/play_pause"
-        android:drawableRight="@drawable/play_pause"
-        android:gravity="center_horizontal"
-        android:text="asdf"
-        android:textSize="22sp" >
+        android:layout_gravity="center_horizontal"
+        android:gravity="center_horizontal|center_vertical"
+        android:singleLine="true"
+        android:textSize="44sp" >
     </TextView>
 
 </LinearLayout>
