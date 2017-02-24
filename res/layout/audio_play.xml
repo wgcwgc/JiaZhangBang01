@@ -8,20 +8,22 @@
         android:id="@+id/listenText_topLinearLayout"
         android:layout_width="match_parent"
         android:layout_height="57dp"
-        android:background="#696969" >
+        android:background="#696969"
+        android:gravity="top" >
 
         <Spinner
             android:id="@+id/listenText_spinner"
             android:layout_width="match_parent"
             android:layout_height="45dp"
             android:background="#696969"
-            android:gravity="center_horizontal|center_vertical" />
+            android:gravity="top" />
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/listenText_spinner"
             android:layout_centerHorizontal="true"
+            android:layout_marginTop="5dp"
             android:src="@drawable/listen_text_down" />
     </RelativeLayout>
 

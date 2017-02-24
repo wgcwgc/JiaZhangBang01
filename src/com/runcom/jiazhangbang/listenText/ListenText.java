@@ -14,6 +14,8 @@ import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.AssetFileDescriptor;
+import android.content.res.AssetManager;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnBufferingUpdateListener;
 import android.media.MediaPlayer.OnCompletionListener;
@@ -81,8 +83,6 @@ public class ListenText extends Activity implements Runnable , OnCompletionListe
 	private int CountTime = 0;
 	private List < LyricContent > LyricList = new ArrayList < LyricContent >();
 
-	int selectedId = 0;
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState )
 	{
@@ -95,11 +95,19 @@ public class ListenText extends Activity implements Runnable , OnCompletionListe
 		// audio:'http://172.16.0.63:24680/wgcwgc/mp3/001.mp3'
 		// lyric : 'http://172.16.0.63:24680/wgcwgc/lrc/001.lrc' ,
 		// name : '12PEP Unit'
+
+		// TODO Auto-generated catch block
 		// source = intent.getStringExtra("source");
-		source1 = "http://172.16.0.63:24680/wgcwgc/mp3/001.mp3";
-		source2 = "http://172.16.0.63:24680/wgcwgc/mp3/002.mp3";
-		source3 = "http://172.16.0.63:24680/wgcwgc/mp3/003.mp3";
-		source4 = "http://172.16.0.63:24680/wgcwgc/mp3/004.mp3";
+		source1 = "001.mp3";
+		source2 = "002.mp3";
+		source3 = "003.mp3";
+		source4 = "004.mp3";
+
+		// source1 = "http://172.16.0.63:24680/wgcwgc/mp3/001.mp3";
+		// source2 = "http://172.16.0.63:24680/wgcwgc/mp3/002.mp3";
+		// source3 = "http://172.16.0.63:24680/wgcwgc/mp3/003.mp3";
+		// source4 = "http://172.16.0.63:24680/wgcwgc/mp3/004.mp3";
+
 		// lyricsPath = intent.getStringExtra("lyric");
 		lyricsPath = "http://172.16.0.63:24680/wgcwgc/lrc/001.lrc";
 		// name = intent.getStringExtra("name");
@@ -265,7 +273,7 @@ public class ListenText extends Activity implements Runnable , OnCompletionListe
 
 	public String getName(String url )
 	{
-		return url.substring(url.lastIndexOf("/") + 1 ,url.lastIndexOf("."));
+		return url.contains("/") ? url.substring(url.lastIndexOf("/") + 1 ,url.lastIndexOf(".")) : url.substring(0 ,url.lastIndexOf("."));
 
 	}
 
@@ -286,9 +294,6 @@ public class ListenText extends Activity implements Runnable , OnCompletionListe
 
 	public void settingFinishTime(long time )
 	{
-		// Toast.makeText(getApplicationContext() ,time + "秒后自动关闭"
-		// ,Toast.LENGTH_LONG).show();
-
 		final Timer timer = new Timer();
 		TimerTask task = new TimerTask()
 		{
@@ -303,68 +308,64 @@ public class ListenText extends Activity implements Runnable , OnCompletionListe
 		timer.schedule(task ,1000 * time);// 打死都不能删除的
 	}
 
+	int selectedId = R.id.action_oo;
+
 	public void detailSetting(View v )
 	{
-		// 创建PopupMenu对象
-		PopupMenu popup = new PopupMenu(this , v);
-		// 将R.menu.popup_menu菜单资源加载到popup菜单中
+		final PopupMenu popup = new PopupMenu(this , v);
 		getMenuInflater().inflate(R.menu.time_setting ,popup.getMenu());
-		// 为popup菜单的菜单项单击事件绑定事件监听器
-		// int selectedId = 0;
+		popup.show();
 		popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener()
 		{
 			@Override
 			public boolean onMenuItemClick(MenuItem item )
 			{
+				item.setCheckable(true);
 				switch(item.getItemId())
 				{
 					case R.id.action_5:
-						// 隐藏该对话框
-						// popup.dismiss();
 						settingFinishTime(5 * 60);
-						// Toast.makeText(getApplicationContext() ,"【" +
-						// item.getTitle() + "】" ,Toast.LENGTH_SHORT).show();
+						// settingFinishTime(5);
 						// item.setChecked(true);
-//						selectedId = R.id.action_5;
-//						break;
+						selectedId = R.id.action_5;
+						break;
 
 					case R.id.action_15:
 						settingFinishTime(15 * 60);
+						// settingFinishTime(15);
 						// item.setChecked(true);
-//						selectedId = R.id.action_15;
-//						break;
+						selectedId = R.id.action_15;
+						break;
 
 					case R.id.action_30:
 						settingFinishTime(30 * 60);
+						// settingFinishTime(30);
 						// item.setChecked(true);
-//						selectedId = R.id.action_30;
-						// Toast.makeText(getApplicationContext() ,"【" +
-						// item.getTitle() + "】" ,Toast.LENGTH_SHORT).show();
-//						break;
+						selectedId = R.id.action_30;
+						break;
 
 					case R.id.action_60:
 						settingFinishTime(60 * 60);
+						// settingFinishTime(60);
 						// item.setChecked(true);
-//						selectedId = R.id.action_60;
-//						break;
+						selectedId = R.id.action_60;
+						break;
 
-//					default:
-						Toast.makeText(getApplicationContext() ,"【" + item.getTitle() + "】" ,Toast.LENGTH_SHORT).show();
-						Toast.makeText(getApplicationContext() ,"【" + item.getTitle() + "】" ,Toast.LENGTH_SHORT).show();
-						item.setChecked(true);
-//						break;
+					default:
+						selectedId = R.id.action_oo;
+						break;
+
 				}
+				// item.setChecked(true);
+				Toast.makeText(getApplicationContext() ,"【" + item.getTitle() + "】" ,Toast.LENGTH_SHORT).show();
 				// TODO Auto-generated method stub
 				return true;
 			}
-
 		});
-		// Toast.makeText(getApplicationContext() ,"【" +
-		// popup.getMenu().findItem(selectedId).getTitle() + "】"
+		// Toast.makeText(getApplicationContext()
+		// ,popup.getMenu().findItem(selectedId).getItemId() + ""
 		// ,Toast.LENGTH_SHORT).show();
-//		Toast.makeText(getApplicationContext() ,selectedId ,Toast.LENGTH_SHORT).show();
-		// popup.getMenu().findItem(selectedId).setChecked(true);
-		popup.show();
+		popup.getMenu().findItem(selectedId).setChecked(true);
 	}
 
 	// 播放按钮
@@ -467,7 +468,13 @@ public class ListenText extends Activity implements Runnable , OnCompletionListe
 			mp.reset();
 			try
 			{
-				mp.setDataSource(SongPath);
+				// TODO
+
+				AssetManager assetManager = getAssets();
+				AssetFileDescriptor afd = assetManager.openFd(SongPath);
+				mp.setDataSource(afd.getFileDescriptor());
+
+				// mp.setDataSource(SongPath);
 				mp.prepare();
 				mp.start();
 				Log.d("LOG" ,SongPath);
