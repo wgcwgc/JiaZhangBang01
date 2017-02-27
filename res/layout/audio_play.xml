@@ -36,7 +36,10 @@
         android:layout_alignParentStart="true"
         android:layout_below="@+id/listenText_topLinearLayout"
         android:background="#969696"
-        android:enabled="true" />
+        android:ellipsize="marquee"
+        android:enabled="true"
+        android:singleLine="true"
+        android:textSize="38sp" />
 
     <LinearLayout
         android:id="@+id/listenText_linearLayout_seekbar"

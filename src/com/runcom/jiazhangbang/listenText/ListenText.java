@@ -79,9 +79,14 @@ public class ListenText extends Activity implements Runnable , OnCompletionListe
 	private LrcRead mLrcRead;
 	private LyricView mLyricView;
 	private int index = 0;
+	private float progress = 0;
 	private int CurrentTime = 0;
 	private int CountTime = 0;
 	private List < LyricContent > LyricList = new ArrayList < LyricContent >();
+
+	// mScreenWidth mScreenHeigth myScreenDensity
+	int myScreenWidth , myScreenHeigth;
+	float myScreenDensity;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState )
@@ -128,6 +133,14 @@ public class ListenText extends Activity implements Runnable , OnCompletionListe
 		mp.setOnErrorListener(this);
 
 		initPlayView();
+
+		myScreenWidth = Util.getScreenWidth(getApplicationContext());
+		myScreenHeigth = Util.getScreenHeight(getApplicationContext());
+		myScreenDensity = Util.getScreenDensity(getApplicationContext());
+		// Log.d("LOG" ,"宽度:" + myScreenWidth + "\n高度:" + myScreenHeigth +
+		// "\n密度:" + myScreenDensity + "\n转换后:" +
+		// Util.dip2px(getApplicationContext() ,myScreenDensity));
+
 	}
 
 	private void initLyric()
@@ -175,11 +188,54 @@ public class ListenText extends Activity implements Runnable , OnCompletionListe
 		public void run()
 		{
 			mLyricView.SetIndex(Index());
+			mLyricView.SetProgress(Progress());
 			mLyricView.invalidate();
-			mHandler.postDelayed(mRunnable ,1000);
+			mHandler.postDelayed(mRunnable ,100);
 		}
+
 	};
 
+	public float Progress()
+	{
+		if(mp.isPlaying())
+		{
+			CurrentTime = mp.getCurrentPosition();
+			CountTime = mp.getDuration();
+		}
+		if(CurrentTime < CountTime)
+		{
+			for(int i = 0 ; i < LyricList.size() ; i ++ )
+			{
+				if(i < LyricList.size() - 1)
+				{
+					if(CurrentTime < LyricList.get(i).getLyricTime() && i == 0)
+					{
+						index = i;
+						progress = 0;
+						Log.d("LOG" , "0000000000000000000");
+					}
+					if(CurrentTime > LyricList.get(i).getLyricTime() && CurrentTime < LyricList.get(i + 1).getLyricTime())
+					{
+						index = i;
+						progress = (float) ((CurrentTime - LyricList.get(i).getLyricTime()) / (LyricList.get(i + 1).getLyricTime() - LyricList.get(i).getLyricTime()));
+						Log.d("LOG" , "1: " + CurrentTime + " 2: " + LyricList.get(i).getLyricTime() + " 3: " + LyricList.get(i + 1).getLyricTime());
+						Log.d("LOG" , "progresssssssssssssssss:" + progress);
+					}
+				}
+
+				if(i == LyricList.size() - 1 && CurrentTime > LyricList.get(i).getLyricTime())
+				{
+					index = i;
+					progress = 1;
+					Log.d("LOG" , "111111111111111111:" + progress);
+					
+				}
+			}
+		}
+//		Log.d("LOG" , "111111111111111111:" + progress);
+		return progress;
+	}
+	
 	public int Index()
 	{
 		if(mp.isPlaying())
