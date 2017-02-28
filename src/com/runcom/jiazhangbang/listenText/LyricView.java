@@ -11,6 +11,9 @@ import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.runcom.jiazhangbang.util.Util;
 
 public class LyricView extends TextView
 {
@@ -18,8 +21,9 @@ public class LyricView extends TextView
 	private float width;
 	private Paint CurrentPaint;
 	private Paint NotCurrentPaint;
-	private float TextHigh = 128;
-	private float TextSize = 37;
+	private Paint ThirdCurrentPaint;
+	private float TextHigh = Util.sp2px(getContext() ,57);
+	private float TextSize = Util.sp2px(getContext() ,15);
 	private int Index = 0;
 	float progress = 0;
 	private List < LyricContent > mySentenceEntities = new ArrayList < LyricContent >();
@@ -34,6 +38,7 @@ public class LyricView extends TextView
 	{
 		super(context);
 		init();
+
 	}
 
 	public LyricView(Context context , AttributeSet attrs , int defStyle)
@@ -57,15 +62,31 @@ public class LyricView extends TextView
 	private void init()
 	{
 		setFocusable(true);
+
 		// 高亮部分
 		CurrentPaint = new Paint();
 		CurrentPaint.setAntiAlias(true);
-		CurrentPaint.setTextAlign(Paint.Align.CENTER);
+		// CurrentPaint.setTextAlign(Paint.Align.CENTER);
+		CurrentPaint.setColor(Color.parseColor("#39DF7C"));
+		CurrentPaint.setTextSize(TextSize);
+		CurrentPaint.setTypeface(Typeface.SERIF);
+
+		// 滚动部分
+		ThirdCurrentPaint = new Paint();
+		ThirdCurrentPaint.setAntiAlias(true);
+		ThirdCurrentPaint.setColor(Color.parseColor("#726463"));
+		ThirdCurrentPaint.setTextSize(TextSize);
+		Log.d("LOG" ,"size():" + ThirdCurrentPaint.getTextSize());
+		Toast.makeText(getContext() ,"size():" + ThirdCurrentPaint.getTextSize() ,Toast.LENGTH_SHORT).show();
+		ThirdCurrentPaint.setTypeface(Typeface.SERIF);
+
 		// 非高亮部分
 		NotCurrentPaint = new Paint();
 		NotCurrentPaint.setAntiAlias(true);
 		NotCurrentPaint.setTextAlign(Paint.Align.CENTER);
-
+		NotCurrentPaint.setTextSize(TextSize);
+		NotCurrentPaint.setTypeface(Typeface.SERIF);
+		NotCurrentPaint.setColor(Color.parseColor("#726463"));
 	}
 
 	@Override
@@ -78,35 +99,32 @@ public class LyricView extends TextView
 			return;
 		}
 
-		// CurrentPaint.setColor(Color.BLUE);
-		// NotCurrentPaint.setColor(Color.GREEN);
-		CurrentPaint.setColor(Color.parseColor("#39DF7C"));
-		NotCurrentPaint.setColor(Color.parseColor("#726463"));
-
-		CurrentPaint.setTextSize(TextSize);
-		CurrentPaint.setTypeface(Typeface.SERIF);
-
-		NotCurrentPaint.setTextSize(TextSize);
-		NotCurrentPaint.setTypeface(Typeface.SERIF);
-
 		try
 		{
-			canvas.drawText(mySentenceEntities.get(Index).getLyric() ,width / 2 ,high / 2 ,NotCurrentPaint);
-
 			int leng = mySentenceEntities.get(Index).getLyric().length();
-			String content = mySentenceEntities.get(Index).getLyric().substring(0 , (int) (progress * leng));
-			Log.d("LOG" ,"progress:" + progress);
-			canvas.drawText(content ,width / 2 - leng + 1 ,high / 2 ,CurrentPaint);
-			
-			
+			String content = mySentenceEntities.get(Index).getLyric().substring(0 ,(int) ((progress)  * leng));
+			int baseX = 6000 / leng;
+			if(leng <= 5)
+				baseX = 450;
+			else
+				if(leng <= 10)
+					baseX = 4000 / leng;
+				else
+					if(leng <= 15)
+						baseX = 5000 / leng;
 
+			 baseX = Util.px2sp(getContext() ,baseX);
+			canvas.drawText(mySentenceEntities.get(Index).getLyric() ,baseX ,high / 2 ,ThirdCurrentPaint);
+			canvas.drawText(content ,baseX ,high / 2 ,CurrentPaint);
+
+			Log.d("LOG" ,"index: " + Index + " progress:" + progress + " leng: " + leng + " width: " + width);
 			float tempY = high / 2;
 			// 画出本句之前的句子
 			for(int i = Index - 1 ; i >= 0 ; i -- )
 			{
 				tempY = tempY - TextHigh;
 
-				canvas.drawText(mySentenceEntities.get(i).getLyric() ,width / 2 ,tempY ,CurrentPaint);
+				canvas.drawText(mySentenceEntities.get(i).getLyric() ,width / 2 ,tempY ,NotCurrentPaint);
 
 			}
 

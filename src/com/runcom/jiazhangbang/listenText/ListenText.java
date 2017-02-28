@@ -14,8 +14,6 @@ import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
-import android.content.res.AssetFileDescriptor;
-import android.content.res.AssetManager;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnBufferingUpdateListener;
 import android.media.MediaPlayer.OnCompletionListener;
@@ -79,7 +77,7 @@ public class ListenText extends Activity implements Runnable , OnCompletionListe
 	private LrcRead mLrcRead;
 	private LyricView mLyricView;
 	private int index = 0;
-	private float progress = 0;
+	private float progress = 0.000f;
 	private int CurrentTime = 0;
 	private int CountTime = 0;
 	private List < LyricContent > LyricList = new ArrayList < LyricContent >();
@@ -108,10 +106,10 @@ public class ListenText extends Activity implements Runnable , OnCompletionListe
 		source3 = "003.mp3";
 		source4 = "004.mp3";
 
-		// source1 = "http://172.16.0.63:24680/wgcwgc/mp3/001.mp3";
-		// source2 = "http://172.16.0.63:24680/wgcwgc/mp3/002.mp3";
-		// source3 = "http://172.16.0.63:24680/wgcwgc/mp3/003.mp3";
-		// source4 = "http://172.16.0.63:24680/wgcwgc/mp3/004.mp3";
+		source1 = "http://172.16.0.63:24680/wgcwgc/mp3/001.mp3";
+		source2 = "http://172.16.0.63:24680/wgcwgc/mp3/002.mp3";
+		source3 = "http://172.16.0.63:24680/wgcwgc/mp3/003.mp3";
+		source4 = "http://172.16.0.63:24680/wgcwgc/mp3/004.mp3";
 
 		// lyricsPath = intent.getStringExtra("lyric");
 		lyricsPath = "http://172.16.0.63:24680/wgcwgc/lrc/001.lrc";
@@ -212,14 +210,16 @@ public class ListenText extends Activity implements Runnable , OnCompletionListe
 					{
 						index = i;
 						progress = 0;
-						Log.d("LOG" , "0000000000000000000");
+						// Log.d("LOG" ,"0000000000000000000");
 					}
 					if(CurrentTime > LyricList.get(i).getLyricTime() && CurrentTime < LyricList.get(i + 1).getLyricTime())
 					{
 						index = i;
-						progress = (float) ((CurrentTime - LyricList.get(i).getLyricTime()) / (LyricList.get(i + 1).getLyricTime() - LyricList.get(i).getLyricTime()));
-						Log.d("LOG" , "1: " + CurrentTime + " 2: " + LyricList.get(i).getLyricTime() + " 3: " + LyricList.get(i + 1).getLyricTime());
-						Log.d("LOG" , "progresssssssssssssssss:" + progress);
+						progress = (float) ((float) (CurrentTime - LyricList.get(i).getLyricTime()) / (float) (LyricList.get(i + 1).getLyricTime() - LyricList.get(i).getLyricTime()));
+						// Log.d("LOG" ,"1: " + CurrentTime + " 2: " +
+						// LyricList.get(i).getLyricTime() + " 3: " +
+						// LyricList.get(i + 1).getLyricTime());
+						// Log.d("LOG" ,"progresssssssssssssssss:" + progress);
 					}
 				}
 
@@ -227,15 +227,15 @@ public class ListenText extends Activity implements Runnable , OnCompletionListe
 				{
 					index = i;
 					progress = 1;
-					Log.d("LOG" , "111111111111111111:" + progress);
-					
+					// Log.d("LOG" ,"111111111111111111:" + progress);
+
 				}
 			}
 		}
-//		Log.d("LOG" , "111111111111111111:" + progress);
+		// Log.d("LOG" , "111111111111111111:" + progress);
 		return progress;
 	}
-	
+
 	public int Index()
 	{
 		if(mp.isPlaying())
@@ -526,11 +526,11 @@ public class ListenText extends Activity implements Runnable , OnCompletionListe
 			{
 				// TODO
 
-				AssetManager assetManager = getAssets();
-				AssetFileDescriptor afd = assetManager.openFd(SongPath);
-				mp.setDataSource(afd.getFileDescriptor());
+				// AssetManager assetManager = getAssets();
+				// AssetFileDescriptor afd = assetManager.openFd(SongPath);
+				// mp.setDataSource(afd.getFileDescriptor());
 
-				// mp.setDataSource(SongPath);
+				mp.setDataSource(SongPath);
 				mp.prepare();
 				mp.start();
 				Log.d("LOG" ,SongPath);
