@@ -11,7 +11,6 @@ import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.runcom.jiazhangbang.util.Util;
 
@@ -22,7 +21,7 @@ public class LyricView extends TextView
 	private Paint CurrentPaint;
 	private Paint NotCurrentPaint;
 	private Paint ThirdCurrentPaint;
-	private float TextHigh = Util.sp2px(getContext() ,57);
+	public float TextHigh = Util.sp2px(getContext() ,57);
 	private float TextSize = Util.sp2px(getContext() ,15);
 	private int Index = 0;
 	float progress = 0;
@@ -50,12 +49,6 @@ public class LyricView extends TextView
 	public LyricView(Context context , AttributeSet attrs)
 	{
 		super(context , attrs);
-
-		// int myScreenWidth = Util.getScreenWidth(context);
-		// int myScreenHeigth = Util.getScreenHeight(context);
-		// float myScreenDensity = Util.getScreenDensity(context);
-		// Log.d("LOG" ,"宽度:" + myScreenWidth + "\n高度:" + myScreenHeigth +
-		// "\n密度:" + myScreenDensity);
 		init();
 	}
 
@@ -76,8 +69,6 @@ public class LyricView extends TextView
 		ThirdCurrentPaint.setAntiAlias(true);
 		ThirdCurrentPaint.setColor(Color.parseColor("#726463"));
 		ThirdCurrentPaint.setTextSize(TextSize);
-		Log.d("LOG" ,"size():" + ThirdCurrentPaint.getTextSize());
-		Toast.makeText(getContext() ,"size():" + ThirdCurrentPaint.getTextSize() ,Toast.LENGTH_SHORT).show();
 		ThirdCurrentPaint.setTypeface(Typeface.SERIF);
 
 		// 非高亮部分
@@ -102,22 +93,16 @@ public class LyricView extends TextView
 		try
 		{
 			int leng = mySentenceEntities.get(Index).getLyric().length();
-			String content = mySentenceEntities.get(Index).getLyric().substring(0 ,(int) ((progress)  * leng));
-			int baseX = 6000 / leng;
-			if(leng <= 5)
-				baseX = 450;
-			else
-				if(leng <= 10)
-					baseX = 4000 / leng;
-				else
-					if(leng <= 15)
-						baseX = 5000 / leng;
+			String content = mySentenceEntities.get(Index).getLyric().substring(0 ,(int) ((progress) * leng));
+			int distance[] =
+			{ 100, 200, 190, 150, 140, 150, 130, 130, 130, 120, 120, 120, 110, 90, 90, 80 };
+			int baseX = 0;
+			baseX = Util.sp2px(getContext() ,leng <= 15 ? distance[leng] : leng >= 50 ? 0 : 1700 / leng);
 
-			 baseX = Util.px2sp(getContext() ,baseX);
 			canvas.drawText(mySentenceEntities.get(Index).getLyric() ,baseX ,high / 2 ,ThirdCurrentPaint);
 			canvas.drawText(content ,baseX ,high / 2 ,CurrentPaint);
 
-			Log.d("LOG" ,"index: " + Index + " progress:" + progress + " leng: " + leng + " width: " + width);
+			Log.d("LOG" ,"index: " + Index + " progress:" + progress + " leng: " + leng + " width: " + width + " baseX:" + baseX);
 			float tempY = high / 2;
 			// 画出本句之前的句子
 			for(int i = Index - 1 ; i >= 0 ; i -- )
@@ -152,10 +137,20 @@ public class LyricView extends TextView
 		this.width = w;
 	}
 
+	// @Override
+	// public boolean onTouchEvent(MotionEvent event )
+	// {
+	// // TODO Auto-generated method stub
+	//
+	// // System.out.println("x: " + event.getX() + " y: " + event.getY());
+	//
+	// return super.onTouchEvent(event);
+	// }
+
 	public void SetIndex(int index )
 	{
 		this.Index = index;
-		// System.out.println(index);
+		// System.out.println("x: " + getX() + " y: " + getY());
 	}
 
 	public void SetProgress(float progress )

@@ -25,6 +25,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
@@ -278,7 +279,8 @@ public class ListenText extends Activity implements Runnable , OnCompletionListe
 		seekBar.setOnSeekBarChangeListener(this);
 		tv_currTime = (TextView) findViewById(R.id.listenText_textView_curr_time);
 		tv_totalTime = (TextView) findViewById(R.id.listenText_textView_total_time);
-		tv_showName = (TextView) findViewById(R.id.listenText_textView_showName);
+		// tv_showName = (TextView)
+		// findViewById(R.id.listenText_textView_showName);
 		// mp = new MediaPlayer();
 		// mp.setOnCompletionListener(this);
 		// mp.setOnErrorListener(this);
@@ -301,7 +303,6 @@ public class ListenText extends Activity implements Runnable , OnCompletionListe
 		// adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
 		spinner.setAdapter(adapter);
-		spinner.setPrompt("测试");
 		spinner.setOnItemSelectedListener(new OnItemSelectedListener()
 		{
 
@@ -309,7 +310,9 @@ public class ListenText extends Activity implements Runnable , OnCompletionListe
 			public void onItemSelected(AdapterView < ? > arg0 , View arg1 , int arg2 , long arg3 )
 			{
 				// TODO Auto-generated method stub
-				Toast.makeText(getApplicationContext() ,"您选择了" + arg0.getItemAtPosition(arg2).toString() + ":" + arg2 ,Toast.LENGTH_SHORT).show();
+				// Toast.makeText(getApplicationContext() ,"您选择了" +
+				// arg0.getItemAtPosition(arg2).toString() + ":" + arg2
+				// ,Toast.LENGTH_SHORT).show();
 				currIndex = arg2;
 				start();
 			}
@@ -423,6 +426,35 @@ public class ListenText extends Activity implements Runnable , OnCompletionListe
 		// ,Toast.LENGTH_SHORT).show();
 		popup.getMenu().findItem(selectedId).setChecked(true);
 	}
+
+	@Override
+	public boolean onTouchEvent(MotionEvent event )
+	{
+		// TODO Auto-generated method stub
+
+		System.out.println("x: " + event.getX() + " y: " + event.getY());
+
+		int index = Index() - 1;
+		// mp.seekTo(index);
+		// **********************************************************************************************************************
+		// progress == time * 100;
+		Log.d("LOG" ,mp.getCurrentPosition() + "");
+		// Toast.makeText(getApplicationContext() ,"left: " + view.getLeft() +
+		// " top: " + view.getTop() + " right: " + view.getRight() + " bottom: "
+		// + view.getBottom() ,Toast.LENGTH_SHORT).show();
+		return super.onTouchEvent(event);
+	}
+
+	// public void lyricOnclick(View v )
+	// {
+	//
+	// // Toast.makeText(getApplicationContext() ,"x: " + view.getX() + " y: "
+	// // + view.getY() ,Toast.LENGTH_SHORT).show();
+	// // Toast.makeText(getApplicationContext() ,"left: " + view.getLeft() +
+	// // " top: " + view.getTop() + " right: " + view.getRight() + " bottom: "
+	// // + view.getBottom() ,Toast.LENGTH_SHORT).show();
+	//
+	// }
 
 	// 播放按钮
 	public void playText(View v )

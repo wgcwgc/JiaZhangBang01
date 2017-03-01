@@ -37,9 +37,7 @@
         android:layout_below="@+id/listenText_topLinearLayout"
         android:background="#969696"
         android:ellipsize="marquee"
-        android:enabled="true"
-        android:singleLine="true"
-        android:textSize="38sp" />
+        android:singleLine="true" />
 
     <LinearLayout
         android:id="@+id/listenText_linearLayout_seekbar"
@@ -71,16 +69,6 @@
             android:layout_marginLeft="5dp"
             android:layout_marginStart="5dp" />
     </LinearLayout>
-
-    <TextView
-        android:id="@+id/listenText_textView_showName"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/listenText_linearLayout_seekbar"
-        android:layout_alignLeft="@+id/listenText_linearLayout_seekbar"
-        android:layout_alignStart="@+id/listenText_linearLayout_seekbar"
-        android:gravity="center"
-        android:text="@string/hello_world" />
 
     <LinearLayout
         android:id="@+id/listenText_linearLayout_control"
