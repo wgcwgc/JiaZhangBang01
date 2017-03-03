@@ -87,6 +87,8 @@ public class ListenText extends Activity implements Runnable , OnCompletionListe
 	int myScreenWidth , myScreenHeigth;
 	float myScreenDensity;
 
+	private int newIndex = 0;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState )
 	{
@@ -186,10 +188,21 @@ public class ListenText extends Activity implements Runnable , OnCompletionListe
 	{
 		public void run()
 		{
+			if(index == newIndex)
+			{
+				mLyricView.setScrolled(false);
+			}
+			
+			if(index > newIndex)
+			{
+				newIndex = index;
+				mLyricView.setScrolled(true);
+			}
+
 			mLyricView.SetIndex(Index());
 			mLyricView.SetProgress(Progress());
 			mLyricView.invalidate();
-			mHandler.postDelayed(mRunnable ,100);
+			mHandler.postDelayed(mRunnable ,1);
 		}
 
 	};
