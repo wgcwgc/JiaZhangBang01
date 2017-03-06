@@ -25,7 +25,6 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
@@ -52,7 +51,7 @@ public class ListenText extends Activity implements Runnable , OnCompletionListe
 	private SeekBar seekBar;
 	private ImageButton btnPlay;
 	@SuppressWarnings("unused")
-	private TextView tv_currTime , tv_totalTime , tv_showName;
+	private TextView tv_currTime , tv_totalTime , tv_showName , textView;
 	List < String > play_list = new ArrayList < String >();
 	List < String > play_list_copy = new ArrayList < String >();
 
@@ -87,7 +86,7 @@ public class ListenText extends Activity implements Runnable , OnCompletionListe
 	int myScreenWidth , myScreenHeigth;
 	float myScreenDensity;
 
-	private int newIndex = 0;
+	int newIndex = 0;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState )
@@ -138,6 +137,7 @@ public class ListenText extends Activity implements Runnable , OnCompletionListe
 		myScreenWidth = Util.getScreenWidth(getApplicationContext());
 		myScreenHeigth = Util.getScreenHeight(getApplicationContext());
 		myScreenDensity = Util.getScreenDensity(getApplicationContext());
+
 		// Log.d("LOG" ,"宽度:" + myScreenWidth + "\n高度:" + myScreenHeigth +
 		// "\n密度:" + myScreenDensity + "\n转换后:" +
 		// Util.dip2px(getApplicationContext() ,myScreenDensity));
@@ -180,31 +180,51 @@ public class ListenText extends Activity implements Runnable , OnCompletionListe
 		LyricList = mLrcRead.GetLyricContent();
 		mLyricView.setSentenceEntities(LyricList);
 		mHandler.post(mRunnable);
+		myHandler.post(myRunnable);
 	}
 
 	Handler mHandler = new Handler();
+	Handler myHandler = new Handler();
 
 	Runnable mRunnable = new Runnable()
 	{
 		public void run()
 		{
-			if(index == newIndex)
-			{
-				mLyricView.setScrolled(false);
-			}
-			
-			if(index > newIndex)
-			{
-				newIndex = index;
-				mLyricView.setScrolled(true);
-			}
-
 			mLyricView.SetIndex(Index());
 			mLyricView.SetProgress(Progress());
 			mLyricView.invalidate();
-			mHandler.postDelayed(mRunnable ,1);
+			mHandler.postDelayed(mRunnable ,10);
 		}
+	};
 
+	Runnable myRunnable = new Runnable()
+	{
+
+		@Override
+		public void run()
+		{
+			// TODO Auto-generated method stub
+			int indexTemp = Index();
+
+			Log.d("LOG" ,"Index(): " + indexTemp + " newIndex: " + newIndex);
+			if(indexTemp == newIndex)
+			{
+				mLyricView.setScrolled(false);
+			}
+			else
+				if(indexTemp > newIndex)
+				{
+					newIndex = indexTemp;
+					mLyricView.setScrolled(true);
+				}
+			String tempString = "";
+			// Log.d("LOG" ,"size(): " + LyricList.size() + " Index(): " +
+			// Index());
+			for(int i = 0 ; i < (LyricList.size() - Index()) * 3.7 ; i ++ )
+				tempString += " \n";
+			textView.setText(tempString);
+			myHandler.postDelayed(this ,1000);
+		}
 	};
 
 	public float Progress()
@@ -292,6 +312,7 @@ public class ListenText extends Activity implements Runnable , OnCompletionListe
 		seekBar.setOnSeekBarChangeListener(this);
 		tv_currTime = (TextView) findViewById(R.id.listenText_textView_curr_time);
 		tv_totalTime = (TextView) findViewById(R.id.listenText_textView_total_time);
+		textView = (TextView) findViewById(R.id.listenText_lyricView_textView);
 		// tv_showName = (TextView)
 		// findViewById(R.id.listenText_textView_showName);
 		// mp = new MediaPlayer();
@@ -440,23 +461,24 @@ public class ListenText extends Activity implements Runnable , OnCompletionListe
 		popup.getMenu().findItem(selectedId).setChecked(true);
 	}
 
-	@Override
-	public boolean onTouchEvent(MotionEvent event )
-	{
-		// TODO Auto-generated method stub
-
-		System.out.println("x: " + event.getX() + " y: " + event.getY());
-
-		int index = Index() - 1;
-		// mp.seekTo(index);
-		// **********************************************************************************************************************
-		// progress == time * 100;
-		Log.d("LOG" ,mp.getCurrentPosition() + "");
-		// Toast.makeText(getApplicationContext() ,"left: " + view.getLeft() +
-		// " top: " + view.getTop() + " right: " + view.getRight() + " bottom: "
-		// + view.getBottom() ,Toast.LENGTH_SHORT).show();
-		return super.onTouchEvent(event);
-	}
+	// @Override
+	// public boolean onTouchEvent(MotionEvent event )
+	// {
+	// // TODO Auto-generated method stub
+	//
+	// System.out.println("x: " + event.getX() + " y: " + event.getY());
+	//
+	// int index = Index() - 1;
+	// // mp.seekTo(index);
+	// //
+	// **********************************************************************************************************************
+	// // progress == time * 100;
+	// Log.d("LOG" ,mp.getCurrentPosition() + "");
+	// // Toast.makeText(getApplicationContext() ,"left: " + view.getLeft() +
+	// // " top: " + view.getTop() + " right: " + view.getRight() + " bottom: "
+	// // + view.getBottom() ,Toast.LENGTH_SHORT).show();
+	// return super.onTouchEvent(event);
+	// }
 
 	// public void lyricOnclick(View v )
 	// {

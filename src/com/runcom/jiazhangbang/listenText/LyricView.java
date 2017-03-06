@@ -12,7 +12,6 @@ import android.os.Handler;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
-import android.view.View;
 import android.widget.ScrollView;
 
 import com.runcom.jiazhangbang.util.Util;
@@ -25,27 +24,27 @@ public class LyricView extends ScrollView
 	private Paint NotCurrentPaint;
 	private Paint ThirdCurrentPaint;
 	public float TextHigh = Util.sp2px(getContext() ,57);
-	private float TextSize = Util.sp2px(getContext() ,15);
-	private int Index = 0 , newIndex = 0;
+//	public float TextHigh = Util.sp2px(getContext() ,37);
+	float TextSize = Util.sp2px(getContext() ,15);
+	private int Index = 0;
 	float progress = 0;
 
 	private List < LyricContent > mySentenceEntities = new ArrayList < LyricContent >();
 
 	// 滚动
-	private final Handler handler = new Handler();
-	private long duration = 50;
-	private boolean isScrolled = false;
-	private int currentIndex = 0;
-	private long period = 1;
-	private int currentY = -1;
-	private double x;
-	private double y;
-	private int type = -1;
+	final Handler handler = new Handler();
+	long duration = 30;
+	boolean isScrolled = true;
+	int currentIndex = 0;
+	long period = 1;
+	int currentY = -1;
+	double x;
+	double y;
+	int type = -1;
 
 	public void setSentenceEntities(List < LyricContent > mySentenceEntities )
 	{
 		this.mySentenceEntities = mySentenceEntities;
-
 	}
 
 	public LyricView(Context context)
@@ -94,22 +93,22 @@ public class LyricView extends ScrollView
 		NotCurrentPaint.setTypeface(Typeface.SERIF);
 		NotCurrentPaint.setColor(Color.parseColor("#726463"));
 
-		this.setOnTouchListener(new OnTouchListener()
-		{
-
-			@Override
-			public boolean onTouch(View v , MotionEvent event )
-			{
-				// TODO Auto-generated method stub
-				setScrollX((int) event.getX());
-				setScrollY((int) event.getY());
-
-				Log.d("LOG" ,event.getX() + "");
-				Log.d("LOG" ,event.getY() + "");
-
-				return false;
-			}
-		});
+		// this.setOnTouchListener(new OnTouchListener()
+		// {
+		//
+		// @Override
+		// public boolean onTouch(View v , MotionEvent event )
+		// {
+		// // TODO Auto-generated method stub
+		// setScrollX((int) event.getX());
+		// setScrollY((int) event.getY());
+		//
+		// Log.d("LOG" ,event.getX() + "");
+		// Log.d("LOG" ,event.getY() + "");
+		//
+		// return false;
+		// }
+		// });
 
 	}
 
@@ -127,15 +126,15 @@ public class LyricView extends ScrollView
 		{
 			int leng = mySentenceEntities.get(Index).getLyric().length();
 			String content = mySentenceEntities.get(Index).getLyric().substring(0 ,(int) ((progress) * leng));
-//			if(Index > newIndex)
-//			{
-//				newIndex = Index;
-//				setScrolled(true);
-//			}
-//			if(Index == newIndex)
-//			{
-//				setScrolled(false);
-//			}
+			// if(Index > newIndex)
+			// {
+			// newIndex = Index;
+			// setScrolled(true);
+			// }
+			// if(Index == newIndex)
+			// {
+			// setScrolled(false);
+			// }
 			int distance[] =
 			{ 0, 220, 200, 170, 160, 150, 150, 150, 130, 140, 140, 130, 130, 120, 110, 100 };
 			int baseX = 0;
@@ -145,6 +144,7 @@ public class LyricView extends ScrollView
 			canvas.drawText(content ,baseX ,high / 2 ,CurrentPaint);
 
 			Log.d("LOG" ,"index: " + Index + " progress:" + progress + " leng: " + leng + " width: " + width + " baseX:" + baseX);
+
 			float tempY = high / 2;
 			// 画出本句之前的句子
 			for(int i = Index - 1 ; i >= 0 ; i -- )
@@ -199,6 +199,49 @@ public class LyricView extends ScrollView
 	{
 		this.progress = progress;
 		// System.out.println(progress);
+	}
+
+	public void autoScroll()
+	{
+		handler.postDelayed(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				boolean flag = isScrolled;
+				if(flag)
+				{
+					// Log.d("LOG", "currentY = " + currentY +
+					// "  getScrollY() = "+ getScrollY() );
+					if(currentY == getScrollY())
+					{
+						try
+						{
+							Thread.sleep(period);
+						}
+						catch(InterruptedException e)
+						{
+							e.printStackTrace();
+						}
+						currentIndex = 0;
+						scrollTo(0 ,0);
+						handler.postDelayed(this ,period);
+					}
+					else
+					{
+						currentY = getScrollY();
+						handler.postDelayed(this ,duration);
+						currentIndex ++ ;
+						scrollTo(0 ,currentIndex * 1);
+					}
+				}
+				else
+				{
+					// currentIndex = 0;
+					// scrollTo(0, 0);
+				}
+			}
+		} ,duration);
 	}
 
 	public boolean onTouchEvent(MotionEvent event )
@@ -311,49 +354,6 @@ public class LyricView extends ScrollView
 	public void setType(int type )
 	{
 		this.type = type;
-	}
-
-	private void autoScroll()
-	{
-		handler.postDelayed(new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				boolean flag = isScrolled;
-				if(flag)
-				{
-					// Log.d("LOG", "currentY = " + currentY +
-					// "  getScrollY() = "+ getScrollY() );
-					if(currentY == getScrollY())
-					{
-						try
-						{
-							Thread.sleep(period);
-						}
-						catch(InterruptedException e)
-						{
-							e.printStackTrace();
-						}
-						currentIndex = 0;
-						scrollTo(0 ,0);
-						handler.postDelayed(this ,period);
-					}
-					else
-					{
-						currentY = getScrollY();
-						handler.postDelayed(this ,duration);
-						currentIndex ++ ;
-						scrollTo(0 ,currentIndex * 1);
-					}
-				}
-				else
-				{
-					// currentIndex = 0;
-					// scrollTo(0, 0);
-				}
-			}
-		} ,duration);
 	}
 
 }
