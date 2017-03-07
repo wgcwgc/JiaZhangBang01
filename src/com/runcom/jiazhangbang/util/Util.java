@@ -16,6 +16,8 @@ public class Util
 	public static final String localAudioListCacheName = "localAudioList.log";
 	public static final String recordFileName = "wgcwgcRecord_";
 
+	public static final String serverAddress = "http://172.16.0.63:24680/wgcwgc/mp3/001.mp3";
+
 	/**
 	 * 得到设备屏幕的宽度
 	 */

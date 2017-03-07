@@ -179,6 +179,12 @@ public class ListenText extends Activity implements Runnable , OnCompletionListe
 		}
 		LyricList = mLrcRead.GetLyricContent();
 		mLyricView.setSentenceEntities(LyricList);
+		// String tempString = "";
+		// for(int i = 0 ; i < LyricList.size() ; i ++)
+		// {
+		// tempString += (LyricList.get(i).getLyric() + "\n");
+		// }
+		// textView.setText(tempString);
 		mHandler.post(mRunnable);
 		myHandler.post(myRunnable);
 	}
@@ -223,7 +229,7 @@ public class ListenText extends Activity implements Runnable , OnCompletionListe
 			for(int i = 0 ; i < (LyricList.size() - Index()) * 3.7 ; i ++ )
 				tempString += " \n";
 			textView.setText(tempString);
-			myHandler.postDelayed(this ,1000);
+			myHandler.postDelayed(this ,1700);
 		}
 	};
 

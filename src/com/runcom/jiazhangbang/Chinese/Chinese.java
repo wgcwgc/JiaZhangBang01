@@ -49,13 +49,34 @@ public class Chinese extends Activity
 			Toast.makeText(getApplicationContext() ,"请检查网络连接" ,Toast.LENGTH_SHORT).show();
 		}
 		else
-			startActivity(intent);
+			// if( !new
+			// ServerUtil().execute(Util.serverAddress).equals("success"))
+			// {
+			// Toast.makeText(getApplicationContext() ,"服务器未开启 !\n请联系网络管理员."
+			// ,Toast.LENGTH_SHORT).show();
+			// }
+			// else
+				startActivity(intent);
 	}
 
 	public void ListenAndWrite(View v )
 	{
-		Toast.makeText(getApplicationContext() ,"听写" ,Toast.LENGTH_SHORT).show();
+		// Toast.makeText(getApplicationContext() ,"听写"
+		// ,Toast.LENGTH_SHORT).show();
 
+		intent.putExtra("selected" ,selected);
+		intent.setClass(getApplicationContext() ,ListenText.class);
+		if(NetUtil.getNetworkState(getApplicationContext()) == NetUtil.NETWORK_NONE)
+		{
+			Toast.makeText(getApplicationContext() ,"请检查网络连接" ,Toast.LENGTH_SHORT).show();
+		}
+		else
+//			if(  !new ServerUtil().execute(Util.serverAddress).equals("success") )
+//			{
+//				Toast.makeText(getApplicationContext() ,"服务器未开启 !\n请联系网络管理员." ,Toast.LENGTH_SHORT).show();
+//			}
+//			else
+				startActivity(intent);
 	}
 
 	public void ReciteText(View v )

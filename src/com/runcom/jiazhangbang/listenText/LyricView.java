@@ -24,16 +24,16 @@ public class LyricView extends ScrollView
 	private Paint NotCurrentPaint;
 	private Paint ThirdCurrentPaint;
 	public float TextHigh = Util.sp2px(getContext() ,57);
-//	public float TextHigh = Util.sp2px(getContext() ,37);
+	// public float TextHigh = Util.sp2px(getContext() ,37);
 	float TextSize = Util.sp2px(getContext() ,15);
-	private int Index = 0;
+	private int Index = 0 , newIndex = 0;
 	float progress = 0;
 
 	private List < LyricContent > mySentenceEntities = new ArrayList < LyricContent >();
 
 	// ¹ö¶¯
 	final Handler handler = new Handler();
-	long duration = 30;
+	long duration = 57;
 	boolean isScrolled = true;
 	int currentIndex = 0;
 	long period = 1;
@@ -126,15 +126,16 @@ public class LyricView extends ScrollView
 		{
 			int leng = mySentenceEntities.get(Index).getLyric().length();
 			String content = mySentenceEntities.get(Index).getLyric().substring(0 ,(int) ((progress) * leng));
-			// if(Index > newIndex)
-			// {
-			// newIndex = Index;
-			// setScrolled(true);
-			// }
-			// if(Index == newIndex)
-			// {
-			// setScrolled(false);
-			// }
+			if(Index == newIndex)
+			{
+
+			}
+			else
+				if(Index > newIndex)
+				{
+					newIndex = Index;
+					high += TextHigh;
+				}
 			int distance[] =
 			{ 0, 220, 200, 170, 160, 150, 150, 150, 130, 140, 140, 130, 130, 120, 110, 100 };
 			int baseX = 0;
