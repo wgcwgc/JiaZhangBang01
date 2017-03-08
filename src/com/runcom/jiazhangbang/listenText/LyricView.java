@@ -126,16 +126,16 @@ public class LyricView extends ScrollView
 		{
 			int leng = mySentenceEntities.get(Index).getLyric().length();
 			String content = mySentenceEntities.get(Index).getLyric().substring(0 ,(int) ((progress) * leng));
-			if(Index == newIndex)
-			{
-
-			}
-			else
-				if(Index > newIndex)
-				{
-					newIndex = Index;
-					high += TextHigh;
-				}
+//			if(Index == newIndex)
+//			{
+//
+//			}
+//			else
+//				if(Index > newIndex)
+//				{
+//					newIndex = Index;
+//					high += (TextHigh - TextSize / 2);
+//				}
 			int distance[] =
 			{ 0, 220, 200, 170, 160, 150, 150, 150, 130, 140, 140, 130, 130, 120, 110, 100 };
 			int baseX = 0;

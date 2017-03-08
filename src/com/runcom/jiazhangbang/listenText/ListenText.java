@@ -179,8 +179,8 @@ public class ListenText extends Activity implements Runnable , OnCompletionListe
 		}
 		LyricList = mLrcRead.GetLyricContent();
 		mLyricView.setSentenceEntities(LyricList);
-		// String tempString = "";
-		// for(int i = 0 ; i < LyricList.size() ; i ++)
+		// String tempString = " \n \n \n \n";
+		// for(int i = 0 ; i < LyricList.size() ; i ++ )
 		// {
 		// tempString += (LyricList.get(i).getLyric() + "\n");
 		// }
@@ -213,23 +213,22 @@ public class ListenText extends Activity implements Runnable , OnCompletionListe
 			int indexTemp = Index();
 
 			Log.d("LOG" ,"Index(): " + indexTemp + " newIndex: " + newIndex);
-			if(indexTemp == newIndex)
-			{
-				mLyricView.setScrolled(false);
-			}
-			else
-				if(indexTemp > newIndex)
-				{
-					newIndex = indexTemp;
-					mLyricView.setScrolled(true);
-				}
+//			if(indexTemp == newIndex)
+//			{
+//				mLyricView.setScrolled(false);
+//			}
+//			else
+//				if(indexTemp > newIndex)
+//				{
+//					newIndex = indexTemp;
+//					mLyricView.setScrolled(true);
+//				}
 			String tempString = "";
-			// Log.d("LOG" ,"size(): " + LyricList.size() + " Index(): " +
-			// Index());
-			for(int i = 0 ; i < (LyricList.size() - Index()) * 3.7 ; i ++ )
+			Log.d("LOG" ,"size(): " + LyricList.size() + " Index(): " + Index());
+			for(int i = 0 ; i < (LyricList.size() - Index()) * 1.4; i ++ )
 				tempString += " \n";
 			textView.setText(tempString);
-			myHandler.postDelayed(this ,1700);
+			myHandler.postDelayed(this ,1500);
 		}
 	};
 

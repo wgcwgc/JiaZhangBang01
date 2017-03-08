@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.runcom.jiazhangbang.R;
 import com.runcom.jiazhangbang.listenText.ListenText;
+import com.runcom.jiazhangbang.listenWrite.ListenWrite;
 import com.runcom.jiazhangbang.util.NetUtil;
 import com.umeng.analytics.MobclickAgent;
 
@@ -65,7 +66,7 @@ public class Chinese extends Activity
 		// ,Toast.LENGTH_SHORT).show();
 
 		intent.putExtra("selected" ,selected);
-		intent.setClass(getApplicationContext() ,ListenText.class);
+		intent.setClass(getApplicationContext() ,ListenWrite.class);
 		if(NetUtil.getNetworkState(getApplicationContext()) == NetUtil.NETWORK_NONE)
 		{
 			Toast.makeText(getApplicationContext() ,"Çë¼ì²éÍøÂçÁ¬½Ó" ,Toast.LENGTH_SHORT).show();

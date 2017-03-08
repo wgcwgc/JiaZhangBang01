@@ -26,32 +26,7 @@
             android:layout_marginTop="2dp"
             android:src="@drawable/listen_text_down" />
     </RelativeLayout>
-
-    <com.runcom.jiazhangbang.listenText.LyricView
-        android:id="@+id/listenText_lyricShow"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/listenText_linearLayout_seekbar"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/listenText_topLinearLayout"
-        android:background="#969696"
-        android:ellipsize="marquee"
-        android:singleLine="true"
-        android:verticalScrollbarPosition="defaultPosition" >
-
-        <TextView
-            android:id="@+id/listenText_lyricView_textView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center_horizontal"
-            android:gravity="center_horizontal|center_vertical"
-            android:text="@string/hello_world"
-            android:lineSpacingExtra="17sp"
-            android:textColor="#25CB73"
-            android:textSize="22sp" />
-    </com.runcom.jiazhangbang.listenText.LyricView>
-
+    
     <LinearLayout
         android:id="@+id/listenText_linearLayout_seekbar"
         android:layout_width="match_parent"
@@ -93,6 +68,12 @@
         <ImageButton
             android:layout_width="57dp"
             android:layout_height="wrap_content"
+            android:onClick="detailSetting"
+            android:src="@drawable/listen_text_detail" />
+        
+        <ImageButton
+            android:layout_width="57dp"
+            android:layout_height="wrap_content"
             android:onClick="previousText"
             android:src="@drawable/listen_text_previous_text" />
 
@@ -115,5 +96,14 @@
             android:onClick="detailSetting"
             android:src="@drawable/listen_text_detail" />
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/listen_write_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/listenText_linearLayout_seekbar"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:text="正在听写..." />
 
 </RelativeLayout>
