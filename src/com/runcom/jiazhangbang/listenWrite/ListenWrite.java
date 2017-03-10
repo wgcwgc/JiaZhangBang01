@@ -33,6 +33,7 @@ public class ListenWrite extends Activity
 		actionbar.setDisplayShowTitleEnabled(true);
 		actionbar.setDisplayShowCustomEnabled(true);
 		actionbar.setTitle(" ÌýÐ´  " + ++ selected + "Äê¼¶");
+		
 
 	}
 

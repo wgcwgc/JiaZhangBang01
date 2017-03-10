@@ -47,7 +47,7 @@
             android:layout_gravity="center_horizontal"
             android:gravity="center_horizontal|center_vertical"
             android:text="@string/hello_world"
-            android:lineSpacingExtra="17sp"
+            android:lineSpacingExtra="30sp"
             android:textColor="#25CB73"
             android:textSize="22sp" />
     </com.runcom.jiazhangbang.listenText.LyricView>

@@ -231,11 +231,9 @@ public class LyricView extends ScrollView
 					else
 					{
 						currentY = getScrollY();
-						handler.postDelayed(this, duration);
-						currentIndex = (int) (width / 2 / 258);
-						// scrollTo(0, (int) (width / 2));
-						scrollBy(0, currentIndex);
-						// offsetTopAndBottom(currentIndex);
+						handler.postDelayed(this ,duration);
+						currentIndex ++ ;
+						scrollTo(0 ,currentIndex * 1);
 					}
 				}
 				else
