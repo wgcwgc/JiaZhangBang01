@@ -3,6 +3,7 @@ package com.runcom.jiazhangbang.listenText;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -93,23 +94,6 @@ public class LyricView extends ScrollView
 		NotCurrentPaint.setTypeface(Typeface.SERIF);
 		NotCurrentPaint.setColor(Color.parseColor("#726463"));
 
-		// this.setOnTouchListener(new OnTouchListener()
-		// {
-		//
-		// @Override
-		// public boolean onTouch(View v , MotionEvent event )
-		// {
-		// // TODO Auto-generated method stub
-		// setScrollX((int) event.getX());
-		// setScrollY((int) event.getY());
-		//
-		// Log.d("LOG" ,event.getX() + "");
-		// Log.d("LOG" ,event.getY() + "");
-		//
-		// return false;
-		// }
-		// });
-
 	}
 
 	@Override
@@ -126,16 +110,16 @@ public class LyricView extends ScrollView
 		{
 			int leng = mySentenceEntities.get(Index).getLyric().length();
 			String content = mySentenceEntities.get(Index).getLyric().substring(0 ,(int) ((progress) * leng));
- 			if(Index == newIndex)
- 			{
- 
- 			}
- 			else
- 				if(Index > newIndex)
- 				{
- 					newIndex = Index;
- 					high += (TextHigh + TextSize / 2);
- 				}
+			if(Index == newIndex)
+			{
+
+			}
+			else
+				if(Index > newIndex)
+				{
+					newIndex = Index;
+					high += (TextHigh + TextSize / 2);
+				}
 			int distance[] =
 			{ 0, 220, 200, 170, 160, 150, 150, 150, 130, 140, 140, 130, 130, 120, 110, 100 };
 			int baseX = 0;
@@ -180,16 +164,6 @@ public class LyricView extends ScrollView
 		this.width = w;
 	}
 
-	// @Override
-	// public boolean onTouchEvent(MotionEvent event )
-	// {
-	// // TODO Auto-generated method stub
-	//
-	// // System.out.println("x: " + event.getX() + " y: " + event.getY());
-	//
-	// return super.onTouchEvent(event);
-	// }
-
 	public void SetIndex(int index )
 	{
 		this.Index = index;
@@ -224,17 +198,17 @@ public class LyricView extends ScrollView
 						{
 							e.printStackTrace();
 						}
-						//currentIndex = 0;
-						scrollTo(0 ,currentIndex);
+						// currentIndex = 0;
+//						scrollTo(0 ,currentIndex);
 						handler.postDelayed(this ,period);
 					}
 					else
 					{
 						currentY = getScrollY();
-						handler.postDelayed(this, duration);
-						currentIndex = (int) (width / 2 / 258);
+						handler.postDelayed(this ,duration);
+						currentIndex = (int) (width / 2 / 318);
 						// scrollTo(0, (int) (width / 2));
-						scrollBy(0, currentIndex);
+						scrollBy(0 , 2);
 						// offsetTopAndBottom(currentIndex);
 					}
 				}
@@ -247,6 +221,7 @@ public class LyricView extends ScrollView
 		} ,duration);
 	}
 
+	@SuppressLint("ClickableViewAccessibility")
 	public boolean onTouchEvent(MotionEvent event )
 	{
 		int Action = event.getAction();
@@ -268,7 +243,6 @@ public class LyricView extends ScrollView
 				{
 					getParent().requestDisallowInterceptTouchEvent(true);
 				}
-
 				break;
 			case MotionEvent.ACTION_UP:
 				if(type == 0)

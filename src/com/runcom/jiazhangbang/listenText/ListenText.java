@@ -213,19 +213,19 @@ public class ListenText extends Activity implements Runnable , OnCompletionListe
 			int indexTemp = Index();
 
 			Log.d("LOG" ,"Index(): " + indexTemp + " newIndex: " + newIndex);
- 			if(indexTemp == newIndex)
- 			{
- 				mLyricView.setScrolled(false);
- 			}
- 			else
- 				if(indexTemp > newIndex)
- 				{
- 					newIndex = indexTemp;
- 					mLyricView.setScrolled(true);
- 				}
+			if(indexTemp == newIndex)
+			{
+				mLyricView.setScrolled(false);
+			}
+			else
+				if(indexTemp > newIndex)
+				{
+					newIndex = indexTemp;
+					mLyricView.setScrolled(true);
+				}
 			String tempString = "";
 			Log.d("LOG" ,"size(): " + LyricList.size() + " Index(): " + Index());
-			for(int i = 0 ; i < (LyricList.size() - Index()) * 1.1; i ++ )
+			for(int i = 0 ; i < (LyricList.size() - Index()) * 1.1 ; i ++ )
 				tempString += " \n";
 			textView.setText(tempString);
 			myHandler.postDelayed(this ,1700);
@@ -249,16 +249,11 @@ public class ListenText extends Activity implements Runnable , OnCompletionListe
 					{
 						index = i;
 						progress = 0;
-						// Log.d("LOG" ,"0000000000000000000");
 					}
 					if(CurrentTime > LyricList.get(i).getLyricTime() && CurrentTime < LyricList.get(i + 1).getLyricTime())
 					{
 						index = i;
 						progress = (float) ((float) (CurrentTime - LyricList.get(i).getLyricTime()) / (float) (LyricList.get(i + 1).getLyricTime() - LyricList.get(i).getLyricTime()));
-						// Log.d("LOG" ,"1: " + CurrentTime + " 2: " +
-						// LyricList.get(i).getLyricTime() + " 3: " +
-						// LyricList.get(i + 1).getLyricTime());
-						// Log.d("LOG" ,"progresssssssssssssssss:" + progress);
 					}
 				}
 
@@ -266,12 +261,9 @@ public class ListenText extends Activity implements Runnable , OnCompletionListe
 				{
 					index = i;
 					progress = 1;
-					// Log.d("LOG" ,"111111111111111111:" + progress);
-
 				}
 			}
 		}
-		// Log.d("LOG" , "111111111111111111:" + progress);
 		return progress;
 	}
 
@@ -336,10 +328,6 @@ public class ListenText extends Activity implements Runnable , OnCompletionListe
 
 		ArrayAdapter < String > adapter;
 		adapter = new ArrayAdapter < String >(getApplicationContext() , R.layout.spinner_item , R.id.spinnerItem_textView , play_list_copy);
-		// adapter = new ArrayAdapter < String >(getApplicationContext() ,
-		// android.R.layout.simple_spinner_dropdown_item , play_list_copy);
-
-		// adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
 		spinner.setAdapter(adapter);
 		spinner.setOnItemSelectedListener(new OnItemSelectedListener()
@@ -349,9 +337,6 @@ public class ListenText extends Activity implements Runnable , OnCompletionListe
 			public void onItemSelected(AdapterView < ? > arg0 , View arg1 , int arg2 , long arg3 )
 			{
 				// TODO Auto-generated method stub
-				// Toast.makeText(getApplicationContext() ,"您选择了" +
-				// arg0.getItemAtPosition(arg2).toString() + ":" + arg2
-				// ,Toast.LENGTH_SHORT).show();
 				currIndex = arg2;
 				start();
 			}
@@ -359,14 +344,10 @@ public class ListenText extends Activity implements Runnable , OnCompletionListe
 			@Override
 			public void onNothingSelected(AdapterView < ? > arg0 )
 			{
-				// TODO Auto-generated method stub
-
 			}
 		});
 
-		// Log.d("LOG" ,"source: " + source);
 		initLyric();
-		// start();
 	}
 
 	public String getName(String url )
@@ -398,12 +379,11 @@ public class ListenText extends Activity implements Runnable , OnCompletionListe
 			@Override
 			public void run()
 			{
-				// MainActivity.this.startActivity(intent);
 				mp.stop();
 				finish();
 			}
 		};
-		timer.schedule(task ,1000 * time);// 打死都不能删除的
+		timer.schedule(task ,1000 * time);
 	}
 
 	int selectedId = R.id.action_oo;
@@ -423,29 +403,21 @@ public class ListenText extends Activity implements Runnable , OnCompletionListe
 				{
 					case R.id.action_5:
 						settingFinishTime(5 * 60);
-						// settingFinishTime(5);
-						// item.setChecked(true);
 						selectedId = R.id.action_5;
 						break;
 
 					case R.id.action_15:
 						settingFinishTime(15 * 60);
-						// settingFinishTime(15);
-						// item.setChecked(true);
 						selectedId = R.id.action_15;
 						break;
 
 					case R.id.action_30:
 						settingFinishTime(30 * 60);
-						// settingFinishTime(30);
-						// item.setChecked(true);
 						selectedId = R.id.action_30;
 						break;
 
 					case R.id.action_60:
 						settingFinishTime(60 * 60);
-						// settingFinishTime(60);
-						// item.setChecked(true);
 						selectedId = R.id.action_60;
 						break;
 
@@ -454,47 +426,12 @@ public class ListenText extends Activity implements Runnable , OnCompletionListe
 						break;
 
 				}
-				// item.setChecked(true);
 				Toast.makeText(getApplicationContext() ,"【" + item.getTitle() + "】" ,Toast.LENGTH_SHORT).show();
-				// TODO Auto-generated method stub
 				return true;
 			}
 		});
-		// Toast.makeText(getApplicationContext()
-		// ,popup.getMenu().findItem(selectedId).getItemId() + ""
-		// ,Toast.LENGTH_SHORT).show();
 		popup.getMenu().findItem(selectedId).setChecked(true);
 	}
-
-	// @Override
-	// public boolean onTouchEvent(MotionEvent event )
-	// {
-	// // TODO Auto-generated method stub
-	//
-	// System.out.println("x: " + event.getX() + " y: " + event.getY());
-	//
-	// int index = Index() - 1;
-	// // mp.seekTo(index);
-	// //
-	// **********************************************************************************************************************
-	// // progress == time * 100;
-	// Log.d("LOG" ,mp.getCurrentPosition() + "");
-	// // Toast.makeText(getApplicationContext() ,"left: " + view.getLeft() +
-	// // " top: " + view.getTop() + " right: " + view.getRight() + " bottom: "
-	// // + view.getBottom() ,Toast.LENGTH_SHORT).show();
-	// return super.onTouchEvent(event);
-	// }
-
-	// public void lyricOnclick(View v )
-	// {
-	//
-	// // Toast.makeText(getApplicationContext() ,"x: " + view.getX() + " y: "
-	// // + view.getY() ,Toast.LENGTH_SHORT).show();
-	// // Toast.makeText(getApplicationContext() ,"left: " + view.getLeft() +
-	// // " top: " + view.getTop() + " right: " + view.getRight() + " bottom: "
-	// // + view.getBottom() ,Toast.LENGTH_SHORT).show();
-	//
-	// }
 
 	// 播放按钮
 	public void playText(View v )
@@ -540,14 +477,10 @@ public class ListenText extends Activity implements Runnable , OnCompletionListe
 			if(play_list.size() <= 0)
 			{
 				Toast.makeText(getApplicationContext() ,"播放列表为空" ,Toast.LENGTH_SHORT).show();
-				// currIndex = -1;
-				// next();
 			}
 			else
 			{
 				Toast.makeText(getApplicationContext() ,"当前已经是第一首了" ,Toast.LENGTH_SHORT).show();
-				// currIndex = -1;
-				// next();
 			}
 	}
 
@@ -597,7 +530,6 @@ public class ListenText extends Activity implements Runnable , OnCompletionListe
 			try
 			{
 				// TODO
-
 				// AssetManager assetManager = getAssets();
 				// AssetFileDescriptor afd = assetManager.openFd(SongPath);
 				// mp.setDataSource(afd.getFileDescriptor());
@@ -630,13 +562,9 @@ public class ListenText extends Activity implements Runnable , OnCompletionListe
 		if(currIndex < play_list.size() - 1 && currIndex >= 0)
 		{
 			next();
-			// ++ currIndex;
-			// start();
 		}
 		else
 		{
-			// initSeekBar();
-			// tv_showName.setText("");
 			tv_currTime.setText("00:00");
 			Toast.makeText(this ,"播放完毕" ,Toast.LENGTH_SHORT).show();
 		}
@@ -652,8 +580,6 @@ public class ListenText extends Activity implements Runnable , OnCompletionListe
 	// 初始化SeekBar
 	private void initSeekBar()
 	{
-		// tv_showName.setText("");
-		// tv_currTime.setText("00:00");
 		seekBar.setMax(mp.getDuration());
 		seekBar.setProgress(0);
 		tv_totalTime.setText(toTime(mp.getDuration()));
