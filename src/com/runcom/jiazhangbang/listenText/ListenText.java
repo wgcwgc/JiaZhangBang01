@@ -92,7 +92,7 @@ public class ListenText extends Activity implements Runnable , OnCompletionListe
 	protected void onCreate(Bundle savedInstanceState )
 	{
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.audio_play);
+		setContentView(R.layout.listen_text);
 
 		intent = getIntent();
 

@@ -57,6 +57,11 @@
             android:icon="@drawable/ic_come_back"
             android:parentActivityName="com.runcom.jiazhangbang.Chinese.Chinese" >
         </activity>
+        <activity
+            android:name="com.runcom.jiazhangbang.setting.PlaySetting"
+            android:icon="@drawable/ic_come_back"
+            android:parentActivityName="com.runcom.jiazhangbang.listenWrite.ListenWrite" >
+        </activity>
     </application>
 
 </manifest>

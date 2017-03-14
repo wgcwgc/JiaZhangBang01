@@ -1,4 +1,4 @@
-package com.runcom.wgcwgc.storage;
+package com.runcom.jiazhangbang.storage;
 
 import android.content.Context;
 import android.content.SharedPreferences;
