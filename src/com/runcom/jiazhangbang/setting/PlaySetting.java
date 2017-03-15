@@ -11,6 +11,9 @@ import android.view.View.OnClickListener;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageView;
+import android.widget.NumberPicker;
+import android.widget.NumberPicker.Formatter;
+import android.widget.NumberPicker.OnValueChangeListener;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,10 +25,11 @@ import com.umeng.analytics.MobclickAgent;
 public class PlaySetting extends Activity
 {
 
-	private Switch English_switch , Chinese_switch , All_swith;
+	private Switch Sequence_switch , Random_switch , Count_swith;
 	private int flag = 0;
-	private final String sharedPreferencesKey = "Setting";
-	private final String sharedPreferencesSubtitleFlag = "subtitleShow";
+	private static final String sharedPreferencesKey = "ListenWriteSetting";
+	private static final String sharedPreferencesPlayModeFlag = "ListenWritePlayMode";
+	private static final String sharedPreferencesIntervalSecond = "ListenWriteIntervalSecond";
 
 	TextView setting_me_textView , setting_log_textView ,
 	        setting_account_textView , setting_mark_textView;
@@ -35,6 +39,8 @@ public class PlaySetting extends Activity
 	        setting_log_detail;
 	ImageView setting_clearCache_detail , setting_opinion_detail ,
 	        setting_checkUpdate_detail , setting_aboutUs_detail;
+
+	private NumberPicker numberPicker;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState )
@@ -60,17 +66,9 @@ public class PlaySetting extends Activity
 
 	private void initSwitch()
 	{
-		// me
-		setting_me_textView = (TextView) findViewById(R.id.setting_me_textView);
-		setting_me_textView.setOnClickListener(listener);
-		setting_me_detail = (ImageView) findViewById(R.id.setting_me_detail);
-		setting_me_detail.setOnClickListener(listener);
-
 		// account
 		setting_account_textView = (TextView) findViewById(R.id.setting_account_textView);
 		setting_account_textView.setOnClickListener(listener);
-		setting_account_detail = (ImageView) findViewById(R.id.setting_account_detail);
-		setting_account_detail.setOnClickListener(listener);
 
 		setting_mark_textView = (TextView) findViewById(R.id.setting_mark_textView);
 		setting_mark_textView.setOnClickListener(listener);
@@ -103,36 +101,39 @@ public class PlaySetting extends Activity
 		setting_aboutUs_detail = (ImageView) findViewById(R.id.setting_aboutUs_detail);
 		setting_aboutUs_detail.setOnClickListener(listener);
 
+		// other setting
+		numberPicker = (NumberPicker) findViewById(R.id.setting_second_numberPicker);
+		numberPicker.setOnClickListener(listener);
 		// subtitleShow_switch
-		English_switch = (Switch) findViewById(R.id.EnglishSwitch);
-		Chinese_switch = (Switch) findViewById(R.id.ChineseSwitch);
-		All_swith = (Switch) findViewById(R.id.AllSwitch);
+		Sequence_switch = (Switch) findViewById(R.id.SequenceSwitch);
+		Random_switch = (Switch) findViewById(R.id.RandomSwitch);
+		Count_swith = (Switch) findViewById(R.id.CountSwitch);
 
-		flag = MySharedPreferences.getValue(getApplicationContext() ,sharedPreferencesKey ,sharedPreferencesSubtitleFlag ,0);
+		flag = MySharedPreferences.getValue(getApplicationContext() ,sharedPreferencesKey ,sharedPreferencesPlayModeFlag ,0);
 		if(1 == flag)
 		{
-			English_switch.setEnabled(false);
-			Chinese_switch.setEnabled(true);
-			Chinese_switch.setChecked(true);
-			All_swith.setEnabled(false);
+			Sequence_switch.setEnabled(false);
+			Random_switch.setEnabled(true);
+			Random_switch.setChecked(true);
+			Count_swith.setEnabled(false);
 		}
 		else
 			if(2 == flag)
 			{
-				English_switch.setEnabled(false);
-				Chinese_switch.setEnabled(false);
-				All_swith.setEnabled(true);
-				All_swith.setChecked(true);
+				Sequence_switch.setEnabled(false);
+				Random_switch.setEnabled(false);
+				Count_swith.setEnabled(true);
+				Count_swith.setChecked(true);
 			}
 			else
 			{
-				English_switch.setEnabled(true);
-				English_switch.setChecked(true);
-				Chinese_switch.setEnabled(false);
-				All_swith.setEnabled(false);
+				Sequence_switch.setEnabled(true);
+				Sequence_switch.setChecked(true);
+				Random_switch.setEnabled(false);
+				Count_swith.setEnabled(false);
 			}
 
-		English_switch.setOnCheckedChangeListener(new OnCheckedChangeListener()
+		Sequence_switch.setOnCheckedChangeListener(new OnCheckedChangeListener()
 		{
 
 			@Override
@@ -140,19 +141,19 @@ public class PlaySetting extends Activity
 			{
 				if(isChecked)
 				{
-					Chinese_switch.setEnabled(false);
-					All_swith.setEnabled(false);
+					Random_switch.setEnabled(false);
+					Count_swith.setEnabled(false);
 					flag = 0;
-					MySharedPreferences.putValue(getApplicationContext() ,sharedPreferencesKey ,sharedPreferencesSubtitleFlag ,flag);
+					MySharedPreferences.putValue(getApplicationContext() ,sharedPreferencesKey ,sharedPreferencesPlayModeFlag ,flag);
 				}
 				else
 				{
-					Chinese_switch.setEnabled(true);
-					All_swith.setEnabled(true);
+					Random_switch.setEnabled(true);
+					Count_swith.setEnabled(true);
 				}
 			}
 		});
-		Chinese_switch.setOnCheckedChangeListener(new OnCheckedChangeListener()
+		Random_switch.setOnCheckedChangeListener(new OnCheckedChangeListener()
 		{
 
 			@Override
@@ -160,20 +161,20 @@ public class PlaySetting extends Activity
 			{
 				if(isChecked)
 				{
-					English_switch.setEnabled(false);
-					All_swith.setEnabled(false);
+					Sequence_switch.setEnabled(false);
+					Count_swith.setEnabled(false);
 					flag = 1;
-					MySharedPreferences.putValue(getApplicationContext() ,sharedPreferencesKey ,sharedPreferencesSubtitleFlag ,flag);
+					MySharedPreferences.putValue(getApplicationContext() ,sharedPreferencesKey ,sharedPreferencesPlayModeFlag ,flag);
 				}
 				else
 				{
-					English_switch.setEnabled(true);
-					All_swith.setEnabled(true);
+					Sequence_switch.setEnabled(true);
+					Count_swith.setEnabled(true);
 
 				}
 			}
 		});
-		All_swith.setOnCheckedChangeListener(new OnCheckedChangeListener()
+		Count_swith.setOnCheckedChangeListener(new OnCheckedChangeListener()
 		{
 
 			@Override
@@ -181,19 +182,53 @@ public class PlaySetting extends Activity
 			{
 				if(isChecked)
 				{
-					English_switch.setEnabled(false);
-					Chinese_switch.setEnabled(false);
+					Sequence_switch.setEnabled(false);
+					Random_switch.setEnabled(false);
 					flag = 2;
-					MySharedPreferences.putValue(PlaySetting.this ,sharedPreferencesKey ,"subtitleShow" ,flag);
+					MySharedPreferences.putValue(getApplicationContext() ,sharedPreferencesKey ,sharedPreferencesPlayModeFlag ,flag);
 				}
 				else
 				{
-					English_switch.setEnabled(true);
-					Chinese_switch.setEnabled(true);
+					Sequence_switch.setEnabled(true);
+					Random_switch.setEnabled(true);
 				}
 			}
 		});
 
+		initNumberPicker();
+
+	}
+
+	private void initNumberPicker()
+	{
+		numberPicker.setMaxValue(10);
+		numberPicker.setMinValue(0);
+		numberPicker.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);// 不可用户编辑输入
+		numberPicker.setFormatter(new Formatter()
+		{
+
+			@Override
+			public String format(int value )
+			{
+				if(value < 10)
+				{
+					return "0" + String.valueOf(value);
+				}
+				return String.valueOf(value);
+			}
+		});
+
+		int value = MySharedPreferences.getValue(getApplicationContext() ,sharedPreferencesKey ,sharedPreferencesIntervalSecond ,0);
+		numberPicker.setValue(value);
+		numberPicker.setOnValueChangedListener(new OnValueChangeListener()
+		{
+			@Override
+			public void onValueChange(NumberPicker picker , int oldVal , int newVal )
+			{
+				numberPicker.setValue(newVal);
+				MySharedPreferences.putValue(getApplicationContext() ,sharedPreferencesKey ,sharedPreferencesIntervalSecond ,newVal);
+			}
+		});
 	}
 
 	/**
@@ -206,17 +241,10 @@ public class PlaySetting extends Activity
 		{
 			switch(v.getId())
 			{
-				case R.id.setting_me_textView:
-					Toast.makeText(getApplicationContext() ,"me..." ,Toast.LENGTH_SHORT).show();
-					break;
-				case R.id.setting_me_detail:
-					Toast.makeText(getApplicationContext() ,"me_detail..." ,Toast.LENGTH_SHORT).show();
+				case R.id.setting_second_numberPicker:
 					break;
 				case R.id.setting_account_textView:
 					Toast.makeText(getApplicationContext() ,"account..." ,Toast.LENGTH_SHORT).show();
-					break;
-				case R.id.setting_account_detail:
-					Toast.makeText(getApplicationContext() ,"account_detail..." ,Toast.LENGTH_SHORT).show();
 					break;
 				case R.id.setting_mark_textView:
 					Toast.makeText(getApplicationContext() ,"mark..." ,Toast.LENGTH_SHORT).show();
@@ -256,6 +284,7 @@ public class PlaySetting extends Activity
 					break;
 			}
 		}
+
 	};
 
 	@Override

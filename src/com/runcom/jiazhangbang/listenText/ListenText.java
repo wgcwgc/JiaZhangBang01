@@ -199,7 +199,7 @@ public class ListenText extends Activity implements Runnable , OnCompletionListe
 			mLyricView.SetIndex(Index());
 			mLyricView.SetProgress(Progress());
 			mLyricView.invalidate();
-			mHandler.postDelayed(mRunnable ,10);
+			mHandler.postDelayed(mRunnable ,1);
 		}
 	};
 
@@ -309,7 +309,7 @@ public class ListenText extends Activity implements Runnable , OnCompletionListe
 		seekBar.setOnSeekBarChangeListener(this);
 		tv_currTime = (TextView) findViewById(R.id.listenText_textView_curr_time);
 		tv_totalTime = (TextView) findViewById(R.id.listenText_textView_total_time);
-		textView = (TextView) findViewById(R.id.listenText_lyricView_textView);
+		textView = (TextView) findViewById(R.id.listenWrite_lyricView_textView);
 		// tv_showName = (TextView)
 		// findViewById(R.id.listenText_textView_showName);
 		// mp = new MediaPlayer();

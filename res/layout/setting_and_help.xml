@@ -26,7 +26,7 @@
                 android:layout_marginTop="10.0dip"
                 android:gravity="center_vertical"
                 android:paddingLeft="4.0dip"
-                android:text="字幕显示"
+                android:text="播放方式"
                 android:textColor="#ff888888"
                 android:textSize="16.0sp" />
 
@@ -43,25 +43,25 @@
                 android:paddingTop="10.0dip" >
 
                 <Switch
-                    android:id="@+id/EnglishSwitch"
+                    android:id="@+id/SequenceSwitch"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:checked="false"
-                    android:text="仅显示英文" />
+                    android:text="顺序播放" />
 
                 <Switch
-                    android:id="@+id/ChineseSwitch"
+                    android:id="@+id/RandomSwitch"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:checked="false"
-                    android:text="仅显示中文" />
+                    android:text="随机播放" />
 
                 <Switch
-                    android:id="@+id/AllSwitch"
+                    android:id="@+id/CountSwitch"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:checked="false"
-                    android:text="二者全显示" />
+                    android:text="字数播放" />
             </LinearLayout>
 
             <TextView
@@ -71,63 +71,7 @@
                 android:layout_marginTop="10.0dip"
                 android:gravity="center_vertical"
                 android:paddingLeft="4.0dip"
-                android:text="我"
-                android:textColor="#ff888888"
-                android:textSize="16.0sp" />
-
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content" >
-
-                <TableLayout
-                    android:id="@+id/MorePageTableLayout_Favorite"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:shrinkColumns="0"
-                    android:stretchColumns="0" >
-
-                    <TableRow
-                        android:id="@+id/more_page_row0"
-                        android:layout_width="fill_parent"
-                        android:layout_marginLeft="2.0dip"
-                        android:layout_marginRight="2.0dip"
-                        android:background="@drawable/setting_background"
-                        android:paddingBottom="16.0dip"
-                        android:paddingTop="8.0dip" >
-
-                        <TextView
-                            android:id="@+id/setting_me_textView"
-                            android:layout_width="wrap_content"
-                            android:layout_height="fill_parent"
-                            android:drawableLeft="@drawable/setting_me"
-                            android:drawablePadding="10.0dip"
-                            android:gravity="center_vertical"
-                            android:includeFontPadding="false"
-                            android:paddingLeft="17.0dip"
-                            android:text="我"
-                            android:textColor="#ff333333"
-                            android:textSize="16.0sp" />
-
-                        <ImageView
-                            android:id="@+id/setting_me_detail"
-                            android:layout_width="wrap_content"
-                            android:layout_height="fill_parent"
-                            android:layout_gravity="right"
-                            android:gravity="center_vertical"
-                            android:paddingRight="20.0dip"
-                            android:src="@drawable/setting_detail" />
-                    </TableRow>
-                </TableLayout>
-            </LinearLayout>
-
-            <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10.0dip"
-                android:layout_marginTop="10.0dip"
-                android:gravity="center_vertical"
-                android:paddingLeft="4.0dip"
-                android:text="账户"
+                android:text="其他设置"
                 android:textColor="#ff888888"
                 android:textSize="16.0sp" />
 
@@ -154,25 +98,24 @@
 
                         <TextView
                             android:id="@+id/setting_account_textView"
-                            android:layout_width="wrap_content"
+                            android:layout_width="258dp"
                             android:layout_height="fill_parent"
                             android:drawableLeft="@drawable/setting_account"
-                            android:drawablePadding="10.0dip"
+                            android:drawablePadding="10dp"
                             android:gravity="center_vertical"
                             android:includeFontPadding="false"
-                            android:paddingLeft="17.0dip"
-                            android:text="账号管理"
+                            android:paddingLeft="17dp"
+                            android:text="两个词语间隔秒数"
                             android:textColor="#ff333333"
-                            android:textSize="16.0sp" />
+                            android:textSize="16sp" />
 
-                        <ImageView
-                            android:id="@+id/setting_account_detail"
+                        <NumberPicker
+                            android:id="@+id/setting_second_numberPicker"
                             android:layout_width="wrap_content"
-                            android:layout_height="fill_parent"
+                            android:layout_height="wrap_content"
                             android:layout_gravity="right"
-                            android:gravity="center_vertical"
-                            android:paddingRight="20.0dip"
-                            android:src="@drawable/setting_detail" />
+                            android:gravity="center_horizontal"
+                            android:paddingRight="27dp" />
                     </TableRow>
 
                     <TableRow
@@ -193,7 +136,7 @@
                             android:gravity="center_vertical"
                             android:includeFontPadding="false"
                             android:paddingLeft="17.0dip"
-                            android:text="我的收藏"
+                            android:text="每个词语阅读次数"
                             android:textColor="#ff333333"
                             android:textSize="16.0sp" />
 
@@ -225,7 +168,7 @@
                             android:gravity="center_vertical"
                             android:includeFontPadding="false"
                             android:paddingLeft="17.0dip"
-                            android:text="浏览记录"
+                            android:text="允许中间查看"
                             android:textColor="#ff333333"
                             android:textSize="16.0sp" />
 

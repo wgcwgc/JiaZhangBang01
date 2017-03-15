@@ -14,6 +14,7 @@ import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnBufferingUpdateListener;
 import android.media.MediaPlayer.OnCompletionListener;
@@ -54,9 +55,7 @@ public class ListenWrite extends Activity implements Runnable , OnCompletionList
 	// seekbar
 	private SeekBar seekBar;
 	private ImageButton btnPlay;
-	@SuppressWarnings("unused")
-	private TextView tv_currTime , tv_totalTime , tv_showName , tv_lrc ,
-	        tv_hint;
+	private TextView tv_currTime , tv_totalTime , tv_lrc , tv_nameShow;
 	List < String > play_list = new ArrayList < String >();
 	List < String > play_list_copy = new ArrayList < String >();
 
@@ -176,12 +175,7 @@ public class ListenWrite extends Activity implements Runnable , OnCompletionList
 		}
 		LyricList = mLrcRead.GetLyricContent();
 		mLyricView.setSentenceEntities(LyricList);
-		// String tempString = " \n \n \n \n";
-		// for(int i = 0 ; i < LyricList.size() ; i ++ )
-		// {
-		// tempString += (LyricList.get(i).getLyric() + "\n");
-		// }
-		// textView.setText(tempString);
+		mLyricView.setBackgroundColor(Color.parseColor("#969696"));
 		mHandler.post(mRunnable);
 		myHandler.post(myRunnable);
 	}
@@ -202,7 +196,7 @@ public class ListenWrite extends Activity implements Runnable , OnCompletionList
 
 				defaultLyricPathFile.createNewFile();
 				BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(defaultLyricPathFile , false));
-				bufferedWriter.write("[00:00.00] ... \r\n");
+				bufferedWriter.write("[00:00.00] \r\n");
 				bufferedWriter.flush();
 				bufferedWriter.close();
 			}
@@ -214,14 +208,10 @@ public class ListenWrite extends Activity implements Runnable , OnCompletionList
 		}
 		LyricList = mLrcRead.GetLyricContent();
 		mLyricView.setSentenceEntities(LyricList);
-		// String tempString = " \n \n \n \n";
-		// for(int i = 0 ; i < LyricList.size() ; i ++ )
-		// {
-		// tempString += (LyricList.get(i).getLyric() + "\n");
-		// }
-		// textView.setText(tempString);
-		mHandler.post(mRunnable);
-		myHandler.post(myRunnable);
+		// tv_lrc.setText("ÕýÔÚÌýÐ´...");
+		mLyricView.setBackground(getResources().getDrawable(R.drawable.ic_launcher));
+		// mHandler.post(mRunnable);
+		// myHandler.post(myRunnable);
 	}
 
 	Handler mHandler = new Handler();
@@ -330,8 +320,8 @@ public class ListenWrite extends Activity implements Runnable , OnCompletionList
 		seekBar.setOnSeekBarChangeListener(this);
 		tv_currTime = (TextView) findViewById(R.id.listenText_textView_curr_time);
 		tv_totalTime = (TextView) findViewById(R.id.listenText_textView_total_time);
-		tv_lrc = (TextView) findViewById(R.id.listenText_lyricView_textView);
-		tv_hint = (TextView) findViewById(R.id.listen_write_textView);
+		tv_lrc = (TextView) findViewById(R.id.listenWrite_lyricView_textView);
+		tv_nameShow = (TextView) findViewById(R.id.listen_write_textView_nameShow);
 
 		mp.setOnBufferingUpdateListener(this);
 		play_list.add(source1);
@@ -370,7 +360,6 @@ public class ListenWrite extends Activity implements Runnable , OnCompletionList
 	public String getName(String url )
 	{
 		return url.contains("/") ? url.substring(url.lastIndexOf("/") + 1 ,url.lastIndexOf(".")) : url.substring(0 ,url.lastIndexOf("."));
-
 	}
 
 	public Handler hander = new Handler()
@@ -408,6 +397,7 @@ public class ListenWrite extends Activity implements Runnable , OnCompletionList
 
 			case 1:// ÏÔÊ¾
 				initLyric();
+
 				text_currentState = 0;
 
 		}
@@ -512,18 +502,18 @@ public class ListenWrite extends Activity implements Runnable , OnCompletionList
 		{
 			case IDLE:
 				start();
-				tv_hint.setText("ÏÐÖÃÕýÔÚÌýÐ´...");
+				tv_nameShow.setText("ÏÐÖÃÕýÔÚÌýÐ´...");
 				break;
 			case PAUSE:
 				mp.pause();
 				btnPlay.setImageResource(R.drawable.play_pause);
 				play_currentState = START;
-				tv_hint.setText("ÔÝÍ£ÌýÐ´...");
+				tv_nameShow.setText("ÔÝÍ£ÌýÐ´...");
 				break;
 			case START:
 				mp.start();
 				btnPlay.setImageResource(R.drawable.play_start);
-				tv_hint.setText("ÕýÔÚÌýÐ´...");
+				tv_nameShow.setText("ÕýÔÚÌýÐ´...");
 				play_currentState = PAUSE;
 		}
 
