@@ -10,7 +10,6 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import android.os.AsyncTask;
 import android.util.Log;
 
-@SuppressWarnings("deprecation")
 public class ServerUtil extends AsyncTask < String , String , String >
 {
 
@@ -30,7 +29,6 @@ public class ServerUtil extends AsyncTask < String , String , String >
 		{
 			HttpGet get = new HttpGet(params[0]);
 			Log.d("LOG" ,params[0]);
-			@SuppressWarnings("resource")
 			HttpResponse response = new DefaultHttpClient().execute(get);
 
 			Log.d("LOG" ,params[0]);
@@ -41,13 +39,11 @@ public class ServerUtil extends AsyncTask < String , String , String >
 		}
 		catch(ClientProtocolException e)
 		{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return "ClientError";
 		}
 		catch(IOException e)
 		{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return "ServerError";
 		}

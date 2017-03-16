@@ -2,9 +2,10 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ffefebe7" >
+    android:background="#BDBBB9" >
 
     <ScrollView
+        android:id="@+id/scrollView1"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:fadingEdge="none" >
@@ -15,32 +16,21 @@
             android:gravity="center_vertical"
             android:orientation="vertical"
             android:paddingBottom="60.0dip"
-            android:paddingLeft="10.0dip"
-            android:paddingRight="10.0dip"
+            android:paddingLeft="0.0dip"
+            android:paddingRight="0.0dip"
             android:paddingTop="10.0dip" >
-
-            <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10.0dip"
-                android:layout_marginTop="10.0dip"
-                android:gravity="center_vertical"
-                android:paddingLeft="4.0dip"
-                android:text="播放方式"
-                android:textColor="#ff888888"
-                android:textSize="16.0sp" />
 
             <LinearLayout
                 android:id="@+id/top_relative"
                 android:layout_width="fill_parent"
                 android:layout_height="99dp"
                 android:layout_weight="0.0"
-                android:background="@drawable/setting_background"
+                android:background="#BDBBB9"
                 android:orientation="vertical"
                 android:paddingEnd="10.0dip"
                 android:paddingLeft="10.0dip"
                 android:paddingRight="10.0dip"
-                android:paddingTop="10.0dip" >
+                android:paddingTop="0.0dip" >
 
                 <Switch
                     android:id="@+id/SequenceSwitch"
@@ -65,26 +55,24 @@
             </LinearLayout>
 
             <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10.0dip"
-                android:layout_marginTop="10.0dip"
-                android:gravity="center_vertical"
-                android:paddingLeft="4.0dip"
-                android:text="其他设置"
-                android:textColor="#ff888888"
-                android:textSize="16.0sp" />
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#000000"
+                android:text="基本设置" />
 
             <LinearLayout
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content" >
 
                 <TableLayout
                     android:id="@+id/MorePageTableLayout_Follow"
-                    android:layout_width="fill_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:background="#BDBBB9"
+                    android:gravity="center_vertical"
                     android:paddingLeft="1.0dip"
-                    android:shrinkColumns="0"
+                    android:shrinkColumns="1"
                     android:stretchColumns="0" >
 
                     <TableRow
@@ -92,38 +80,38 @@
                         android:layout_width="fill_parent"
                         android:layout_marginLeft="2.0dip"
                         android:layout_marginRight="2.0dip"
-                        android:background="@drawable/setting_background"
                         android:paddingBottom="16.0dip"
                         android:paddingTop="16.0dip" >
 
                         <TextView
                             android:id="@+id/setting_account_textView"
-                            android:layout_width="258dp"
+                            android:layout_width="222dp"
                             android:layout_height="fill_parent"
-                            android:drawableLeft="@drawable/setting_account"
-                            android:drawablePadding="10dp"
                             android:gravity="center_vertical"
                             android:includeFontPadding="false"
-                            android:paddingLeft="17dp"
+                            android:paddingLeft="17.0dip"
                             android:text="两个词语间隔秒数"
                             android:textColor="#ff333333"
                             android:textSize="16sp" />
 
                         <NumberPicker
-                            android:id="@+id/setting_second_numberPicker"
+                            android:id="@+id/setting_intervalNumberPicker"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="right"
-                            android:gravity="center_horizontal"
-                            android:paddingRight="27dp" />
+                            android:layout_gravity="center_horizontal"
+                            android:gravity="center_horizontal|center_vertical" />
                     </TableRow>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="1dp"
+                        android:background="#000000" />
 
                     <TableRow
                         android:id="@+id/more_page_row2"
                         android:layout_width="fill_parent"
                         android:layout_marginLeft="2.0dip"
                         android:layout_marginRight="2.0dip"
-                        android:background="@drawable/setting_background"
                         android:paddingBottom="16.0dip"
                         android:paddingTop="16.0dip" >
 
@@ -131,8 +119,6 @@
                             android:id="@+id/setting_mark_textView"
                             android:layout_width="wrap_content"
                             android:layout_height="fill_parent"
-                            android:drawableLeft="@drawable/setting_mark"
-                            android:drawablePadding="10.0dip"
                             android:gravity="center_vertical"
                             android:includeFontPadding="false"
                             android:paddingLeft="17.0dip"
@@ -140,22 +126,24 @@
                             android:textColor="#ff333333"
                             android:textSize="16.0sp" />
 
-                        <ImageView
-                            android:id="@+id/setting_mark_detail"
+                        <NumberPicker
+                            android:id="@+id/setting_frequencyNumberPicker"
                             android:layout_width="wrap_content"
-                            android:layout_height="fill_parent"
-                            android:layout_gravity="right"
-                            android:gravity="center_vertical"
-                            android:paddingRight="20.0dip"
-                            android:src="@drawable/setting_detail" />
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:gravity="center_horizontal|center_vertical" />
                     </TableRow>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="1dp"
+                        android:background="#000000" />
 
                     <TableRow
                         android:id="@+id/more_page_row3"
                         android:layout_width="fill_parent"
                         android:layout_marginLeft="2.0dip"
                         android:layout_marginRight="2.0dip"
-                        android:background="@drawable/setting_background"
                         android:paddingBottom="16.0dip"
                         android:paddingTop="16.0dip" >
 
@@ -163,37 +151,27 @@
                             android:id="@+id/setting_log_textView"
                             android:layout_width="wrap_content"
                             android:layout_height="fill_parent"
-                            android:drawableLeft="@drawable/setting_log"
-                            android:drawablePadding="10.0dip"
                             android:gravity="center_vertical"
                             android:includeFontPadding="false"
-                            android:paddingLeft="17.0dip"
-                            android:text="允许中间查看"
+                            android:paddingLeft="17dp"
+                            android:text="允许中间查看词语"
                             android:textColor="#ff333333"
-                            android:textSize="16.0sp" />
+                            android:textSize="16sp" />
 
-                        <ImageView
-                            android:id="@+id/setting_log_detail"
+                        <Switch
+                            android:id="@+id/setting_wordShow"
                             android:layout_width="wrap_content"
-                            android:layout_height="fill_parent"
-                            android:layout_gravity="right"
-                            android:gravity="center_vertical"
-                            android:paddingRight="20.0dip"
-                            android:src="@drawable/setting_detail" />
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center_horizontal"
+                            android:gravity="center_horizontal|center_vertical" />
                     </TableRow>
                 </TableLayout>
             </LinearLayout>
 
             <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10.0dip"
-                android:layout_marginTop="10.0dip"
-                android:gravity="center_vertical"
-                android:paddingLeft="4.0dip"
-                android:text="其他设置"
-                android:textColor="#ff888888"
-                android:textSize="16.0sp" />
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#000000" />
 
             <LinearLayout
                 android:layout_width="fill_parent"
@@ -203,6 +181,7 @@
                     android:id="@+id/MorePageTableLayout_Client"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
+                    android:background="#BDBBB9"
                     android:paddingLeft="1.0dip"
                     android:shrinkColumns="0"
                     android:stretchColumns="0" >
@@ -212,7 +191,6 @@
                         android:layout_width="fill_parent"
                         android:layout_marginLeft="2.0dip"
                         android:layout_marginRight="2.0dip"
-                        android:background="@drawable/setting_background"
                         android:paddingBottom="16.0dip"
                         android:paddingTop="16.0dip" >
 
@@ -220,8 +198,6 @@
                             android:id="@+id/setting_clearCache_textView"
                             android:layout_width="wrap_content"
                             android:layout_height="fill_parent"
-                            android:drawableLeft="@drawable/setting_clearcache"
-                            android:drawablePadding="10.0dip"
                             android:gravity="center_vertical"
                             android:includeFontPadding="false"
                             android:paddingLeft="17.0dip"
@@ -239,12 +215,16 @@
                             android:src="@drawable/setting_detail" />
                     </TableRow>
 
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="#000000" />
+
                     <TableRow
                         android:id="@+id/more_page_row5"
                         android:layout_width="fill_parent"
                         android:layout_marginLeft="2.0dip"
                         android:layout_marginRight="2.0dip"
-                        android:background="@drawable/setting_background"
                         android:paddingBottom="16.0dip"
                         android:paddingTop="16.0dip" >
 
@@ -252,8 +232,6 @@
                             android:id="@+id/setting_opinion_textView"
                             android:layout_width="wrap_content"
                             android:layout_height="fill_parent"
-                            android:drawableLeft="@drawable/setting_opinion"
-                            android:drawablePadding="10.0dip"
                             android:gravity="center_vertical"
                             android:includeFontPadding="false"
                             android:paddingLeft="17.0dip"
@@ -271,12 +249,16 @@
                             android:src="@drawable/setting_detail" />
                     </TableRow>
 
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="1dp"
+                        android:background="#000000" />
+
                     <TableRow
                         android:id="@+id/more_page_row6"
                         android:layout_width="fill_parent"
                         android:layout_marginLeft="2.0dip"
                         android:layout_marginRight="2.0dip"
-                        android:background="@drawable/setting_background"
                         android:paddingBottom="16.0dip"
                         android:paddingTop="16.0dip" >
 
@@ -284,8 +266,6 @@
                             android:id="@+id/setting_checkUpdate_textView"
                             android:layout_width="wrap_content"
                             android:layout_height="fill_parent"
-                            android:drawableLeft="@drawable/setting_checkupdate"
-                            android:drawablePadding="10.0dip"
                             android:gravity="center_vertical"
                             android:includeFontPadding="false"
                             android:paddingLeft="17.0dip"
@@ -303,12 +283,16 @@
                             android:src="@drawable/setting_detail" />
                     </TableRow>
 
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="1dp"
+                        android:background="#000000" />
+
                     <TableRow
                         android:id="@+id/more_page_row7"
                         android:layout_width="fill_parent"
                         android:layout_marginLeft="2.0dip"
                         android:layout_marginRight="2.0dip"
-                        android:background="@drawable/setting_background"
                         android:paddingBottom="16.0dip"
                         android:paddingTop="16.0dip" >
 
@@ -316,8 +300,6 @@
                             android:id="@+id/setting_aboutUs_textView"
                             android:layout_width="wrap_content"
                             android:layout_height="fill_parent"
-                            android:drawableLeft="@drawable/setting_aboutus"
-                            android:drawablePadding="10.0dip"
                             android:gravity="center_vertical"
                             android:includeFontPadding="false"
                             android:paddingLeft="17.0dip"
@@ -334,6 +316,10 @@
                             android:paddingRight="20.0dip"
                             android:src="@drawable/setting_detail" />
                     </TableRow>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="1dp"
+                        android:background="#000000" />
                 </TableLayout>
             </LinearLayout>
         </LinearLayout>

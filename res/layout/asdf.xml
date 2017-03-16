@@ -9,4 +9,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
+    <RadioButton
+        android:id="@+id/radioButton1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="RadioButton" />
+
+    <Switch
+        android:id="@+id/switch1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Switch" />
+
 </LinearLayout>

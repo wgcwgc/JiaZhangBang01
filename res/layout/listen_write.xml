@@ -46,7 +46,7 @@
             android:layout_height="match_parent"
             android:gravity="center_vertical|center_horizontal"
             android:lineSpacingExtra="30sp"
-            android:text="不显示词语"
+            android:text=""
             android:textColor="#25CB73"
             android:textSize="22sp" />
     </com.runcom.jiazhangbang.listenText.LyricView>

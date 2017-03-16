@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.runcom.jiazhangbang.R;
 import com.runcom.jiazhangbang.listenText.ListenText;
 import com.runcom.jiazhangbang.listenWrite.ListenWrite;
+import com.runcom.jiazhangbang.reciteText.ReciteText;
 import com.runcom.jiazhangbang.util.NetUtil;
 import com.umeng.analytics.MobclickAgent;
 
@@ -57,7 +58,7 @@ public class Chinese extends Activity
 			// ,Toast.LENGTH_SHORT).show();
 			// }
 			// else
-				startActivity(intent);
+			startActivity(intent);
 	}
 
 	public void ListenAndWrite(View v )
@@ -72,18 +73,36 @@ public class Chinese extends Activity
 			Toast.makeText(getApplicationContext() ,"请检查网络连接" ,Toast.LENGTH_SHORT).show();
 		}
 		else
-//			if(  !new ServerUtil().execute(Util.serverAddress).equals("success") )
-//			{
-//				Toast.makeText(getApplicationContext() ,"服务器未开启 !\n请联系网络管理员." ,Toast.LENGTH_SHORT).show();
-//			}
-//			else
-				startActivity(intent);
+			// if( !new
+			// ServerUtil().execute(Util.serverAddress).equals("success") )
+			// {
+			// Toast.makeText(getApplicationContext() ,"服务器未开启 !\n请联系网络管理员."
+			// ,Toast.LENGTH_SHORT).show();
+			// }
+			// else
+			startActivity(intent);
 	}
 
 	public void ReciteText(View v )
 	{
-		Toast.makeText(getApplicationContext() ,"背课文" ,Toast.LENGTH_SHORT).show();
+		// Toast.makeText(getApplicationContext() ,"背课文"
+		// ,Toast.LENGTH_SHORT).show();
 
+		intent.putExtra("selected" ,selected);
+		intent.setClass(getApplicationContext() ,ReciteText.class);
+		if(NetUtil.getNetworkState(getApplicationContext()) == NetUtil.NETWORK_NONE)
+		{
+			Toast.makeText(getApplicationContext() ,"请检查网络连接" ,Toast.LENGTH_SHORT).show();
+		}
+		else
+			// if( !new
+			// ServerUtil().execute(Util.serverAddress).equals("success") )
+			// {
+			// Toast.makeText(getApplicationContext() ,"服务器未开启 !\n请联系网络管理员."
+			// ,Toast.LENGTH_SHORT).show();
+			// }
+			// else
+			startActivity(intent);
 	}
 
 	public void Repeat(View v )
