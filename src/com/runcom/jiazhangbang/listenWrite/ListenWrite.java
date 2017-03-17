@@ -424,7 +424,6 @@ public class ListenWrite extends Activity implements Runnable , OnCompletionList
 
 	public void detailSetting(View v )
 	{
-
 		// TODO settingÌıĞ´ÉèÖÃ
 		intent = new Intent();
 		// Toast.makeText(getApplicationContext() ,"ÌıĞ´"
@@ -593,7 +592,7 @@ public class ListenWrite extends Activity implements Runnable , OnCompletionList
 				// AssetManager assetManager = getAssets();
 				// AssetFileDescriptor afd = assetManager.openFd(SongPath);
 				// mp.setDataSource(afd.getFileDescriptor());
-
+				
 				mp.setDataSource(SongPath);
 				mp.prepare();
 				mp.start();
