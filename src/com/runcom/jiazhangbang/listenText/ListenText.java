@@ -109,6 +109,7 @@ public class ListenText extends Activity implements Runnable , OnCompletionListe
 		source4 = "004.mp3";
 
 		source1 = "http://172.16.0.63:24680/wgcwgc/mp3/001.mp3";
+		source1 = "http://abv.cn/music/ºì¶¹.mp3";
 		source2 = "http://172.16.0.63:24680/wgcwgc/mp3/002.mp3";
 		source3 = "http://172.16.0.63:24680/wgcwgc/mp3/003.mp3";
 		source4 = "http://172.16.0.63:24680/wgcwgc/mp3/004.mp3";
@@ -309,7 +310,7 @@ public class ListenText extends Activity implements Runnable , OnCompletionListe
 		seekBar.setOnSeekBarChangeListener(this);
 		tv_currTime = (TextView) findViewById(R.id.listenText_textView_curr_time);
 		tv_totalTime = (TextView) findViewById(R.id.listenText_textView_total_time);
-		textView = (TextView) findViewById(R.id.listenWrite_lyricView_textView);
+		textView = (TextView) findViewById(R.id.listenText_lyricView_textView);
 		// tv_showName = (TextView)
 		// findViewById(R.id.listenText_textView_showName);
 		// mp = new MediaPlayer();
@@ -471,6 +472,7 @@ public class ListenText extends Activity implements Runnable , OnCompletionListe
 		if(currIndex >= 1 && play_list.size() > 0)
 		{
 			currIndex -- ;
+			spinner.setSelection(currIndex);
 			start();
 		}
 		else
@@ -496,6 +498,7 @@ public class ListenText extends Activity implements Runnable , OnCompletionListe
 		if(currIndex < play_list.size() - 1)
 		{
 			++ currIndex;
+			spinner.setSelection(currIndex);
 			start();
 		}
 		else
@@ -522,7 +525,7 @@ public class ListenText extends Activity implements Runnable , OnCompletionListe
 	// ¿ªÊ¼²¥·Å
 	public void start()
 	{
-		Log.d("LOG" ,"start()" + currIndex + 1 + ":" + play_list.size());
+		Log.d("LOG" ,"start()" + currIndex + 1 + ":" + play_list.size() + play_list.get(currIndex));
 		if(play_list.size() > 0 && currIndex < play_list.size())
 		{
 			String SongPath = play_list.get(currIndex);

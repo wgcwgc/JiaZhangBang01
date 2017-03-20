@@ -1,6 +1,6 @@
 package com.runcom.jiazhangbang.reciteText;
 
-public class MyAudio
+public class MyText
 {
 	private String id , name , link , source , lyric , other;
 

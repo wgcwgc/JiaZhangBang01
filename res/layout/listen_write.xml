@@ -41,7 +41,7 @@
         android:verticalScrollbarPosition="defaultPosition" >
 
         <TextView
-            android:id="@+id/listenWrite_lyricView_textView"
+            android:id="@+id/listenText_lyricView_textView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center_vertical|center_horizontal"

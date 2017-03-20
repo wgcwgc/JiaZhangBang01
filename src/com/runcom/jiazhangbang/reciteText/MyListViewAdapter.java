@@ -1,51 +1,41 @@
 package com.runcom.jiazhangbang.reciteText;
 
 import java.io.File;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.runcom.jiazhangbang.R;
-import com.runcom.jiazhangbang.util.NetUtil;
-import com.runcom.jiazhangbang.util.Util;
 
 @SuppressLint("InflateParams")
 public class MyListViewAdapter extends BaseAdapter
 {
-	public static MyAudio myAudio;
-	public static ArrayList < MyAudio > audioList;
+	public static MyText myText;
+	public static ArrayList < MyText > textList;
 
 	LayoutInflater inflater;
 	static int flag;
 	private Context context;
 
-	public MyListViewAdapter(LayoutInflater inflater , ArrayList < MyAudio > audioList)
+	public MyListViewAdapter(LayoutInflater inflater , ArrayList < MyText > audioList)
 	{
 		this.inflater = inflater;
-		// this.inflater=LayoutInflater.from(this);
-		MyListViewAdapter.audioList = audioList;
+		MyListViewAdapter.textList = audioList;
 	}
 
-	public MyListViewAdapter(Context context , ArrayList < MyAudio > audioList)
+	public MyListViewAdapter(Context context , ArrayList < MyText > textList)
 	{
 		this.context = context;
-		MyListViewAdapter.audioList = audioList;
+		MyListViewAdapter.textList = textList;
 		inflater = LayoutInflater.from(this.context);
 	}
 
@@ -72,13 +62,13 @@ public class MyListViewAdapter extends BaseAdapter
 	public int getCount()
 	{
 		// return audioList == null ? 0 : audioList.size();
-		return audioList.size();
+		return textList.size();
 	}
 
 	@Override
 	public Object getItem(int position )
 	{
-		return audioList.get(position);
+		return textList.get(position);
 	}
 
 	@Override
@@ -93,9 +83,9 @@ public class MyListViewAdapter extends BaseAdapter
 		Holder holder;
 		if(convertView == null)
 		{
-			convertView = inflater.inflate(R.layout.tab1_fragment_list_item ,null);
+			convertView = inflater.inflate(R.layout.recite_text_listview ,null);
 			holder = new Holder();
-			holder.name = (TextView) convertView.findViewById(R.id.tab1_fragment_list_item_name);
+			holder.name = (TextView) convertView.findViewById(R.id.recite_text_listview_item_name);
 			convertView.setTag(holder);
 		}
 		else
@@ -103,12 +93,12 @@ public class MyListViewAdapter extends BaseAdapter
 			holder = (Holder) convertView.getTag();
 		}
 
-		if(audioList.size() == 0 || audioList.size() <= position)
+		if(textList.size() == 0 || textList.size() <= position)
 		{
 
 		}
 		else
-			holder.name.setText(audioList.get(position).getName());
+			holder.name.setText(textList.get(position).getName());
 
 		// convertView.setOnClickListener(new View.OnClickListener()
 		// {
@@ -141,80 +131,95 @@ public class MyListViewAdapter extends BaseAdapter
 		//
 		// });
 
-		ImageButton imageButton_share = (ImageButton) convertView.findViewById(R.id.tab1_fragment_list_item_share);
-		final ImageButton imageButton_download = (ImageButton) convertView.findViewById(R.id.tab1_fragement_list_item_download);
-		imageButton_share.setOnClickListener(new OnClickListener()
-		{
+		// ImageButton imageButton_share = (ImageButton)
+		// convertView.findViewById(R.id.tab1_fragment_list_item_share);
+		// final ImageButton imageButton_download = (ImageButton)
+		// convertView.findViewById(R.id.tab1_fragement_list_item_download);
+		// imageButton_share.setOnClickListener(new OnClickListener()
+		// {
+		//
+		// @Override
+		// public void onClick(View v )
+		// {
+		// if(NetUtil.getNetworkState(inflater.getContext()) ==
+		// NetUtil.NETWORK_NONE)
+		// {
+		// Toast.makeText(inflater.getContext() ,"请检查网络连接"
+		// ,Toast.LENGTH_SHORT).show();
+		// }
+		// else
+		// {
+		// Toast.makeText(inflater.getContext() ,"正在分享" +
+		// audioList.get(position).getName().toString() + "..."
+		// ,Toast.LENGTH_SHORT).show();
+		// Intent intent = new Intent(Intent.ACTION_SEND);
+		// intent.setType("text/*");
+		// intent.putExtra(Intent.EXTRA_SUBJECT ,"Share");
+		// String url = ("www.baidu.com").toString();
+		// intent.putExtra(Intent.EXTRA_TEXT ,url);
+		// intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		// inflater.getContext().startActivity(Intent.createChooser(intent
+		// ,"分享"));
+		// }
+		// }
+		// });
 
-			@Override
-			public void onClick(View v )
-			{
-				if(NetUtil.getNetworkState(inflater.getContext()) == NetUtil.NETWORK_NONE)
-				{
-					Toast.makeText(inflater.getContext() ,"请检查网络连接" ,Toast.LENGTH_SHORT).show();
-				}
-				else
-				{
-					Toast.makeText(inflater.getContext() ,"正在分享" + audioList.get(position).getName().toString() + "..." ,Toast.LENGTH_SHORT).show();
-					Intent intent = new Intent(Intent.ACTION_SEND);
-					intent.setType("text/*");
-					intent.putExtra(Intent.EXTRA_SUBJECT ,"Share");
-					String url = ("www.baidu.com").toString();
-					intent.putExtra(Intent.EXTRA_TEXT ,url);
-					intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-					inflater.getContext().startActivity(Intent.createChooser(intent ,"分享"));
-				}
-			}
-		});
-
-		imageButton_download.setOnClickListener(new OnClickListener()
-		{
-
-			@Override
-			public void onClick(View v )
-			{
-				if(NetUtil.getNetworkState(inflater.getContext()) == NetUtil.NETWORK_NONE)
-				{
-					Toast.makeText(inflater.getContext() ,"请检查网络连接" ,Toast.LENGTH_SHORT).show();
-				}
-				else
-				{
-					// TODO download musics
-					Toast.makeText(inflater.getContext() ,"正在下载" + audioList.get(position).getName().toString() + "..." ,Toast.LENGTH_SHORT).show();
-					String urlString = audioList.get(position).getLink().toString();
-					urlString = "http://abv.cn/music/红豆.mp3";// 千千阙歌 红豆 光辉岁月.mp3
-					String fileName = urlString.substring(urlString.lastIndexOf("/") + 1);
-					try
-					{
-						fileName = URLEncoder.encode(fileName ,"UTF-8");
-					}
-					catch(UnsupportedEncodingException e)
-					{
-						e.printStackTrace();
-					}
-
-					urlString = urlString.substring(0 ,urlString.lastIndexOf("/") + 1) + fileName;
-					if(Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED))
-					{
-						File saveDir = new File(Util.musicsPath);
-						try
-						{
-							download(URLDecoder.decode(fileName.substring(0 ,fileName.lastIndexOf(".")) + " " ,"UTF-8") ,urlString ,saveDir);
-						}
-						catch(UnsupportedEncodingException e)
-						{
-							e.printStackTrace();
-						}
-						imageButton_download.setEnabled(false);
-
-					}
-					else
-					{
-						Toast.makeText(inflater.getContext() ,"请检查SD卡" ,Toast.LENGTH_LONG).show();
-					}
-				}
-			}
-		});
+		// imageButton_download.setOnClickListener(new OnClickListener()
+		// {
+		//
+		// @Override
+		// public void onClick(View v )
+		// {
+		// if(NetUtil.getNetworkState(inflater.getContext()) ==
+		// NetUtil.NETWORK_NONE)
+		// {
+		// Toast.makeText(inflater.getContext() ,"请检查网络连接"
+		// ,Toast.LENGTH_SHORT).show();
+		// }
+		// else
+		// {
+		// // TODO download musics
+		// Toast.makeText(inflater.getContext() ,"正在下载" +
+		// audioList.get(position).getName().toString() + "..."
+		// ,Toast.LENGTH_SHORT).show();
+		// String urlString = audioList.get(position).getLink().toString();
+		// urlString = "http://abv.cn/music/红豆.mp3";// 千千阙歌 红豆 光辉岁月.mp3
+		// String fileName = urlString.substring(urlString.lastIndexOf("/") +
+		// 1);
+		// try
+		// {
+		// fileName = URLEncoder.encode(fileName ,"UTF-8");
+		// }
+		// catch(UnsupportedEncodingException e)
+		// {
+		// e.printStackTrace();
+		// }
+		//
+		// urlString = urlString.substring(0 ,urlString.lastIndexOf("/") + 1) +
+		// fileName;
+		// if(Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED))
+		// {
+		// File saveDir = new File(Util.musicsPath);
+		// try
+		// {
+		// download(URLDecoder.decode(fileName.substring(0
+		// ,fileName.lastIndexOf(".")) + " " ,"UTF-8") ,urlString ,saveDir);
+		// }
+		// catch(UnsupportedEncodingException e)
+		// {
+		// e.printStackTrace();
+		// }
+		// imageButton_download.setEnabled(false);
+		//
+		// }
+		// else
+		// {
+		// Toast.makeText(inflater.getContext() ,"请检查SD卡"
+		// ,Toast.LENGTH_LONG).show();
+		// }
+		// }
+		// }
+		// });
 
 		return convertView;
 	}

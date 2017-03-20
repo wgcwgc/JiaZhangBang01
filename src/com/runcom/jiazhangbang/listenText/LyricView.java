@@ -128,7 +128,7 @@ public class LyricView extends ScrollView
 			canvas.drawText(mySentenceEntities.get(Index).getLyric() ,baseX ,high / 2 ,ThirdCurrentPaint);
 			canvas.drawText(content ,baseX ,high / 2 ,CurrentPaint);
 
-			Log.d("LOG" ,"index: " + Index + " progress:" + progress + " leng: " + leng + " width: " + width + " baseX:" + baseX);
+//			Log.d("LOG" ,"index: " + Index + " progress:" + progress + " leng: " + leng + " width: " + width + " baseX:" + baseX);
 
 			float tempY = high / 2;
 			// 画出本句之前的句子

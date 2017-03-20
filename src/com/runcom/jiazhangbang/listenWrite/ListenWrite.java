@@ -14,6 +14,8 @@ import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.AssetFileDescriptor;
+import android.content.res.AssetManager;
 import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnBufferingUpdateListener;
@@ -112,10 +114,10 @@ public class ListenWrite extends Activity implements Runnable , OnCompletionList
 		source3 = "003.mp3";
 		source4 = "004.mp3";
 
-		source1 = "http://172.16.0.63:24680/wgcwgc/mp3/001.mp3";
-		source2 = "http://172.16.0.63:24680/wgcwgc/mp3/002.mp3";
-		source3 = "http://172.16.0.63:24680/wgcwgc/mp3/003.mp3";
-		source4 = "http://172.16.0.63:24680/wgcwgc/mp3/004.mp3";
+		// source1 = "http://172.16.0.63:24680/wgcwgc/mp3/001.mp3";
+		// source2 = "http://172.16.0.63:24680/wgcwgc/mp3/002.mp3";
+		// source3 = "http://172.16.0.63:24680/wgcwgc/mp3/003.mp3";
+		// source4 = "http://172.16.0.63:24680/wgcwgc/mp3/004.mp3";
 
 		// lyricsPath = intent.getStringExtra("lyric");
 		lyricsPath = "http://172.16.0.63:24680/wgcwgc/lrc/001.lrc";
@@ -320,7 +322,7 @@ public class ListenWrite extends Activity implements Runnable , OnCompletionList
 		seekBar.setOnSeekBarChangeListener(this);
 		tv_currTime = (TextView) findViewById(R.id.listenText_textView_curr_time);
 		tv_totalTime = (TextView) findViewById(R.id.listenText_textView_total_time);
-		tv_lrc = (TextView) findViewById(R.id.listenWrite_lyricView_textView);
+		tv_lrc = (TextView) findViewById(R.id.listenText_lyricView_textView);
 		tv_nameShow = (TextView) findViewById(R.id.listen_write_textView_nameShow);
 
 		mp.setOnBufferingUpdateListener(this);
@@ -589,11 +591,11 @@ public class ListenWrite extends Activity implements Runnable , OnCompletionList
 			try
 			{
 				// TODO start()
-				// AssetManager assetManager = getAssets();
-				// AssetFileDescriptor afd = assetManager.openFd(SongPath);
-				// mp.setDataSource(afd.getFileDescriptor());
-				
-				mp.setDataSource(SongPath);
+				AssetManager assetManager = getAssets();
+				AssetFileDescriptor afd = assetManager.openFd(SongPath);
+				mp.setDataSource(afd.getFileDescriptor());
+
+				// mp.setDataSource(SongPath);
 				mp.prepare();
 				mp.start();
 				Log.d("LOG" ,SongPath);
