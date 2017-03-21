@@ -3,14 +3,20 @@
  */
 package com.runcom.jiazhangbang.reciteText;
 
+import java.util.HashMap;
+
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.SpannableString;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.TextView;
+import android.widget.EditText;
 
 import com.runcom.jiazhangbang.R;
 import com.umeng.analytics.MobclickAgent;
@@ -33,7 +39,7 @@ import com.umeng.analytics.MobclickAgent;
 
 public class ReciteTextMain extends Activity
 {
-	TextView textView;
+	EditText textView;
 	Intent intent;
 
 	/*
@@ -44,7 +50,6 @@ public class ReciteTextMain extends Activity
 	@Override
 	protected void onCreate(Bundle savedInstanceState )
 	{
-		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.recite_text_main);
 
@@ -63,21 +68,78 @@ public class ReciteTextMain extends Activity
 
 	}
 
+	SpannableString spannableString;
+	HashMap < String , Integer > key = new HashMap < String , Integer >();
+
 	/**
 	 * 
 	 */
 	private void initView()
 	{
 		// TODO Auto-generated method stub
-		textView = (TextView) findViewById(R.id.recite_text_main_text);
+		textView = (EditText) findViewById(R.id.recite_text_main_text);
 		String tempString = "start...\n";
 		int i;
-		for(i = 0 ; i < 57 ; i ++ )
+		for(i = 0 ; i < 7 ; i ++ )
 		{
-			tempString += i + "\n";
+			tempString += "\u3000\u3000" + i + "adsfasdf爱疯阿斯顿发生大事的发生的发生的发生发送到发送到发送到发送到发送到分。\n";
 		}
-		tempString += i + "\nend...\n";
+		tempString += "end...\n";
+
+		spannableString = new SpannableString("");
+
+		key.put("(" ,Color.RED);
+		key.put(")" ,Color.RED);
+		key.put("[" ,Color.BLUE);
+		key.put("]" ,Color.BLUE);
+		key.put("0" ,Color.GREEN);
+		key.put("1" ,Color.GREEN);
+		key.put("2" ,Color.GREEN);
+		key.put("3" ,Color.GREEN);
+		key.put("4" ,Color.GREEN);
+		key.put("5" ,Color.GREEN);
+		key.put("6" ,Color.GREEN);
+		key.put("7" ,Color.GREEN);
+		key.put("8" ,Color.GREEN);
+		key.put("9" ,Color.GREEN);
+
 		textView.setText(tempString);
+
+		textView.addTextChangedListener(new TextWatcher()
+		{
+
+			@Override
+			public void onTextChanged(CharSequence s , int start , int before , int count )
+			{
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s , int start , int count , int after )
+			{
+			}
+
+			@Override
+			public void afterTextChanged(Editable s )
+			{
+				// Iterator < String > iterator = key.keySet().iterator();
+				// String text = s.toString();
+				// while(iterator.hasNext())
+				// {
+				// String strTemp = iterator.next();
+				// if(text.contains(strTemp))
+				// {
+				// int index = 0;
+				// while((index = text.indexOf(strTemp ,index)) != -1)
+				// {
+				// s.setSpan(new ForegroundColorSpan(key.get(strTemp)) ,index
+				// ,index + 1 ,Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+				// index += strTemp.length();
+				// }
+				// }
+				// }
+			}
+		});
+
 	}
 
 	@Override

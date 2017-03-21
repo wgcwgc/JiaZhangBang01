@@ -53,8 +53,8 @@ public class ReciteText extends Activity
 
 	String audio , lyric , name;
 	private SwipeMenuListView listView;
-	MyAudio myAudio = new MyAudio();
-	ArrayList < MyAudio > audioList01 = new ArrayList < MyAudio >();
+	MyText myAudio = new MyText();
+	ArrayList < MyText > textList = new ArrayList < MyText >();
 	MyListViewAdapter adapter;
 
 	@Override
@@ -63,7 +63,7 @@ public class ReciteText extends Activity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.recite_text);
 
-		selected = getIntent().getIntExtra("selected" ,0);
+		selected = getIntent().getIntExtra("selected" ,1);
 
 		ActionBar actionbar = getActionBar();
 		actionbar.setDisplayHomeAsUpEnabled(false);
@@ -73,15 +73,15 @@ public class ReciteText extends Activity
 		actionbar.setDisplayShowCustomEnabled(true);
 		actionbar.setTitle("背课文  " + selected + "年级");
 
-		listView = (SwipeMenuListView) findViewById(R.id.fragment_tab1_listView);
+		listView = (SwipeMenuListView) findViewById(R.id.recitText_swipeMenu_listView);
 
 		if(NetUtil.getNetworkState(getApplicationContext()) == NetUtil.NETWORK_NONE)
 		{
 			Toast.makeText(getApplicationContext() ,"请检查网络连接" ,Toast.LENGTH_SHORT).show();
 		}
 
-		new GetThread_getList1().start();
-		adapter = new MyListViewAdapter(getApplicationContext() , audioList01);
+		new GetThread_getList().start();
+		adapter = new MyListViewAdapter(getApplicationContext() , textList);
 		listView.setAdapter(adapter);
 		adapter.notifyDataSetChanged();
 
@@ -91,17 +91,7 @@ public class ReciteText extends Activity
 			@Override
 			public void onItemClick(AdapterView < ? > arg0 , View arg1 , int arg2 , long arg3 )
 			{
-				// System.out.println(flag);
-				// Log.d("LOG" , flag + "item");
-				// if(flag)
-				// {
-				// Toast.makeText(getContext() ,"您单击了" +
-				// audioList01.get(arg2).getName().toString()
-				// ,Toast.LENGTH_SHORT).show();
-				// }
-				// else
-				// flag = true;
-				Toast.makeText(getApplicationContext() ,"您单击了" + audioList01.get(arg2).getName().toString() ,Toast.LENGTH_SHORT).show();
+				Toast.makeText(getApplicationContext() ,"您单击了" + textList.get(arg2).getName().toString() ,Toast.LENGTH_SHORT).show();
 			}
 
 		});
@@ -112,7 +102,7 @@ public class ReciteText extends Activity
 			@Override
 			public boolean onItemLongClick(AdapterView < ? > arg0 , View arg1 , int arg2 , long arg3 )
 			{
-				Toast.makeText(getApplicationContext() ,"您长按了" + audioList01.get(arg2).getName().toString() ,Toast.LENGTH_SHORT).show();
+				Toast.makeText(getApplicationContext() ,"您长按了" + textList.get(arg2).getName().toString() ,Toast.LENGTH_SHORT).show();
 				return false;
 			}
 
@@ -179,33 +169,30 @@ public class ReciteText extends Activity
 				switch(index)
 				{
 					case 0:
-						Toast.makeText(getApplicationContext() ,"您点击了" + audioList01.get(position).getName().toString() ,Toast.LENGTH_SHORT).show();
-						Intent open_intent = new Intent(getApplicationContext() , ReciteText.class);
-						String source = audioList01.get(position).getSource();
+						Toast.makeText(getApplicationContext() ,"您点击了" + textList.get(position).getName().toString() ,Toast.LENGTH_SHORT).show();
+						Intent open_intent = new Intent(getApplicationContext() , ReciteTextMain.class);
+						String source = textList.get(position).getSource();
 						// source = "http://abv.cn/music/红豆.mp3";// 千千阙歌 红豆
 						// 光辉岁月.mp3
 						open_intent.putExtra("source" ,source);
-						String lyric = audioList01.get(position).getLyric();
+						String lyric = textList.get(position).getLyric();
 						// lyric = "http://abv.cn/music/王菲_红豆.lrc";
 						open_intent.putExtra("lyric" ,lyric);
-						String name = audioList01.get(position).getName();
+						String name = textList.get(position).getName();
 						open_intent.putExtra("name" ,name);
 						Log.d("LOG" ,"audio: " + source + "\nlyric: " + lyric + "\nname: " + name);
-						getApplicationContext().startActivity(open_intent);
+						Toast.makeText(getApplicationContext() ,"audio: " + source + "\nlyric: " + lyric + "\nname: " + name ,Toast.LENGTH_SHORT).show();
+						startActivity(open_intent);
 						break;
 					case 1:
-						Toast.makeText(getApplicationContext() ,"正在分享" + audioList01.get(position).getName().toString() + "..." ,Toast.LENGTH_SHORT).show();
+						Toast.makeText(getApplicationContext() ,"正在分享" + textList.get(position).getName().toString() + "..." ,Toast.LENGTH_SHORT).show();
 						Intent share_intent = new Intent(Intent.ACTION_SEND);
 						share_intent.setType("text/*");
 						share_intent.putExtra(Intent.EXTRA_SUBJECT ,"Share");
-						String url = (audioList01.get(position).getSource().toString()).toString();
+						String url = (textList.get(position).getSource().toString()).toString();
 						share_intent.putExtra(Intent.EXTRA_TEXT ,url);
 						share_intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-						getApplicationContext().startActivity(Intent.createChooser(share_intent ,"分享"));
-						break;
-					case 2:
-						Toast.makeText(getApplicationContext() ,"正在删除" + audioList01.get(position).getName().toString() + "..." ,Toast.LENGTH_SHORT).show();
-
+						startActivity(Intent.createChooser(share_intent ,"分享"));
 						break;
 				}
 				return false;
@@ -214,18 +201,16 @@ public class ReciteText extends Activity
 
 	}
 
-	class GetThread_getList1 extends Thread
+	class GetThread_getList extends Thread
 	{
 
-		public GetThread_getList1()
+		public GetThread_getList()
 		{
-
 		}
 
 		@Override
 		public void run()
 		{
-
 			String url = "http://172.16.0.63:8080/wgc/List00.jsp?type=0";
 			HttpGet httpGet = new HttpGet(url);
 			try
@@ -250,18 +235,15 @@ public class ReciteText extends Activity
 					audio = jsonObject.getString("audio");
 					lyric = jsonObject.getString("lyric");
 					name = jsonObject.getString("name");
-					audioList01.clear();
+					textList.clear();
 					for(int i = 1 ; i < 17 ; i ++ )
 					{
-						myAudio = new MyAudio();
+						myAudio = new MyText();
 						lyric = lyric.substring(0 ,lyric.lastIndexOf("/")) + "/00" + i + ".lrc";
 						myAudio.setLyric(lyric);
-						// new Thread(new DownloadTask(getContext() , lyric ,
-						// new File(Util.lyricsPath))).start();
-						// new LrcFileDownloader(lyric).start();
 						myAudio.setName(name + i);
 						myAudio.setSource(audio.substring(0 ,audio.lastIndexOf("/")) + "/00" + i + ".mp3");
-						audioList01.add(myAudio);
+						textList.add(myAudio);
 					}
 				}
 			}

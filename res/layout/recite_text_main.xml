@@ -1,25 +1,83 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:layout_height="match_parent" >
 
     <ScrollView
+        android:id="@+id/recite_text_main_scrollView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/recite_text_main_linear_layout_score"
+        android:layout_alignParentTop="true"
         android:background="#6F8291" >
 
-        <TextView
+        <EditText
             android:id="@+id/recite_text_main_text"
-            android:layout_width="321dp"
-            android:layout_height="414dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:editable="true"
-            android:gravity="center_vertical|center_horizontal"
+            android:gravity="center_vertical|center_horizontal|left"
             android:text="asdf"
             android:textColor="#000000"
             android:textSize="27sp" />
-        
-        
     </ScrollView>
 
-</LinearLayout>
+    <LinearLayout
+        android:id="@+id/recite_text_main_linear_layout_score"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:background="#3f3f3f"
+        android:gravity="center_vertical"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/recite_text_main_textview_score"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:gravity="left"
+            android:text="正确率: "
+            android:textColor="#FFFFFF"
+            android:textSize="27sp" />
+
+        <EditText
+            android:id="@+id/recite_text_main_edit_text_score"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:editable="false"
+            android:text="57%"
+            android:textSize="27sp" >
+
+            <requestFocus />
+        </EditText>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="5dp"
+            android:layout_marginRight="5dp"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/recite_text_main_textview_autojudge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal|center_vertical"
+                android:text="自动评分"
+                android:textColor="#FFFFFF"
+                android:textSize="27sp" />
+
+            <TextView
+                android:id="@+id/recite_text_main_textview_userjudge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal|center_vertical|top"
+                android:text="手动评分"
+                android:textColor="#FFFFFF"
+                android:textSize="27sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+</RelativeLayout>

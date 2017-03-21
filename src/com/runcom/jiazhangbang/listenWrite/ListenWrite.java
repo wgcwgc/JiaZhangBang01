@@ -532,6 +532,7 @@ public class ListenWrite extends Activity implements Runnable , OnCompletionList
 		if(currIndex >= 1 && play_list.size() > 0)
 		{
 			currIndex -- ;
+			spinner.setSelection(currIndex);
 			start();
 		}
 		else
@@ -557,6 +558,7 @@ public class ListenWrite extends Activity implements Runnable , OnCompletionList
 		if(currIndex < play_list.size() - 1)
 		{
 			++ currIndex;
+			spinner.setSelection(currIndex);
 			start();
 		}
 		else

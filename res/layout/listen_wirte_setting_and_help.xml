@@ -5,7 +5,7 @@
     android:background="#BDBBB9" >
 
     <ScrollView
-        android:id="@+id/scrollView1"
+        android:id="@+id/recite_text_main_scrollview"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:fadingEdge="none" >
