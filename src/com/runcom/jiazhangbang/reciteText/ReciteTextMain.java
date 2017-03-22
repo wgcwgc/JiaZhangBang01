@@ -16,6 +16,8 @@ import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.View.OnLongClickListener;
 import android.widget.EditText;
 
 import com.runcom.jiazhangbang.R;
@@ -111,6 +113,10 @@ public class ReciteTextMain extends Activity
 			@Override
 			public void onTextChanged(CharSequence s , int start , int before , int count )
 			{
+				System.out.println("start: " + start + "\nbefore: " + before + "\ncount: " + count);
+				// ((Spannable) s).setSpan(new
+				// ForegroundColorSpan(key.get(s.toString().indexOf(start)))
+				// ,start ,start + count ,Spanned.SPAN_INCLUSIVE_INCLUSIVE);
 			}
 
 			@Override
@@ -131,14 +137,30 @@ public class ReciteTextMain extends Activity
 				// int index = 0;
 				// while((index = text.indexOf(strTemp ,index)) != -1)
 				// {
-				// s.setSpan(new ForegroundColorSpan(key.get(strTemp)) ,index
-				// ,index + 1 ,Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+				// System.out.println("strTemp: " + strTemp);
+				// // s.setSpan(new
+				// // ForegroundColorSpan(key.get(strTemp)) ,index
+				// // ,index + 1 ,Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 				// index += strTemp.length();
 				// }
 				// }
 				// }
 			}
 		});
+
+		textView.setTextIsSelectable(true);
+		textView.setOnLongClickListener(new OnLongClickListener()
+		{
+
+			@Override
+			public boolean onLongClick(View v )
+			{
+				// TODO Auto-generated method stub
+				System.out.println("setOnLongClickListener...");
+				return false;
+			}
+		});
+		textView.onTextContextMenuItem(3);
 
 	}
 
