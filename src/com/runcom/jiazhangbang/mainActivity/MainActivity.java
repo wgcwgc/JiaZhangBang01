@@ -35,7 +35,6 @@ public class MainActivity extends Activity
 	@Override
 	protected void onCreate(Bundle savedInstanceState )
 	{
-		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
@@ -61,18 +60,16 @@ public class MainActivity extends Activity
 			@Override
 			public void onItemSelected(AdapterView < ? > arg0 , View arg1 , int arg2 , long arg3 )
 			{
-				// TODO Auto-generated method stub
 				selected = arg2 + 1;
 				Chinese_textView.setText(selected + "年级语文");
 				math_textView.setText(selected + "年级数学");
 				English_textView.setText(selected + "年级英语");
+				initImageView(selected);
 			}
 
 			@Override
 			public void onNothingSelected(AdapterView < ? > arg0 )
 			{
-				// TODO Auto-generated method stub
-
 			}
 		});
 
@@ -80,13 +77,18 @@ public class MainActivity extends Activity
 		math_imageView = (ImageView) findViewById(R.id.math_imageView);
 		English_imageView = (ImageView) findViewById(R.id.English_imageView);
 
+		// Chinese_imageView.setBackground(getResources().getDrawable(R.drawable.main_first_up));
+		// math_imageView.setBackground(getResources().getDrawable(R.drawable.main_first_up));
+		// English_imageView.setBackground(getResources().getDrawable(R.drawable.main_first_up));
+
+		initImageView(selected);
+
 		Chinese_imageView.setOnClickListener(new OnClickListener()
 		{
 
 			@Override
 			public void onClick(View v )
 			{
-				// TODO Auto-generated method stub
 				// Toast.makeText(getApplicationContext() ,selected + "年级语文"
 				// ,Toast.LENGTH_SHORT).show();
 
@@ -106,7 +108,6 @@ public class MainActivity extends Activity
 			{
 				// TODO Auto-generated method stub
 				Toast.makeText(getApplicationContext() ,selected + "年级数学" ,Toast.LENGTH_SHORT).show();
-
 			}
 		});
 
@@ -125,6 +126,8 @@ public class MainActivity extends Activity
 		course_textView = (TextView) findViewById(R.id.course_textView);
 		animation_textView = (TextView) findViewById(R.id.animation_textView);
 		story_textView = (TextView) findViewById(R.id.story_textView);
+
+		initEndTextView();
 
 		course_textView.setOnClickListener(new OnClickListener()
 		{
@@ -156,6 +159,59 @@ public class MainActivity extends Activity
 				Toast.makeText(getApplicationContext() ,"听故事..." ,Toast.LENGTH_SHORT).show();
 			}
 		});
+
+	}
+
+	/**
+	 * 
+	 */
+	private void initEndTextView()
+	{
+		course_textView.setBackground(getResources().getDrawable(R.drawable.main_course_textview));
+		animation_textView.setBackground(getResources().getDrawable(R.drawable.main_animation_textview));
+		story_textView.setBackground(getResources().getDrawable(R.drawable.main_story_textview));
+	}
+
+	/**
+	 * @param selected
+	 */
+	private void initImageView(int selected )
+	{
+		switch(selected)
+		{
+			case 1:
+				Chinese_imageView.setImageResource(R.drawable.main_first_up);
+				math_imageView.setImageResource(R.drawable.main_first_up);
+				English_imageView.setImageResource(R.drawable.main_first_up);
+				break;
+			case 2:
+				Chinese_imageView.setImageResource(R.drawable.main_second_up);
+				math_imageView.setImageResource(R.drawable.main_second_up);
+				English_imageView.setImageResource(R.drawable.main_second_up);
+				break;
+			case 3:
+				Chinese_imageView.setImageResource(R.drawable.main_third_up);
+				math_imageView.setImageResource(R.drawable.main_third_up);
+				English_imageView.setImageResource(R.drawable.main_third_up);
+				break;
+			case 4:
+				Chinese_imageView.setImageResource(R.drawable.main_fourth_up);
+				math_imageView.setImageResource(R.drawable.main_fourth_up);
+				English_imageView.setImageResource(R.drawable.main_fourth_up);
+				break;
+			case 5:
+				Chinese_imageView.setImageResource(R.drawable.main_fifth_up);
+				math_imageView.setImageResource(R.drawable.main_fifth_up);
+				English_imageView.setImageResource(R.drawable.main_fifth_up);
+				break;
+			case 6:
+				Chinese_imageView.setImageResource(R.drawable.main_sixth_up);
+				math_imageView.setImageResource(R.drawable.main_sixth_up);
+				English_imageView.setImageResource(R.drawable.main_sixth_up);
+				break;
+			default:
+				Toast.makeText(getApplicationContext() ,"selected error" ,Toast.LENGTH_SHORT).show();
+		}
 
 	}
 

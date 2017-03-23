@@ -16,8 +16,7 @@ import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.View.OnLongClickListener;
+import android.view.ViewGroup;
 import android.widget.EditText;
 
 import com.runcom.jiazhangbang.R;
@@ -41,7 +40,7 @@ import com.umeng.analytics.MobclickAgent;
 
 public class ReciteTextMain extends Activity
 {
-	EditText textView;
+	EditText editText;
 	Intent intent;
 
 	/*
@@ -79,7 +78,7 @@ public class ReciteTextMain extends Activity
 	private void initView()
 	{
 		// TODO Auto-generated method stub
-		textView = (EditText) findViewById(R.id.recite_text_main_text);
+		editText = (EditText) findViewById(R.id.recite_text_main_text);
 		String tempString = "start...\n";
 		int i;
 		for(i = 0 ; i < 7 ; i ++ )
@@ -105,15 +104,15 @@ public class ReciteTextMain extends Activity
 		key.put("8" ,Color.GREEN);
 		key.put("9" ,Color.GREEN);
 
-		textView.setText(tempString);
+		editText.setText(tempString);
 
-		textView.addTextChangedListener(new TextWatcher()
+		editText.addTextChangedListener(new TextWatcher()
 		{
 
 			@Override
 			public void onTextChanged(CharSequence s , int start , int before , int count )
 			{
-				System.out.println("start: " + start + "\nbefore: " + before + "\ncount: " + count);
+				System.out.println("start: " + start + "\ncount: " + count);
 				// ((Spannable) s).setSpan(new
 				// ForegroundColorSpan(key.get(s.toString().indexOf(start)))
 				// ,start ,start + count ,Spanned.SPAN_INCLUSIVE_INCLUSIVE);
@@ -122,6 +121,7 @@ public class ReciteTextMain extends Activity
 			@Override
 			public void beforeTextChanged(CharSequence s , int start , int count , int after )
 			{
+//				ViewGroup
 			}
 
 			@Override
@@ -129,7 +129,7 @@ public class ReciteTextMain extends Activity
 			{
 				// Iterator < String > iterator = key.keySet().iterator();
 				// String text = s.toString();
-				// while(iterator.hasNext())
+				// while(iterator.hasNext())android 小学语文课本图标
 				// {
 				// String strTemp = iterator.next();
 				// if(text.contains(strTemp))
@@ -148,19 +148,19 @@ public class ReciteTextMain extends Activity
 			}
 		});
 
-		textView.setTextIsSelectable(true);
-		textView.setOnLongClickListener(new OnLongClickListener()
-		{
-
-			@Override
-			public boolean onLongClick(View v )
-			{
-				// TODO Auto-generated method stub
-				System.out.println("setOnLongClickListener...");
-				return false;
-			}
-		});
-		textView.onTextContextMenuItem(3);
+		// textView.setTextIsSelectable(true);
+		// textView.setOnLongClickListener(new OnLongClickListener()
+		// {
+		//
+		// @Override
+		// public boolean onLongClick(View v )
+		// {
+		// // TODO Auto-generated method stub
+		// System.out.println("setOnLongClickListener...");
+		// return false;
+		// }
+		// });
+		// textView.onTextContextMenuItem(3);
 
 	}
 
