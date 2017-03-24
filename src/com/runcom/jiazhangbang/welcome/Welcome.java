@@ -86,7 +86,7 @@ public class Welcome extends Activity
 
 				if(judge(name ,mobilePhoneNumber))
 				{
-					startActivity(intent);
+					// startActivity(intent);
 					finish();
 				}
 				else

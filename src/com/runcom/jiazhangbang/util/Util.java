@@ -18,6 +18,9 @@ public class Util
 
 	public static final String serverAddress = "http://172.16.0.63:24680/wgcwgc/mp3/001.mp3";
 
+	// public static final String serverAddress = "http://abv.cn/music/红豆.mp3";
+	// public static final String serverAddress = "http://www.baidu.com";
+
 	/**
 	 * 得到设备屏幕的宽度
 	 */

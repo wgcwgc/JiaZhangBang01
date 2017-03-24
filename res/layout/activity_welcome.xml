@@ -16,7 +16,7 @@
         android:layout_alignParentLeft="true"
         android:layout_toLeftOf="@+id/welcome_name_editText"
         android:gravity="center_horizontal|center_vertical"
-        android:text="姓名 *"
+        android:text="姓名"
         android:textSize="22sp" />
 
     <EditText
@@ -38,7 +38,7 @@
         android:layout_alignRight="@+id/welcome_name_textView"
         android:layout_alignTop="@+id/welcome_classes_spinner"
         android:gravity="center_horizontal|center_vertical"
-        android:text="年级 *"
+        android:text="年级"
         android:textSize="22sp" />
 
     <Spinner
@@ -80,6 +80,6 @@
         android:layout_below="@+id/welcome_mobilePhoneNumber_editText"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="37dp"
-        android:text="登录" />
+        android:text="提交" />
 
 </RelativeLayout>

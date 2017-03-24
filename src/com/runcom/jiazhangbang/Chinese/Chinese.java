@@ -15,6 +15,7 @@ import com.runcom.jiazhangbang.listenText.ListenText;
 import com.runcom.jiazhangbang.listenWrite.ListenWrite;
 import com.runcom.jiazhangbang.reciteText.ReciteText;
 import com.runcom.jiazhangbang.util.NetUtil;
+import com.runcom.jiazhangbang.welcome.Welcome;
 import com.umeng.analytics.MobclickAgent;
 
 public class Chinese extends Activity
@@ -25,7 +26,6 @@ public class Chinese extends Activity
 	@Override
 	protected void onCreate(Bundle savedInstanceState )
 	{
-		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_chinese);
 		selected = getIntent().getIntExtra("selected" ,0);
@@ -42,8 +42,6 @@ public class Chinese extends Activity
 
 	public void ListenText(View v )
 	{
-		// Toast.makeText(getApplicationContext() ,"听课文"
-		// ,Toast.LENGTH_SHORT).show();
 		intent.putExtra("selected" ,selected);
 		intent.setClass(getApplicationContext() ,ListenText.class);
 		if(NetUtil.getNetworkState(getApplicationContext()) == NetUtil.NETWORK_NONE)
@@ -51,21 +49,11 @@ public class Chinese extends Activity
 			Toast.makeText(getApplicationContext() ,"请检查网络连接" ,Toast.LENGTH_SHORT).show();
 		}
 		else
-			// if( !new
-			// ServerUtil().execute(Util.serverAddress).equals("success"))
-			// {
-			// Toast.makeText(getApplicationContext() ,"服务器未开启 !\n请联系网络管理员."
-			// ,Toast.LENGTH_SHORT).show();
-			// }
-			// else
 			startActivity(intent);
 	}
 
 	public void ListenAndWrite(View v )
 	{
-		// Toast.makeText(getApplicationContext() ,"听写"
-		// ,Toast.LENGTH_SHORT).show();
-
 		intent.putExtra("selected" ,selected);
 		intent.setClass(getApplicationContext() ,ListenWrite.class);
 		if(NetUtil.getNetworkState(getApplicationContext()) == NetUtil.NETWORK_NONE)
@@ -73,21 +61,11 @@ public class Chinese extends Activity
 			Toast.makeText(getApplicationContext() ,"请检查网络连接" ,Toast.LENGTH_SHORT).show();
 		}
 		else
-			// if( !new
-			// ServerUtil().execute(Util.serverAddress).equals("success") )
-			// {
-			// Toast.makeText(getApplicationContext() ,"服务器未开启 !\n请联系网络管理员."
-			// ,Toast.LENGTH_SHORT).show();
-			// }
-			// else
 			startActivity(intent);
 	}
 
 	public void ReciteText(View v )
 	{
-		// Toast.makeText(getApplicationContext() ,"背课文"
-		// ,Toast.LENGTH_SHORT).show();
-
 		intent.putExtra("selected" ,selected);
 		intent.setClass(getApplicationContext() ,ReciteText.class);
 		if(NetUtil.getNetworkState(getApplicationContext()) == NetUtil.NETWORK_NONE)
@@ -108,18 +86,20 @@ public class Chinese extends Activity
 	public void Repeat(View v )
 	{
 		Toast.makeText(getApplicationContext() ,"跟读" ,Toast.LENGTH_SHORT).show();
-
 	}
 
 	public void FindNewWords(View v )
 	{
-
 		Toast.makeText(getApplicationContext() ,"查生词" ,Toast.LENGTH_SHORT).show();
 	}
 
 	public void ComingSoon(View v )
 	{
 		Toast.makeText(getApplicationContext() ,"Coming soon !" ,Toast.LENGTH_SHORT).show();
+		intent.putExtra("selected" ,selected);
+		intent.setClass(getApplicationContext() ,Welcome.class);
+		startActivity(intent);
+		// this.finish();
 	}
 
 	// @Override

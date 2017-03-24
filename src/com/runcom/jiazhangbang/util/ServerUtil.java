@@ -49,4 +49,27 @@ public class ServerUtil extends AsyncTask < String , String , String >
 		}
 		return "success";
 	}
+	
+	public boolean judge(String...params )
+	{
+		try
+		{
+			HttpGet get = new HttpGet(params[0]);
+			Log.d("LOG" ,params[0]);
+			HttpResponse response = new DefaultHttpClient().execute(get);
+			
+			Log.d("LOG" ,params[0]);
+			if(response.getStatusLine().getStatusCode() == 200)
+			{
+				return true;
+			}
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
+	
 }
