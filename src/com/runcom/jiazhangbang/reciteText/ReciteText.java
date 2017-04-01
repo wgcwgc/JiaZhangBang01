@@ -61,7 +61,7 @@ public class ReciteText extends Activity
 	protected void onCreate(Bundle savedInstanceState )
 	{
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.recite_text);
+		setContentView(R.layout.recite_text_listview);
 
 		selected = getIntent().getIntExtra("selected" ,1);
 
@@ -242,6 +242,7 @@ public class ReciteText extends Activity
 						lyric = lyric.substring(0 ,lyric.lastIndexOf("/")) + "/00" + i + ".lrc";
 						myAudio.setLyric(lyric);
 						myAudio.setName(name + i);
+						myAudio.setMode("È«ÎÄ±³ËÐ" + i);
 						myAudio.setSource(audio.substring(0 ,audio.lastIndexOf("/")) + "/00" + i + ".mp3");
 						textList.add(myAudio);
 					}

@@ -83,9 +83,11 @@ public class MyListViewAdapter extends BaseAdapter
 		Holder holder;
 		if(convertView == null)
 		{
-			convertView = inflater.inflate(R.layout.recite_text_listview ,null);
+			convertView = inflater.inflate(R.layout.recite_text_listview_item ,null);
 			holder = new Holder();
 			holder.name = (TextView) convertView.findViewById(R.id.recite_text_listview_item_name);
+			holder.mode = (TextView) convertView.findViewById(R.id.recite_text_listview_item_recite_mode);
+
 			convertView.setTag(holder);
 		}
 		else
@@ -98,7 +100,10 @@ public class MyListViewAdapter extends BaseAdapter
 
 		}
 		else
+		{
 			holder.name.setText(textList.get(position).getName());
+			holder.mode.setText(textList.get(position).getMode());
+		}
 
 		// convertView.setOnClickListener(new View.OnClickListener()
 		// {
@@ -226,7 +231,7 @@ public class MyListViewAdapter extends BaseAdapter
 
 	class Holder
 	{
-		TextView id , name , data , source , link , other;
+		TextView id , name , mode , data , source , link , other;
 		ImageButton share , download;
 	}
 

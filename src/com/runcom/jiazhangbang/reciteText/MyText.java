@@ -2,7 +2,7 @@ package com.runcom.jiazhangbang.reciteText;
 
 public class MyText
 {
-	private String id , name , link , source , lyric , other;
+	private String id , name , mode , link , source , lyric , other;
 
 	public String getId()
 	{
@@ -22,6 +22,23 @@ public class MyText
 	public void setName(String name )
 	{
 		this.name = name;
+	}
+
+	/**
+	 * @return the mode
+	 */
+	public String getMode()
+	{
+		return mode;
+	}
+
+	/**
+	 * @param mode
+	 *            the mode to set
+	 */
+	public void setMode(String mode )
+	{
+		this.mode = mode;
 	}
 
 	public String getLink()

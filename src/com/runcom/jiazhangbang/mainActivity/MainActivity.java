@@ -38,8 +38,8 @@ public class MainActivity extends Activity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		arrayAdapter = ArrayAdapter.createFromResource(this ,R.array.classes ,android.R.layout.simple_spinner_item);
-		arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		arrayAdapter = ArrayAdapter.createFromResource(this ,R.array.classes ,R.layout.simple_spinner_item);
+		arrayAdapter.setDropDownViewResource(R.layout.simple_spinner_dropdown_item);
 
 		spinner = (Spinner) findViewById(R.id.main_spinner);
 		spinner.setAdapter(arrayAdapter);
@@ -64,6 +64,7 @@ public class MainActivity extends Activity
 				Chinese_textView.setText(selected + "年级语文");
 				math_textView.setText(selected + "年级数学");
 				English_textView.setText(selected + "年级英语");
+				Toast.makeText(getApplicationContext() ,"arg0: " + arg0.getSelectedItem().toString() + "\nspinner: " + spinner.getSelectedItem().toString() ,Toast.LENGTH_LONG).show();
 				initImageView(selected);
 			}
 
@@ -95,7 +96,6 @@ public class MainActivity extends Activity
 				Intent intent = new Intent();
 				intent.setClass(getApplicationContext() ,Chinese.class);
 				intent.putExtra("selected" ,selected);
-
 				startActivity(intent);
 			}
 		});
@@ -157,9 +157,27 @@ public class MainActivity extends Activity
 			{
 				// TODO Auto-generated method stub
 				Toast.makeText(getApplicationContext() ,"听故事..." ,Toast.LENGTH_SHORT).show();
+				// Intent intent = new Intent();
+				// intent.setAction(Intent.ACTION_MAIN);
+				// intent.addCategory(Intent.CATEGORY_HOME);
+				// startActivity(intent);
 			}
 		});
 
+		// Bitmap icon = BitmapFactory.decodeResource(getResources()
+		// ,R.drawable.ic_launcher);
+		// Notification notification = new
+		// NotificationCompat.Builder(getApplicationContext()).setSmallIcon(R.drawable.ic_interface)
+		// .setContentTitle("contentTitle").setContentText("contentText").setLargeIcon(icon).setOngoing(false)
+		// .setTicker("ticker").setContentInfo("contentInfo").setDefaults(Notification.DEFAULT_ALL)
+		// .setContentIntent(PendingIntent.getActivity(getApplicationContext()
+		// ,100 ,
+		// new Intent(this , ReciteTextMain.class)
+		// ,PendingIntent.FLAG_ONE_SHOT))
+		// .setAutoCancel(true).build();
+		// NotificationManager notificationManager = (NotificationManager)
+		// getSystemService(this.NOTIFICATION_SERVICE);
+		// notificationManager.notify(1 ,notification);
 	}
 
 	/**

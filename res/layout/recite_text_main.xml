@@ -15,8 +15,10 @@
             android:id="@+id/recite_text_main_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:clickable="false"
             android:editable="true"
             android:gravity="center_vertical|center_horizontal|left"
+            android:longClickable="false"
             android:text="asdf"
             android:textColor="#000000"
             android:textSize="27sp" />

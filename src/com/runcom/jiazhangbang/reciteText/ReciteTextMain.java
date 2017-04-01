@@ -3,21 +3,23 @@
  */
 package com.runcom.jiazhangbang.reciteText;
 
-import java.util.HashMap;
-
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
-import android.text.SpannableString;
 import android.text.TextWatcher;
+import android.util.Log;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.ViewGroup;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.View.OnTouchListener;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.runcom.jiazhangbang.R;
 import com.umeng.analytics.MobclickAgent;
@@ -69,15 +71,13 @@ public class ReciteTextMain extends Activity
 
 	}
 
-	SpannableString spannableString;
-	HashMap < String , Integer > key = new HashMap < String , Integer >();
-
 	/**
 	 * 
 	 */
+	int touch_count = 0;
+
 	private void initView()
 	{
-		// TODO Auto-generated method stub
 		editText = (EditText) findViewById(R.id.recite_text_main_text);
 		String tempString = "start...\n";
 		int i;
@@ -87,80 +87,77 @@ public class ReciteTextMain extends Activity
 		}
 		tempString += "end...\n";
 
-		spannableString = new SpannableString("");
-
-		key.put("(" ,Color.RED);
-		key.put(")" ,Color.RED);
-		key.put("[" ,Color.BLUE);
-		key.put("]" ,Color.BLUE);
-		key.put("0" ,Color.GREEN);
-		key.put("1" ,Color.GREEN);
-		key.put("2" ,Color.GREEN);
-		key.put("3" ,Color.GREEN);
-		key.put("4" ,Color.GREEN);
-		key.put("5" ,Color.GREEN);
-		key.put("6" ,Color.GREEN);
-		key.put("7" ,Color.GREEN);
-		key.put("8" ,Color.GREEN);
-		key.put("9" ,Color.GREEN);
-
 		editText.setText(tempString);
+		editText.setOnTouchListener(new OnTouchListener()
+		{
+			@Override
+			public boolean onTouch(View v , MotionEvent event )
+			{
+				touch_count ++ ;
+				switch(touch_count)
+				{
+					case 1:
+						Toast.makeText(getApplicationContext() ,"touch" ,Toast.LENGTH_SHORT).show();
 
+						break;
+					default:
+						Toast.makeText(getApplicationContext() ,"touch: " + touch_count ,Toast.LENGTH_SHORT).show();
+
+				}
+				return false;
+			}
+		});
 		editText.addTextChangedListener(new TextWatcher()
 		{
 
 			@Override
 			public void onTextChanged(CharSequence s , int start , int before , int count )
 			{
-				System.out.println("start: " + start + "\ncount: " + count);
-				// ((Spannable) s).setSpan(new
-				// ForegroundColorSpan(key.get(s.toString().indexOf(start)))
-				// ,start ,start + count ,Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+				// System.out.println("start: " + start + "\nbefore: " + before
+				// + "\ncount: " + count);
+				// new SpannableString(s).setSpan(new
+				// ForegroundColorSpan(Color.RED) ,start ,start + count
+				// ,Spannable.SPAN_INCLUSIVE_INCLUSIVE);
 			}
 
 			@Override
 			public void beforeTextChanged(CharSequence s , int start , int count , int after )
 			{
-//				ViewGroup
 			}
 
 			@Override
 			public void afterTextChanged(Editable s )
 			{
-				// Iterator < String > iterator = key.keySet().iterator();
-				// String text = s.toString();
-				// while(iterator.hasNext())android 小学语文课本图标
-				// {
-				// String strTemp = iterator.next();
-				// if(text.contains(strTemp))
-				// {
-				// int index = 0;
-				// while((index = text.indexOf(strTemp ,index)) != -1)
-				// {
-				// System.out.println("strTemp: " + strTemp);
-				// // s.setSpan(new
-				// // ForegroundColorSpan(key.get(strTemp)) ,index
-				// // ,index + 1 ,Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-				// index += strTemp.length();
-				// }
-				// }
-				// }
 			}
 		});
+	}
 
-		// textView.setTextIsSelectable(true);
-		// textView.setOnLongClickListener(new OnLongClickListener()
-		// {
-		//
-		// @Override
-		// public boolean onLongClick(View v )
-		// {
-		// // TODO Auto-generated method stub
-		// System.out.println("setOnLongClickListener...");
-		// return false;
-		// }
-		// });
-		// textView.onTextContextMenuItem(3);
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see android.app.Activity#onCreateContextMenu(android.view.ContextMenu,
+	 * android.view.View, android.view.ContextMenu.ContextMenuInfo)
+	 */
+	@Override
+	public void onCreateContextMenu(ContextMenu menu , View view , ContextMenuInfo menuInfo )
+	{
+		super.onCreateContextMenu(menu ,view ,menuInfo);
+		// menu.removeItem(android.R.id.selectAll);
+		// menu.removeItem(android.R.id.paste);
+		// menu.removeItem(android.R.id.cut);
+		menu.removeItem(android.R.id.copy);
+		MenuItem item = menu.findItem(android.R.id.copy);
+
+		try
+		{
+			String ChkMenu = item.getTitle().toString();
+			Log.d("LOG" ,item.toString() + "\nchkmenu: " + ChkMenu);
+			menu.add(0 ,1 ,0 ,"加入笔记");
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
 
 	}
 

@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.runcom.jiazhangbang.R;
 import com.runcom.jiazhangbang.listenText.ListenText;
 import com.runcom.jiazhangbang.listenWrite.ListenWrite;
+import com.runcom.jiazhangbang.notification.MyNotification;
 import com.runcom.jiazhangbang.reciteText.ReciteText;
 import com.runcom.jiazhangbang.util.NetUtil;
 import com.runcom.jiazhangbang.welcome.Welcome;
@@ -38,6 +39,20 @@ public class Chinese extends Activity
 		actionbar.setDisplayShowCustomEnabled(true);
 		actionbar.setTitle(selected + "Äê¼¶ÓïÎÄ");
 
+		// Bitmap icon = BitmapFactory.decodeResource(getResources()
+		// ,R.drawable.ic_launcher);
+		// Notification notification = new
+		// NotificationCompat.Builder(getApplicationContext())
+		// .setSmallIcon(R.drawable.ic_interface).setContentTitle("contentTitle").setContentText("contentText")
+		// .setLargeIcon(icon).setOngoing(false).setTicker("ticker").setContentInfo("contentInfo")
+		// .setDefaults(Notification.DEFAULT_ALL).setContentIntent(PendingIntent.getActivity(getApplicationContext()
+		// ,100 ,new Intent(this , ReciteTextMain.class)
+		// ,PendingIntent.FLAG_ONE_SHOT))
+		// .setAutoCancel(true).build();
+		// NotificationManager notificationManager = (NotificationManager)
+		// getSystemService(this.NOTIFICATION_SERVICE);
+		// notificationManager.notify(1 ,notification);
+		MyNotification.myNotification(getApplicationContext());
 	}
 
 	public void ListenText(View v )

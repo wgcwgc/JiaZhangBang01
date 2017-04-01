@@ -1,27 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal" >
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#D6D6D6"
+    android:orientation="vertical" >
 
-    <TextView
-        android:id="@+id/recite_text_listview_item_name"
-        android:layout_width="wrap_content"
-        android:layout_height="57dp"
-        android:layout_marginLeft="1dp"
-        android:layout_marginStart="1dp"
-        android:gravity="center_vertical|left"
-        android:singleLine="true"
-        android:text="请检查网络连接"
-        android:textSize="33sp" />
-
-    <TextView
-        android:id="@+id/recite_text_listview_item_recite_mode"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center_vertical|center_horizontal"
-        android:singleLine="true"
-        android:text="全文背诵"
-        android:textSize="17sp" />
+    <com.baoyz.swipemenulistview.SwipeMenuListView
+        android:id="@+id/recitText_swipeMenu_listView"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="#B3A981" />
 
 </LinearLayout>
