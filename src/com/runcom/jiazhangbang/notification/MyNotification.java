@@ -11,7 +11,7 @@ import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
 
 import com.runcom.jiazhangbang.R;
-import com.runcom.jiazhangbang.reciteText.ReciteTextMain;
+import com.runcom.jiazhangbang.welcome.Welcome;
 
 /**
  * @author Administrator
@@ -62,7 +62,7 @@ public class MyNotification
 		// .setContentInfo("contentInfo")
 		.setDefaults(Notification.DEFAULT_ALL)//
 		.setContentIntent(PendingIntent.getActivity(context ,100 ,new Intent(context//
-		, ReciteTextMain.class) ,PendingIntent.FLAG_ONE_SHOT))//
+		, Welcome.class) ,PendingIntent.FLAG_ONE_SHOT))//
 		.setAutoCancel(true).build();
 
 		NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);

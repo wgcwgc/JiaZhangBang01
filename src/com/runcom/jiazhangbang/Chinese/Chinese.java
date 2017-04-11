@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.runcom.jiazhangbang.R;
+import com.runcom.jiazhangbang.findNewWords.FindNewWords;
 import com.runcom.jiazhangbang.listenText.ListenText;
 import com.runcom.jiazhangbang.listenWrite.ListenWrite;
 import com.runcom.jiazhangbang.notification.MyNotification;
@@ -39,20 +40,6 @@ public class Chinese extends Activity
 		actionbar.setDisplayShowCustomEnabled(true);
 		actionbar.setTitle(selected + "年级语文");
 
-		// Bitmap icon = BitmapFactory.decodeResource(getResources()
-		// ,R.drawable.ic_launcher);
-		// Notification notification = new
-		// NotificationCompat.Builder(getApplicationContext())
-		// .setSmallIcon(R.drawable.ic_interface).setContentTitle("contentTitle").setContentText("contentText")
-		// .setLargeIcon(icon).setOngoing(false).setTicker("ticker").setContentInfo("contentInfo")
-		// .setDefaults(Notification.DEFAULT_ALL).setContentIntent(PendingIntent.getActivity(getApplicationContext()
-		// ,100 ,new Intent(this , ReciteTextMain.class)
-		// ,PendingIntent.FLAG_ONE_SHOT))
-		// .setAutoCancel(true).build();
-		// NotificationManager notificationManager = (NotificationManager)
-		// getSystemService(this.NOTIFICATION_SERVICE);
-		// notificationManager.notify(1 ,notification);
-		MyNotification.myNotification(getApplicationContext());
 	}
 
 	public void ListenText(View v )
@@ -101,16 +88,50 @@ public class Chinese extends Activity
 	public void Repeat(View v )
 	{
 		Toast.makeText(getApplicationContext() ,"跟读" ,Toast.LENGTH_SHORT).show();
+		// TODO 跟读
+		intent.putExtra("selected" ,selected);
+		intent.setClass(getApplicationContext() ,ListenWrite.class);
+		if(NetUtil.getNetworkState(getApplicationContext()) == NetUtil.NETWORK_NONE)
+		{
+			Toast.makeText(getApplicationContext() ,"请检查网络连接" ,Toast.LENGTH_SHORT).show();
+		}
+		else
+			// if( !new
+			// ServerUtil().execute(Util.serverAddress).equals("success") )
+			// {
+			// Toast.makeText(getApplicationContext() ,"服务器未开启 !\n请联系网络管理员."
+			// ,Toast.LENGTH_SHORT).show();
+			// }
+			// else
+			startActivity(intent);
 	}
 
 	public void FindNewWords(View v )
 	{
-		Toast.makeText(getApplicationContext() ,"查生词" ,Toast.LENGTH_SHORT).show();
+		intent.putExtra("selected" ,selected);
+		intent.setClass(getApplicationContext() ,FindNewWords.class);
+		if(NetUtil.getNetworkState(getApplicationContext()) == NetUtil.NETWORK_NONE)
+		{
+			Toast.makeText(getApplicationContext() ,"请检查网络连接" ,Toast.LENGTH_SHORT).show();
+		}
+		else
+			// if( !new
+			// ServerUtil().execute(Util.serverAddress).equals("success") )
+			// {
+			// Toast.makeText(getApplicationContext() ,"服务器未开启 !\n请联系网络管理员."
+			// ,Toast.LENGTH_SHORT).show();
+			// }
+			// else
+			startActivity(intent);
+		// Toast.makeText(getApplicationContext() ,"查生词"
+		// ,Toast.LENGTH_SHORT).show();
 	}
 
 	public void ComingSoon(View v )
 	{
-		Toast.makeText(getApplicationContext() ,"Coming soon !" ,Toast.LENGTH_SHORT).show();
+		MyNotification.myNotification(getApplicationContext());
+		// Toast.makeText(getApplicationContext() ,"Coming soon !"
+		// ,Toast.LENGTH_SHORT).show();
 		intent.putExtra("selected" ,selected);
 		intent.setClass(getApplicationContext() ,Welcome.class);
 		startActivity(intent);

@@ -53,10 +53,10 @@ public class MainActivity extends Activity
 		Chinese_textView.setText(selected + "年级语文");
 		math_textView.setText(selected + "年级数学");
 		English_textView.setText(selected + "年级英语");
-
+		spinner.setDropDownHorizontalOffset(2);
+		spinner.setDropDownVerticalOffset(2);
 		spinner.setOnItemSelectedListener(new OnItemSelectedListener()
 		{
-
 			@Override
 			public void onItemSelected(AdapterView < ? > arg0 , View arg1 , int arg2 , long arg3 )
 			{
