@@ -78,6 +78,11 @@
             android:icon="@drawable/ic_come_back"
             android:parentActivityName="com.runcom.jiazhangbang.Chinese.Chinese" >
         </activity>
+        <activity
+            android:name="com.runcom.jiazhangbang.repeat.Repeat"
+            android:icon="@drawable/ic_come_back"
+            android:parentActivityName="com.runcom.jiazhangbang.Chinese.Chinese" >
+        </activity>
     </application>
 
 </manifest>

@@ -10,7 +10,6 @@ public class NetUtil
 	public static final int NETWORK_WIFI = 1;
 	public static final int NETWORK_MOBILE = 2;
 
-	@SuppressWarnings("deprecation")
 	public static int getNetworkState(Context context )
 	{
 		// 获取网络链接的服务

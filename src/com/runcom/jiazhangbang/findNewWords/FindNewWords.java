@@ -103,6 +103,7 @@ public class FindNewWords extends Activity
 			@Override
 			public void afterTextChanged(Editable s )
 			{
+				loadingData(s.toString());
 			}
 		});
 		autoCompleteTextView.setOnItemClickListener(new OnItemClickListener()
@@ -111,15 +112,7 @@ public class FindNewWords extends Activity
 			public void onItemClick(AdapterView < ? > parent , View view , int position , long id )
 			{
 				String contents = parent.getItemAtPosition(position).toString();
-				for(int i = 0 ; i < 57 ; i ++ )
-				{
-					contents += "\n" + i;
-				}
-				contentsShowTextView.setText(contents);
-				// Toast.makeText(FindNewWords.this
-				// ,parent.getItemAtPosition(position).toString() + " ÄÚÈÝ: " +
-				// contentsShowTextView.getText().toString()
-				// ,Toast.LENGTH_SHORT).show();
+				loadingData(contents);
 			}
 		});
 
@@ -135,18 +128,24 @@ public class FindNewWords extends Activity
 
 		search_imageView.setOnClickListener(new OnClickListener()
 		{
-
 			@Override
 			public void onClick(View v )
 			{
 				String contents = autoCompleteTextView.getText().toString();
-				for(int i = 0 ; i < 57 ; i ++ )
-				{
-					contents += "\n" + i;
-				}
-				contentsShowTextView.setText(contents);
+				loadingData(contents);
 			}
+
 		});
+	}
+
+	private void loadingData(String contents )
+	{
+		String realContents = contents;
+		for(int i = 0 ; i < 57 ; i ++ )
+		{
+			realContents += "\n" + contents + i;
+		}
+		contentsShowTextView.setText(realContents);
 	}
 
 	/**

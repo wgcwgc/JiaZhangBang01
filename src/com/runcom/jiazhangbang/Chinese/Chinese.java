@@ -16,6 +16,7 @@ import com.runcom.jiazhangbang.listenText.ListenText;
 import com.runcom.jiazhangbang.listenWrite.ListenWrite;
 import com.runcom.jiazhangbang.notification.MyNotification;
 import com.runcom.jiazhangbang.reciteText.ReciteText;
+import com.runcom.jiazhangbang.repeat.Repeat;
 import com.runcom.jiazhangbang.util.NetUtil;
 import com.runcom.jiazhangbang.welcome.Welcome;
 import com.umeng.analytics.MobclickAgent;
@@ -87,10 +88,11 @@ public class Chinese extends Activity
 
 	public void Repeat(View v )
 	{
-		Toast.makeText(getApplicationContext() ,"¸ú¶Á" ,Toast.LENGTH_SHORT).show();
+		// Toast.makeText(getApplicationContext() ,"¸ú¶Á"
+		// ,Toast.LENGTH_SHORT).show();
 		// TODO ¸ú¶Á
 		intent.putExtra("selected" ,selected);
-		intent.setClass(getApplicationContext() ,ListenWrite.class);
+		intent.setClass(getApplicationContext() ,Repeat.class);
 		if(NetUtil.getNetworkState(getApplicationContext()) == NetUtil.NETWORK_NONE)
 		{
 			Toast.makeText(getApplicationContext() ,"Çë¼ì²éÍøÂçÁ¬½Ó" ,Toast.LENGTH_SHORT).show();
