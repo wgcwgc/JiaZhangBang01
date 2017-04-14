@@ -109,7 +109,7 @@ public class ListenText extends Activity implements Runnable , OnCompletionListe
 		source4 = "004.mp3";
 
 		source1 = "http://172.16.0.63:24680/wgcwgc/mp3/001.mp3";
-		source1 = "http://abv.cn/music/ºì¶¹.mp3";
+		// source1 = "http://abv.cn/music/ºì¶¹.mp3";
 		source2 = "http://172.16.0.63:24680/wgcwgc/mp3/002.mp3";
 		source3 = "http://172.16.0.63:24680/wgcwgc/mp3/003.mp3";
 		source4 = "http://172.16.0.63:24680/wgcwgc/mp3/004.mp3";
@@ -118,8 +118,7 @@ public class ListenText extends Activity implements Runnable , OnCompletionListe
 		lyricsPath = "http://172.16.0.63:24680/wgcwgc/lrc/001.lrc";
 		// name = intent.getStringExtra("name");
 		name = "12PEP Unit" + selected;
-		// lyricsPath = Util.lyricsPath + "Íõ·Æ_ºì¶¹.lrc";// defaultLyric.lrc
-		lyricsPath = Util.lyricsPath + lyricsPath.substring(lyricsPath.lastIndexOf("/"));
+		lyricsPath = Util.LYRICSPATH + lyricsPath.substring(lyricsPath.lastIndexOf("/"));
 
 		ActionBar actionbar = getActionBar();
 		actionbar.setDisplayHomeAsUpEnabled(false);

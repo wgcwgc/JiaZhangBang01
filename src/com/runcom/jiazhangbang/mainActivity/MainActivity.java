@@ -1,7 +1,11 @@
 package com.runcom.jiazhangbang.mainActivity;
 
+import java.io.File;
+
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
@@ -16,6 +20,7 @@ import android.widget.Toast;
 
 import com.runcom.jiazhangbang.R;
 import com.runcom.jiazhangbang.Chinese.Chinese;
+import com.runcom.jiazhangbang.util.SDCardHelper;
 import com.umeng.analytics.MobclickAgent;
 
 public class MainActivity extends Activity
@@ -100,14 +105,15 @@ public class MainActivity extends Activity
 			}
 		});
 
+		final String urlString = "https://www.baidu.com/img/bd_logo1.png";
 		math_imageView.setOnClickListener(new OnClickListener()
 		{
 
 			@Override
 			public void onClick(View v )
 			{
-				// TODO Auto-generated method stub
 				Toast.makeText(getApplicationContext() ,selected + "年级数学" ,Toast.LENGTH_SHORT).show();
+				new MyTask(MainActivity.this , urlString.substring(urlString.lastIndexOf("/"))).execute(urlString);
 			}
 		});
 
@@ -119,6 +125,18 @@ public class MainActivity extends Activity
 			{
 				// TODO Auto-generated method stub
 				Toast.makeText(getApplicationContext() ,selected + "年级英语" ,Toast.LENGTH_SHORT).show();
+
+				String filepath = SDCardHelper.getSDCardPath() + File.separator + "&abc_record/pictures" + File.separator + urlString.substring(urlString.lastIndexOf("/"));
+				byte [] data = SDCardHelper.loadFileFromSDCard(filepath);
+				if(data != null)
+				{// 如果已经有旧的数据,就直接从SD卡中读取出来显示在ImageView中
+					Bitmap bm = BitmapFactory.decodeByteArray(data ,0 ,data.length);
+					English_imageView.setImageBitmap(bm);
+				}
+				else
+				{
+					Toast.makeText(getApplicationContext() ,"没有该图片！" ,Toast.LENGTH_LONG).show();
+				}
 
 			}
 		});
@@ -135,7 +153,6 @@ public class MainActivity extends Activity
 			@Override
 			public void onClick(View v )
 			{
-				// TODO Auto-generated method stub
 				Toast.makeText(getApplicationContext() ,"培训课程..." ,Toast.LENGTH_SHORT).show();
 			}
 		});
@@ -155,7 +172,6 @@ public class MainActivity extends Activity
 			@Override
 			public void onClick(View v )
 			{
-				// TODO Auto-generated method stub
 				Toast.makeText(getApplicationContext() ,"听故事..." ,Toast.LENGTH_SHORT).show();
 				// Intent intent = new Intent();
 				// intent.setAction(Intent.ACTION_MAIN);

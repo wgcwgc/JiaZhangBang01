@@ -1,22 +1,39 @@
 package com.runcom.jiazhangbang.util;
 
 import android.content.Context;
-import android.os.Environment;
 
 public class Util
 {
-	private static final String rootPath = Environment.getExternalStorageDirectory().toString();
-	public static final String appPath = rootPath + "/&abc_record/";
-	public static final String articlesPath = appPath + "articles/";
-	public static final String audiosPath = appPath + "audios/";
-	public static final String cachePath = appPath + "cache/";
-	public static final String lyricsPath = appPath + "lyrics/";
-	public static final String musicsPath = appPath + "musics/";
+	public static final String ROOTPATH = SDCardHelper.getSDCardPath();
+	
+	public static final String appPath = "/&abc_record/";
+	public static final String APPPATH = ROOTPATH + appPath;
 
-	public static final String localAudioListCacheName = "localAudioList.log";
-	public static final String recordFileName = "wgcwgcRecord_";
+	public static final String articlesPath = "articles/";
+	public static final String ARTICLESPATH = APPPATH + articlesPath;
 
-	public static final String serverAddress = "http://172.16.0.63:24680/wgcwgc/mp3/001.mp3";
+	public static final String audiosPath = "audios/";
+	public static final String AUDIOSPATH = APPPATH + audiosPath;
+	
+	public static final String lyricsPath = "lyrics/";
+	public static final String LYRICSPATH = APPPATH + lyricsPath;
+
+	public static final String musicsPath = "musics/";
+	public static final String MUSICSPATH = APPPATH + musicsPath;
+	
+	public static final String cachePath = "cache/";
+	public static final String CACHEPATH = APPPATH + cachePath;
+
+	public static final String picturesPath = "pictures/";
+	public static final String PICTURESPATH = APPPATH + picturesPath;
+
+	public static final String localAudioListCache = "localAudioList.log";
+	public static final String LOCALAUDIOLISTCACHE = CACHEPATH + localAudioListCache;
+
+	public static final String recordPath = "wgcwgcRecord_";
+	public static final String RECORDPATH = APPPATH + recordPath;
+
+	public static final String SERVERADDRESS = "http://172.16.0.63:24680/wgcwgc/mp3/001.mp3";
 
 	// public static final String serverAddress = "http://abv.cn/music/ºì¶¹.mp3";
 	// public static final String serverAddress = "http://www.baidu.com";
