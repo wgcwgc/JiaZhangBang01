@@ -2,11 +2,14 @@ package com.runcom.jiazhangbang.mainActivity;
 
 import java.io.File;
 
+import okhttp3.Call;
+import okhttp3.Response;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -18,9 +21,12 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.gr.okhttp.OkHttpUtils;
+import com.gr.okhttp.callback.Callback;
 import com.runcom.jiazhangbang.R;
 import com.runcom.jiazhangbang.Chinese.Chinese;
 import com.runcom.jiazhangbang.util.SDCardHelper;
+import com.runcom.jiazhangbang.util.ServerInterfaceUtil;
 import com.umeng.analytics.MobclickAgent;
 
 public class MainActivity extends Activity
@@ -159,11 +165,42 @@ public class MainActivity extends Activity
 		animation_textView.setOnClickListener(new OnClickListener()
 		{
 
+			@SuppressWarnings("rawtypes")
 			@Override
 			public void onClick(View v )
 			{
 				// TODO Auto-generated method stub
 				Toast.makeText(getApplicationContext() ,"¶¯»­ÅäÒô..." ,Toast.LENGTH_SHORT).show();
+
+				// OkHttpClient.Builder
+
+				String url = "http://123.206.133.214:8080/JiaZhangBang/listenText.jsp";
+				OkHttpUtils.get().url(url).build().execute(new Callback()
+				{
+
+					@Override
+					public void onError(Call arg0 , Exception arg1 , int arg2 )
+					{
+						// TODO Auto-generated method stub
+						Log.d("test00_LOG" ,arg0 + ":" + arg1 + ":" + arg2);
+					}
+
+					@Override
+					public void onResponse(Object arg0 , int arg1 )
+					{
+						// TODO Auto-generated method stub
+						Log.d("test01_LOG" ,arg0 + ":" + arg1);
+
+					}
+
+					@Override
+					public Object parseNetworkResponse(Response arg0 , int arg1 ) throws Exception
+					{
+						// TODO Auto-generated method stub
+						Log.d("test02_LOG" ,arg0.body().string() + ":" + arg1 + ":" + arg0.body().bytes().toString());
+						return null;
+					}
+				});
 			}
 		});
 		story_textView.setOnClickListener(new OnClickListener()
@@ -172,7 +209,10 @@ public class MainActivity extends Activity
 			@Override
 			public void onClick(View v )
 			{
-				Toast.makeText(getApplicationContext() ,"Ìý¹ÊÊÂ..." ,Toast.LENGTH_SHORT).show();
+				// Toast.makeText(getApplicationContext() ,"Ìý¹ÊÊÂ..."
+				// ,Toast.LENGTH_SHORT).show();
+				System.out.println("main: " + new ServerInterfaceUtil().getData("http://123.206.133.214:8080/JiaZhangBang/listenText.jsp?type=0"));
+
 				// Intent intent = new Intent();
 				// intent.setAction(Intent.ACTION_MAIN);
 				// intent.addCategory(Intent.CATEGORY_HOME);

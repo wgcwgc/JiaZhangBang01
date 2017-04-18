@@ -33,7 +33,7 @@ public class Util
 	public static final String recordPath = "wgcwgcRecord_";
 	public static final String RECORDPATH = APPPATH + recordPath;
 
-	public static final String SERVERADDRESS = "http://172.16.0.63:24680/wgcwgc/mp3/001.mp3";
+	public static final String SERVERADDRESS = "http://123.206.133.214:8080/";
 
 	// public static final String serverAddress = "http://abv.cn/music/ºì¶¹.mp3";
 	// public static final String serverAddress = "http://www.baidu.com";
