@@ -5,7 +5,7 @@ import android.content.Context;
 public class Util
 {
 	public static final String ROOTPATH = SDCardHelper.getSDCardPath();
-	
+
 	public static final String appPath = "/&abc_record/";
 	public static final String APPPATH = ROOTPATH + appPath;
 
@@ -14,13 +14,13 @@ public class Util
 
 	public static final String audiosPath = "audios/";
 	public static final String AUDIOSPATH = APPPATH + audiosPath;
-	
+
 	public static final String lyricsPath = "lyrics/";
 	public static final String LYRICSPATH = APPPATH + lyricsPath;
 
 	public static final String musicsPath = "musics/";
 	public static final String MUSICSPATH = APPPATH + musicsPath;
-	
+
 	public static final String cachePath = "cache/";
 	public static final String CACHEPATH = APPPATH + cachePath;
 
@@ -33,10 +33,19 @@ public class Util
 	public static final String recordPath = "wgcwgcRecord_";
 	public static final String RECORDPATH = APPPATH + recordPath;
 
-	public static final String SERVERADDRESS = "http://123.206.133.214:8080/";
+	public static final String SERVERADDRESS = "http://123.206.133.214:8080/JiaZhangBang/listenText.jsp?type=0";
+	public static final String SERVERADDRESS_findNewWords = "http://172.16.0.63:8080/wgc/findNewWords.jsp?type=0";
+	public static final String SERVERADDRESS_listenText = "http://123.206.133.214:8080/JiaZhangBang/listenText.jsp?type=0";
+	public static final String SERVERADDRESS_listenWrite = "http://123.206.133.214:8080/JiaZhangBang/listenWrite.jsp?type=0";
+	public static final String SERVERADDRESS_reciteText = "http://123.206.133.214:8080/JiaZhangBang/reciteText.jsp?type=0";
+	public static final String SERVERADDRESS_repeat = "http://123.206.133.214:8080/JiaZhangBang/repeat.jsp?type=0";
 
-	// public static final String serverAddress = "http://abv.cn/music/红豆.mp3";
-	// public static final String serverAddress = "http://www.baidu.com";
+	// public static final String serverAddress00 =
+	// "http://abv.cn/music/红豆.mp3";
+	// public static final String serverAddress01 = "http://www.baidu.com";
+	public static final int lyricEnglishShow = 0;
+	public static final int lyricChineseShow = 1;
+	public static final int lyricAllShow = 2;
 
 	/**
 	 * 得到设备屏幕的宽度

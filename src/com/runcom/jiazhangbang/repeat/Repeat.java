@@ -13,12 +13,15 @@ import java.util.TimerTask;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import okhttp3.Call;
+import okhttp3.Response;
+
+import org.json.JSONObject;
+
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
-import android.content.res.AssetFileDescriptor;
-import android.content.res.AssetManager;
 import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnBufferingUpdateListener;
@@ -41,13 +44,17 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.VideoView;
 
+import com.gr.okhttp.OkHttpUtils;
+import com.gr.okhttp.callback.Callback;
 import com.runcom.jiazhangbang.R;
 import com.runcom.jiazhangbang.listenText.LrcRead;
 import com.runcom.jiazhangbang.listenText.LyricContent;
 import com.runcom.jiazhangbang.listenText.LyricView;
+import com.runcom.jiazhangbang.listenText.MyAudio;
 import com.runcom.jiazhangbang.setting.PlaySetting;
-import com.runcom.jiazhangbang.util.NetUtil;
+import com.runcom.jiazhangbang.util.LrcFileDownloader;
 import com.runcom.jiazhangbang.util.Util;
 import com.umeng.analytics.MobclickAgent;
 
@@ -70,6 +77,8 @@ import com.umeng.analytics.MobclickAgent;
 @SuppressLint("HandlerLeak")
 public class Repeat extends Activity implements Runnable , OnCompletionListener , OnErrorListener , OnSeekBarChangeListener , OnBufferingUpdateListener
 {
+
+	VideoView videoView;
 	// spinner
 	private Spinner spinner;
 
@@ -77,9 +86,9 @@ public class Repeat extends Activity implements Runnable , OnCompletionListener 
 	private SeekBar seekBar;
 	private ImageButton btnPlay;
 	private TextView tv_currTime , tv_totalTime , tv_lrc;
-	List < String > play_list = new ArrayList < String >();
+	List < MyAudio > play_list = new ArrayList < MyAudio >();
 	List < String > play_list_copy = new ArrayList < String >();
-
+	MyAudio myAudio;
 	public MediaPlayer mp;
 	int currIndex = 0;// 表示当前播放的音乐索引
 	private boolean seekBarFlag = true;// 控制进度条线程标记
@@ -95,7 +104,7 @@ public class Repeat extends Activity implements Runnable , OnCompletionListener 
 	private ExecutorService es = Executors.newSingleThreadExecutor();
 
 	private Intent intent;
-	String source3 , lyricsPath , name , source1 , source2 , source4;
+	private String lyricsPath;
 	int selected;
 
 	// 歌词处理
@@ -107,10 +116,6 @@ public class Repeat extends Activity implements Runnable , OnCompletionListener 
 	private int CountTime = 0;
 	private List < LyricContent > LyricList = new ArrayList < LyricContent >();
 
-	// mScreenWidth mScreenHeigth myScreenDensity
-	int myScreenWidth , myScreenHeigth;
-	float myScreenDensity;
-
 	int newIndex = 0;
 
 	@Override
@@ -120,30 +125,7 @@ public class Repeat extends Activity implements Runnable , OnCompletionListener 
 		setContentView(R.layout.repeat);
 
 		intent = getIntent();
-
 		selected = intent.getIntExtra("selected" ,0);
-		// audio:'http://172.16.0.63:24680/wgcwgc/mp3/001.mp3'
-		// lyric : 'http://172.16.0.63:24680/wgcwgc/lrc/001.lrc' ,
-		// name : '12PEP Unit'
-
-		// TODO Auto-generated catch block 读取资源文件
-		// source = intent.getStringExtra("source");
-		source1 = "001.mp3";
-		source2 = "002.mp3";
-		source3 = "003.mp3";
-		source4 = "004.mp3";
-
-		// source1 = "http://172.16.0.63:24680/wgcwgc/mp3/001.mp3";
-		// source2 = "http://172.16.0.63:24680/wgcwgc/mp3/002.mp3";
-		// source3 = "http://172.16.0.63:24680/wgcwgc/mp3/003.mp3";
-		// source4 = "http://172.16.0.63:24680/wgcwgc/mp3/004.mp3";
-
-		// lyricsPath = intent.getStringExtra("lyric");
-		lyricsPath = "http://172.16.0.63:24680/wgcwgc/lrc/001.lrc";
-		// name = intent.getStringExtra("name");
-		name = "12PEP Unit" + selected;
-		// lyricsPath = Util.lyricsPath + "王菲_红豆.lrc";// defaultLyric.lrc
-		lyricsPath = Util.lyricsPath + lyricsPath.substring(lyricsPath.lastIndexOf("/"));
 
 		ActionBar actionbar = getActionBar();
 		actionbar.setDisplayHomeAsUpEnabled(false);
@@ -153,17 +135,114 @@ public class Repeat extends Activity implements Runnable , OnCompletionListener 
 		actionbar.setDisplayShowCustomEnabled(true);
 		actionbar.setTitle(" 跟读 " + selected + "年级");
 
+		initPlayView();
+	}
+
+	private void initPlayView()
+	{
 		mp = new MediaPlayer();
 		mp.setOnCompletionListener(this);
 		mp.setOnErrorListener(this);
+		mp.setOnBufferingUpdateListener(this);
+		// spinner
+		spinner = (Spinner) findViewById(R.id.listenText_spinner);
+		btnPlay = (ImageButton) findViewById(R.id.media_play);
+		seekBar = (SeekBar) findViewById(R.id.listenText_seekBar);
+		seekBar.setOnSeekBarChangeListener(this);
+		tv_currTime = (TextView) findViewById(R.id.listenText_textView_curr_time);
+		tv_totalTime = (TextView) findViewById(R.id.listenText_textView_total_time);
+		tv_lrc = (TextView) findViewById(R.id.listenText_lyricView_textView);
 
-		initPlayView();
+		initData();
 
+	}
+
+	private void initData()
+	{
+		// source1 = "http://if.redvpn.cn:9900/cn/stream/14/14.m3u8";
+		// source2 = "http://123.206.133.214:8080/wgcwgc/mp3/001.mp3";
+		// source3 = "http://if.redvpn.cn:9900/cn/stream/14.mp3";
+		// source4 = "http://123.206.133.214:8080/wgcwgc/mp3/001.mp3";
+
+		OkHttpUtils.get().url(Util.SERVERADDRESS).build().execute(new Callback < String >()
+		{
+
+			@Override
+			public void onError(Call arg0 , Exception arg1 , int arg2 )
+			{
+			}
+
+			@Override
+			public void onResponse(String arg0 , int arg1 )
+			{
+				initSpinner();
+			}
+
+			@Override
+			public String parseNetworkResponse(Response arg0 , int arg1 ) throws Exception
+			{
+				String response = arg0.body().string().trim();
+				JSONObject jsonObject = new JSONObject(response);
+				String source = jsonObject.getString("source");
+				String lyric = jsonObject.getString("lyric");
+				String name = jsonObject.getString("name");
+				play_list.clear();
+				play_list_copy.clear();
+				for(int i = 1 ; i <= 8 ; i ++ )
+				{
+					myAudio = new MyAudio();
+					myAudio.setId(i);
+					myAudio.setName(name + i);
+					String lyric_copy = lyric.substring(0 ,lyric.lastIndexOf("/") + 1) + "00" + i + ".lrc";
+					myAudio.setLyric(lyric_copy);
+					String source_copy = source.substring(0 ,source.lastIndexOf("/") + 1) + "00" + i + ".mp3";
+					myAudio.setSource(source_copy);
+					play_list.add(myAudio);
+					play_list_copy.add(myAudio.getName());
+				}
+
+				Log.d("执行LOG" ,play_list.toString() + "\n" + play_list_copy.toString() + "\n");
+				return "initData" + arg1;
+			}
+
+		});
+
+	}
+
+	private void initSpinner()
+	{
+		ArrayAdapter < String > adapter;
+		adapter = new ArrayAdapter < String >(getApplicationContext() , R.layout.spinner_item , R.id.spinnerItem_textView , play_list_copy);
+
+		spinner.setAdapter(adapter);
+		spinner.setOnItemSelectedListener(new OnItemSelectedListener()
+		{
+			@Override
+			public void onItemSelected(AdapterView < ? > arg0 , View arg1 , int arg2 , long arg3 )
+			{
+				currIndex = arg2;
+				start();
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView < ? > arg0 )
+			{
+			}
+		});
+
+	}
+
+	public String getName(String url )
+	{
+		return url.contains("/") ? url.substring(url.lastIndexOf("/") + 1 ,url.lastIndexOf(".")) : url.substring(0 ,url.lastIndexOf("."));
 	}
 
 	private void initLyric()
 	{
-		int flag = 0;
+		lyricsPath = play_list.get(currIndex).getLyric();
+		new LrcFileDownloader(lyricsPath);
+		lyricsPath = Util.LYRICSPATH + lyricsPath.substring(lyricsPath.lastIndexOf("/"));
+		int flag = Util.lyricEnglishShow;
 
 		mLrcRead = new LrcRead();
 		mLyricView = (LyricView) findViewById(R.id.listenText_lyricShow);
@@ -175,7 +254,7 @@ public class Repeat extends Activity implements Runnable , OnCompletionListener 
 			}
 			else
 			{
-				String defaultLyricPath = Util.lyricsPath + "defaultLyric.lrc";
+				String defaultLyricPath = Util.LYRICSPATH + "defaultLyric.lrc";
 				File defaultLyricPathFile = new File(defaultLyricPath);
 				if( !defaultLyricPathFile.exists() || !defaultLyricPathFile.getParentFile().exists())
 				{
@@ -298,56 +377,6 @@ public class Repeat extends Activity implements Runnable , OnCompletionListener 
 		return index;
 	}
 
-	private void initPlayView()
-	{
-		// spinner
-		spinner = (Spinner) findViewById(R.id.listenText_spinner);
-		btnPlay = (ImageButton) findViewById(R.id.media_play);
-		seekBar = (SeekBar) findViewById(R.id.listenText_seekBar);
-		seekBar.setOnSeekBarChangeListener(this);
-		tv_currTime = (TextView) findViewById(R.id.listenText_textView_curr_time);
-		tv_totalTime = (TextView) findViewById(R.id.listenText_textView_total_time);
-		tv_lrc = (TextView) findViewById(R.id.listenText_lyricView_textView);
-
-		mp.setOnBufferingUpdateListener(this);
-		play_list.add(source1);
-		play_list_copy.add(getName(source1));
-		play_list.add(source2);
-		play_list_copy.add(getName(source2));
-		play_list.add(source3);
-		play_list_copy.add(getName(source3));
-		play_list.add(source4);
-		play_list_copy.add(getName(source4));
-
-		ArrayAdapter < String > adapter;
-		adapter = new ArrayAdapter < String >(getApplicationContext() , R.layout.spinner_item , R.id.spinnerItem_textView , play_list_copy);
-
-		spinner.setAdapter(adapter);
-		spinner.setOnItemSelectedListener(new OnItemSelectedListener()
-		{
-
-			@Override
-			public void onItemSelected(AdapterView < ? > arg0 , View arg1 , int arg2 , long arg3 )
-			{
-				currIndex = arg2;
-				start();
-			}
-
-			@Override
-			public void onNothingSelected(AdapterView < ? > arg0 )
-			{
-			}
-		});
-
-		// initLyric();
-
-	}
-
-	public String getName(String url )
-	{
-		return url.contains("/") ? url.substring(url.lastIndexOf("/") + 1 ,url.lastIndexOf(".")) : url.substring(0 ,url.lastIndexOf("."));
-	}
-
 	public Handler hander = new Handler()
 	{
 		public void handleMessage(Message msg )
@@ -378,20 +407,12 @@ public class Repeat extends Activity implements Runnable , OnCompletionListener 
 		timer.schedule(task ,1000 * time);
 	}
 
-	int selectedId = R.id.action_oo;
-
 	public void detailSetting(View v )
 	{
 		intent = new Intent();
 		intent.putExtra("selected" ,selected);
 		intent.setClass(getApplicationContext() ,PlaySetting.class);
-		if(NetUtil.getNetworkState(getApplicationContext()) == NetUtil.NETWORK_NONE)
-		{
-			Toast.makeText(getApplicationContext() ,"请检查网络连接" ,Toast.LENGTH_SHORT).show();
-		}
-		else
-			startActivity(intent);
-
+		startActivity(intent);
 	}
 
 	// 播放按钮
@@ -454,7 +475,6 @@ public class Repeat extends Activity implements Runnable , OnCompletionListener 
 
 	public void next()
 	{
-		// Log.d("LOG" ,currIndex + "");
 		if(currIndex < play_list.size() - 1)
 		{
 			++ currIndex;
@@ -469,7 +489,6 @@ public class Repeat extends Activity implements Runnable , OnCompletionListener 
 			else
 				if(currIndex == play_list.size() - 1)
 				{
-					// initSeekBar();
 					Toast.makeText(getApplicationContext() ,"当前已经是最后一首了" ,Toast.LENGTH_SHORT).show();
 					currIndex = -1;
 					next();
@@ -485,25 +504,26 @@ public class Repeat extends Activity implements Runnable , OnCompletionListener 
 	// 开始播放
 	public void start()
 	{
-		Log.d("LOG" ,"start()" + currIndex + 1 + ":" + play_list.size());
 		if(play_list.size() > 0 && currIndex < play_list.size())
 		{
-			String SongPath = play_list.get(currIndex);
+			String SongPath = play_list.get(currIndex).getSource();
 			mp.reset();
 			try
 			{
-				// TODO start()
-				AssetManager assetManager = getAssets();
-				AssetFileDescriptor afd = assetManager.openFd(SongPath);
-				mp.setDataSource(afd.getFileDescriptor());
+				// AssetManager assetManager = getAssets();
+				// AssetFileDescriptor afd = assetManager.openFd(SongPath);
+				// mp.setDataSource(afd.getFileDescriptor());
 
-				// mp.setDataSource(SongPath);
+				// videoView.setVideoURI(Uri.parse(SongPath));
+				// videoView.requestFocus();
+				// videoView.start();
+
+				mp.setDataSource(SongPath);
 				mp.prepare();
 				mp.start();
 				Log.d("LOG" ,SongPath);
 				initSeekBar();
 				es.execute(this);
-				// tv_showName.setText(name);
 				btnPlay.setImageResource(R.drawable.play_start);
 				play_currentState = PAUSE;
 				initLyric();
@@ -608,7 +628,6 @@ public class Repeat extends Activity implements Runnable , OnCompletionListener 
 	public void onBufferingUpdate(MediaPlayer mp , int percent )
 	{
 		seekBar.setSecondaryProgress(percent * mp.getDuration() / 100);
-		// Log.d("LOG" , "percent: " + percent);
 	}
 
 	public void onStartTrackingTouch(SeekBar seekBar )

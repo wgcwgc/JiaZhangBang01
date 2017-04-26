@@ -10,10 +10,14 @@ import java.util.TimerTask;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import okhttp3.Call;
+import okhttp3.Response;
+
+import org.json.JSONObject;
+
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
-import android.content.Intent;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnBufferingUpdateListener;
 import android.media.MediaPlayer.OnCompletionListener;
@@ -37,11 +41,13 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.gr.okhttp.OkHttpUtils;
+import com.gr.okhttp.callback.Callback;
 import com.runcom.jiazhangbang.R;
+import com.runcom.jiazhangbang.util.LrcFileDownloader;
 import com.runcom.jiazhangbang.util.Util;
 import com.umeng.analytics.MobclickAgent;
 
-@SuppressLint("HandlerLeak")
 public class ListenText extends Activity implements Runnable , OnCompletionListener , OnErrorListener , OnSeekBarChangeListener , OnBufferingUpdateListener
 {
 	// spinner
@@ -50,11 +56,11 @@ public class ListenText extends Activity implements Runnable , OnCompletionListe
 	// seekbar
 	private SeekBar seekBar;
 	private ImageButton btnPlay;
-	@SuppressWarnings("unused")
-	private TextView tv_currTime , tv_totalTime , tv_showName , textView;
-	List < String > play_list = new ArrayList < String >();
+	private TextView tv_currTime , tv_totalTime , textView;
+	// private List < String > play_list = new ArrayList < String >();
 	List < String > play_list_copy = new ArrayList < String >();
-
+	List < MyAudio > play_list = new ArrayList < MyAudio >();
+	MyAudio myAudio;
 	public MediaPlayer mp;
 	int currIndex = 0;// 表示当前播放的音乐索引
 	private boolean seekBarFlag = true;// 控制进度条线程标记
@@ -69,8 +75,7 @@ public class ListenText extends Activity implements Runnable , OnCompletionListe
 	// 定义线程池（同时只能有一个线程运行）
 	private ExecutorService es = Executors.newSingleThreadExecutor();
 
-	private Intent intent;
-	String source3 , lyricsPath , name , source1 , source2 , source4;
+	private String lyricsPath;
 	int selected;
 
 	// 歌词处理
@@ -82,10 +87,6 @@ public class ListenText extends Activity implements Runnable , OnCompletionListe
 	private int CountTime = 0;
 	private List < LyricContent > LyricList = new ArrayList < LyricContent >();
 
-	// mScreenWidth mScreenHeigth myScreenDensity
-	int myScreenWidth , myScreenHeigth;
-	float myScreenDensity;
-
 	int newIndex = 0;
 
 	@Override
@@ -94,31 +95,7 @@ public class ListenText extends Activity implements Runnable , OnCompletionListe
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.listen_text);
 
-		intent = getIntent();
-
-		selected = intent.getIntExtra("selected" ,0);
-		// audio:'http://172.16.0.63:24680/wgcwgc/mp3/001.mp3'
-		// lyric : 'http://172.16.0.63:24680/wgcwgc/lrc/001.lrc' ,
-		// name : '12PEP Unit'
-
-		// TODO Auto-generated catch block
-		// source = intent.getStringExtra("source");
-		source1 = "001.mp3";
-		source2 = "002.mp3";
-		source3 = "003.mp3";
-		source4 = "004.mp3";
-
-		source1 = "http://172.16.0.63:24680/wgcwgc/mp3/001.mp3";
-		// source1 = "http://abv.cn/music/红豆.mp3";
-		source2 = "http://172.16.0.63:24680/wgcwgc/mp3/002.mp3";
-		source3 = "http://172.16.0.63:24680/wgcwgc/mp3/003.mp3";
-		source4 = "http://172.16.0.63:24680/wgcwgc/mp3/004.mp3";
-
-		// lyricsPath = intent.getStringExtra("lyric");
-		lyricsPath = "http://172.16.0.63:24680/wgcwgc/lrc/001.lrc";
-		// name = intent.getStringExtra("name");
-		name = "12PEP Unit" + selected;
-		lyricsPath = Util.LYRICSPATH + lyricsPath.substring(lyricsPath.lastIndexOf("/"));
+		selected = getIntent().getIntExtra("selected" ,0);
 
 		ActionBar actionbar = getActionBar();
 		actionbar.setDisplayHomeAsUpEnabled(false);
@@ -133,21 +110,123 @@ public class ListenText extends Activity implements Runnable , OnCompletionListe
 		mp.setOnErrorListener(this);
 
 		initPlayView();
+	}
 
-		myScreenWidth = Util.getScreenWidth(getApplicationContext());
-		myScreenHeigth = Util.getScreenHeight(getApplicationContext());
-		myScreenDensity = Util.getScreenDensity(getApplicationContext());
+	private void initPlayView()
+	{
+		spinner = (Spinner) findViewById(R.id.listenText_spinner);
+		btnPlay = (ImageButton) findViewById(R.id.media_play);
+		seekBar = (SeekBar) findViewById(R.id.listenText_seekBar);
+		seekBar.setOnSeekBarChangeListener(this);
+		tv_currTime = (TextView) findViewById(R.id.listenText_textView_curr_time);
+		tv_totalTime = (TextView) findViewById(R.id.listenText_textView_total_time);
+		textView = (TextView) findViewById(R.id.listenText_lyricView_textView);
+		mp.setOnBufferingUpdateListener(this);
 
-		// Log.d("LOG" ,"宽度:" + myScreenWidth + "\n高度:" + myScreenHeigth +
-		// "\n密度:" + myScreenDensity + "\n转换后:" +
-		// Util.dip2px(getApplicationContext() ,myScreenDensity));
+		initData();
+	}
+
+	/**
+	 * 初始化数据
+	 */
+	private void initData()
+	{
+
+		OkHttpUtils.get().url(Util.SERVERADDRESS).build().execute(new Callback < String >()
+		{
+			@Override
+			public void onError(Call arg0 , Exception arg1 , int arg2 )
+			{
+			}
+
+			@Override
+			public void onResponse(String arg0 , int arg1 )
+			{
+				initSpinner();
+				Log.d("执行LOG" ,"我执行了" + arg0);
+			}
+
+			@Override
+			public String parseNetworkResponse(Response arg0 , int arg1 ) throws Exception
+			{
+				String response = arg0.body().string().trim();
+				JSONObject jsonObject = new JSONObject(response);
+				String source = jsonObject.getString("source");
+				String lyric = jsonObject.getString("lyric");
+				String name = jsonObject.getString("name");
+				play_list.clear();
+				play_list_copy.clear();
+				for(int i = 1 ; i <= 8 ; i ++ )
+				{
+					myAudio = new MyAudio();
+					myAudio.setId(i);
+					myAudio.setName(name + i);
+					String lyric_copy = lyric.substring(0 ,lyric.lastIndexOf("/") + 1) + "00" + i + ".lrc";
+					myAudio.setLyric(lyric_copy);
+					String source_copy = source.substring(0 ,source.lastIndexOf("/") + 1) + "00" + i + ".mp3";
+					myAudio.setSource(source_copy);
+					play_list.add(myAudio);
+					play_list_copy.add(myAudio.getName());
+				}
+
+				Log.d("执行LOG" ,play_list.toString() + "\n" + play_list_copy.toString() + "\n");
+				return "initData";
+			}
+
+		});
 
 	}
 
+	private void initSpinner()
+	{
+		ArrayAdapter < String > adapter;
+		adapter = new ArrayAdapter < String >(getApplicationContext() , R.layout.spinner_item , R.id.spinnerItem_textView , play_list_copy);
+
+		spinner.setAdapter(adapter);
+		spinner.setOnItemSelectedListener(new OnItemSelectedListener()
+		{
+
+			@Override
+			public void onItemSelected(AdapterView < ? > arg0 , View arg1 , int arg2 , long arg3 )
+			{
+				currIndex = arg2;
+				start();
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView < ? > arg0 )
+			{
+			}
+		});
+	}
+
+	public String getName(String url )
+	{
+		return url.contains("/") ? url.substring(url.lastIndexOf("/") + 1 ,url.lastIndexOf(".")) : url.substring(0 ,url.lastIndexOf("."));
+	}
+
+	@SuppressLint("HandlerLeak")
+	public Handler hander = new Handler()
+	{
+		public void handleMessage(Message msg )
+		{
+			switch(msg.what)
+			{
+				case CURR_TIME_VALUE:
+					tv_currTime.setText(msg.obj.toString());
+					break;
+				default:
+					break;
+			}
+		};
+	};
+
 	private void initLyric()
 	{
-		int flag = 0;
-
+		lyricsPath = play_list.get(currIndex).getLyric();
+		new LrcFileDownloader(lyricsPath);
+		lyricsPath = Util.LYRICSPATH + lyricsPath.substring(lyricsPath.lastIndexOf("/") + 1);
+		int flag = Util.lyricEnglishShow;
 		mLrcRead = new LrcRead();
 		mLyricView = (LyricView) findViewById(R.id.listenText_lyricShow);
 		try
@@ -158,7 +237,7 @@ public class ListenText extends Activity implements Runnable , OnCompletionListe
 			}
 			else
 			{
-				String defaultLyricPath = Util.lyricsPath + "defaultLyric.lrc";
+				String defaultLyricPath = Util.LYRICSPATH + "defaultLyric.lrc";
 				File defaultLyricPathFile = new File(defaultLyricPath);
 				if( !defaultLyricPathFile.exists() || !defaultLyricPathFile.getParentFile().exists())
 				{
@@ -179,12 +258,6 @@ public class ListenText extends Activity implements Runnable , OnCompletionListe
 		}
 		LyricList = mLrcRead.GetLyricContent();
 		mLyricView.setSentenceEntities(LyricList);
-		// String tempString = " \n \n \n \n";
-		// for(int i = 0 ; i < LyricList.size() ; i ++ )
-		// {
-		// tempString += (LyricList.get(i).getLyric() + "\n");
-		// }
-		// textView.setText(tempString);
 		mHandler.post(mRunnable);
 		myHandler.post(myRunnable);
 	}
@@ -209,7 +282,6 @@ public class ListenText extends Activity implements Runnable , OnCompletionListe
 		@Override
 		public void run()
 		{
-			// TODO Auto-generated method stub
 			int indexTemp = Index();
 
 			Log.d("LOG" ,"Index(): " + indexTemp + " newIndex: " + newIndex);
@@ -224,7 +296,8 @@ public class ListenText extends Activity implements Runnable , OnCompletionListe
 					mLyricView.setScrolled(true);
 				}
 			String tempString = "";
-			Log.d("LOG" ,"size(): " + LyricList.size() + " Index(): " + Index());
+			// Log.d("LOG" ,"size(): " + LyricList.size() + " Index(): " +
+			// Index());
 			for(int i = 0 ; i < (LyricList.size() - Index()) * 1.1 ; i ++ )
 				tempString += " \n";
 			textView.setText(tempString);
@@ -299,77 +372,6 @@ public class ListenText extends Activity implements Runnable , OnCompletionListe
 
 		return index;
 	}
-
-	private void initPlayView()
-	{
-		// spinner
-		spinner = (Spinner) findViewById(R.id.listenText_spinner);
-		btnPlay = (ImageButton) findViewById(R.id.media_play);
-		seekBar = (SeekBar) findViewById(R.id.listenText_seekBar);
-		seekBar.setOnSeekBarChangeListener(this);
-		tv_currTime = (TextView) findViewById(R.id.listenText_textView_curr_time);
-		tv_totalTime = (TextView) findViewById(R.id.listenText_textView_total_time);
-		textView = (TextView) findViewById(R.id.listenText_lyricView_textView);
-		// tv_showName = (TextView)
-		// findViewById(R.id.listenText_textView_showName);
-		// mp = new MediaPlayer();
-		// mp.setOnCompletionListener(this);
-		// mp.setOnErrorListener(this);
-		mp.setOnBufferingUpdateListener(this);
-		// mp.setLooping(true);
-		play_list.add(source1);
-		play_list_copy.add(getName(source1));
-		play_list.add(source2);
-		play_list_copy.add(getName(source2));
-		play_list.add(source3);
-		play_list_copy.add(getName(source3));
-		play_list.add(source4);
-		play_list_copy.add(getName(source4));
-
-		ArrayAdapter < String > adapter;
-		adapter = new ArrayAdapter < String >(getApplicationContext() , R.layout.spinner_item , R.id.spinnerItem_textView , play_list_copy);
-
-		spinner.setAdapter(adapter);
-		spinner.setOnItemSelectedListener(new OnItemSelectedListener()
-		{
-
-			@Override
-			public void onItemSelected(AdapterView < ? > arg0 , View arg1 , int arg2 , long arg3 )
-			{
-				// TODO Auto-generated method stub
-				currIndex = arg2;
-				start();
-			}
-
-			@Override
-			public void onNothingSelected(AdapterView < ? > arg0 )
-			{
-			}
-		});
-
-		initLyric();
-	}
-
-	public String getName(String url )
-	{
-		return url.contains("/") ? url.substring(url.lastIndexOf("/") + 1 ,url.lastIndexOf(".")) : url.substring(0 ,url.lastIndexOf("."));
-
-	}
-
-	public Handler hander = new Handler()
-	{
-		public void handleMessage(Message msg )
-		{
-			switch(msg.what)
-			{
-				case CURR_TIME_VALUE:
-					tv_currTime.setText(msg.obj.toString());
-					break;
-				default:
-					break;
-			}
-		};
-	};
 
 	public void settingFinishTime(long time )
 	{
@@ -524,32 +526,27 @@ public class ListenText extends Activity implements Runnable , OnCompletionListe
 	// 开始播放
 	public void start()
 	{
-		Log.d("LOG" ,"start()" + currIndex + 1 + ":" + play_list.size() + play_list.get(currIndex));
+		Log.d("LOG" ,"start()" + currIndex + ":" + play_list.size() + play_list.get(currIndex).getSource());
 		if(play_list.size() > 0 && currIndex < play_list.size())
 		{
-			String SongPath = play_list.get(currIndex);
+			String SongPath = play_list.get(currIndex).getSource();
+			Log.d("LOG" ,SongPath);
 			mp.reset();
 			try
 			{
-				// TODO
-				// AssetManager assetManager = getAssets();
-				// AssetFileDescriptor afd = assetManager.openFd(SongPath);
-				// mp.setDataSource(afd.getFileDescriptor());
-
 				mp.setDataSource(SongPath);
 				mp.prepare();
 				mp.start();
-				Log.d("LOG" ,SongPath);
 				initSeekBar();
 				es.execute(this);
-				// tv_showName.setText(name);
 				btnPlay.setImageResource(R.drawable.play_start);
 				currState = PAUSE;
+				initLyric();
 			}
 			catch(Exception e)
 			{
-				e.printStackTrace();
 				Log.d("LOG" ,"bugle");
+				e.printStackTrace();
 			}
 		}
 		else
@@ -656,30 +653,6 @@ public class ListenText extends Activity implements Runnable , OnCompletionListe
 	public void onStopTrackingTouch(SeekBar seekBar )
 	{
 	}
-
-	// @Override
-	// public boolean onMenuOpened(int featureId , Menu menu )
-	// {
-	// if(featureId == Window.FEATURE_ACTION_BAR && menu != null)
-	// {
-	// if(menu.getClass().getSimpleName().equals("MenuBuilder"))
-	// {
-	// try
-	// {
-	// Method m = menu.getClass().getDeclaredMethod("setOptionalIconsVisible"
-	// ,Boolean.TYPE);
-	// m.setAccessible(true);
-	// m.invoke(menu ,true);
-	// }
-	// catch(Exception e)
-	// {
-	// Toast.makeText(this ,"overflow 展开显示item图标异常" ,Toast.LENGTH_LONG).show();
-	// }
-	// }
-	// }
-	//
-	// return super.onMenuOpened(featureId ,menu);
-	// }
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu )

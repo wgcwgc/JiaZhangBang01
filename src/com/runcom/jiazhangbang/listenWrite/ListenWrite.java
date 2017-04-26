@@ -10,12 +10,15 @@ import java.util.TimerTask;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import okhttp3.Call;
+import okhttp3.Response;
+
+import org.json.JSONObject;
+
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
-import android.content.res.AssetFileDescriptor;
-import android.content.res.AssetManager;
 import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnBufferingUpdateListener;
@@ -39,28 +42,28 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.gr.okhttp.OkHttpUtils;
+import com.gr.okhttp.callback.Callback;
 import com.runcom.jiazhangbang.R;
 import com.runcom.jiazhangbang.listenText.LrcRead;
 import com.runcom.jiazhangbang.listenText.LyricContent;
 import com.runcom.jiazhangbang.listenText.LyricView;
+import com.runcom.jiazhangbang.listenText.MyAudio;
 import com.runcom.jiazhangbang.setting.PlaySetting;
-import com.runcom.jiazhangbang.util.NetUtil;
+import com.runcom.jiazhangbang.util.LrcFileDownloader;
 import com.runcom.jiazhangbang.util.Util;
 import com.umeng.analytics.MobclickAgent;
 
 @SuppressLint("HandlerLeak")
 public class ListenWrite extends Activity implements Runnable , OnCompletionListener , OnErrorListener , OnSeekBarChangeListener , OnBufferingUpdateListener
 {
-	// spinner
 	private Spinner spinner;
-
-	// seekbar
 	private SeekBar seekBar;
 	private ImageButton btnPlay;
 	private TextView tv_currTime , tv_totalTime , tv_lrc , tv_nameShow;
-	List < String > play_list = new ArrayList < String >();
+	List < MyAudio > play_list = new ArrayList < MyAudio >();
 	List < String > play_list_copy = new ArrayList < String >();
-
+	MyAudio myAudio;
 	public MediaPlayer mp;
 	int currIndex = 0;// 表示当前播放的音乐索引
 	private boolean seekBarFlag = true;// 控制进度条线程标记
@@ -76,7 +79,7 @@ public class ListenWrite extends Activity implements Runnable , OnCompletionList
 	private ExecutorService es = Executors.newSingleThreadExecutor();
 
 	private Intent intent;
-	String source3 , lyricsPath , name , source1 , source2 , source4;
+	private String lyricsPath;
 	int selected;
 
 	// 歌词处理
@@ -87,10 +90,6 @@ public class ListenWrite extends Activity implements Runnable , OnCompletionList
 	private int CurrentTime = 0;
 	private int CountTime = 0;
 	private List < LyricContent > LyricList = new ArrayList < LyricContent >();
-
-	// mScreenWidth mScreenHeigth myScreenDensity
-	int myScreenWidth , myScreenHeigth;
-	float myScreenDensity;
 
 	int newIndex = 0;
 
@@ -103,28 +102,6 @@ public class ListenWrite extends Activity implements Runnable , OnCompletionList
 		intent = getIntent();
 
 		selected = intent.getIntExtra("selected" ,0);
-		// audio:'http://172.16.0.63:24680/wgcwgc/mp3/001.mp3'
-		// lyric : 'http://172.16.0.63:24680/wgcwgc/lrc/001.lrc' ,
-		// name : '12PEP Unit'
-
-		// TODO Auto-generated catch block 读取资源文件
-		// source = intent.getStringExtra("source");
-		source1 = "001.mp3";
-		source2 = "002.mp3";
-		source3 = "003.mp3";
-		source4 = "004.mp3";
-
-		// source1 = "http://172.16.0.63:24680/wgcwgc/mp3/001.mp3";
-		// source2 = "http://172.16.0.63:24680/wgcwgc/mp3/002.mp3";
-		// source3 = "http://172.16.0.63:24680/wgcwgc/mp3/003.mp3";
-		// source4 = "http://172.16.0.63:24680/wgcwgc/mp3/004.mp3";
-
-		// lyricsPath = intent.getStringExtra("lyric");
-		lyricsPath = "http://172.16.0.63:24680/wgcwgc/lrc/001.lrc";
-		// name = intent.getStringExtra("name");
-		name = "12PEP Unit" + selected;
-		// lyricsPath = Util.lyricsPath + "王菲_红豆.lrc";// defaultLyric.lrc
-		lyricsPath = Util.lyricsPath + lyricsPath.substring(lyricsPath.lastIndexOf("/"));
 
 		ActionBar actionbar = getActionBar();
 		actionbar.setDisplayHomeAsUpEnabled(false);
@@ -134,18 +111,107 @@ public class ListenWrite extends Activity implements Runnable , OnCompletionList
 		actionbar.setDisplayShowCustomEnabled(true);
 		actionbar.setTitle(" 听写 " + selected + "年级");
 
-		mp = new MediaPlayer();
-		mp.setOnCompletionListener(this);
-		mp.setOnErrorListener(this);
-
 		initPlayView();
 
 	}
 
+	private void initPlayView()
+	{
+		mp = new MediaPlayer();
+		mp.setOnCompletionListener(this);
+		mp.setOnErrorListener(this);
+		mp.setOnBufferingUpdateListener(this);
+		// spinner
+		spinner = (Spinner) findViewById(R.id.listenText_spinner);
+		btnPlay = (ImageButton) findViewById(R.id.media_play);
+		seekBar = (SeekBar) findViewById(R.id.listenText_seekBar);
+		seekBar.setOnSeekBarChangeListener(this);
+		tv_currTime = (TextView) findViewById(R.id.listenText_textView_curr_time);
+		tv_totalTime = (TextView) findViewById(R.id.listenText_textView_total_time);
+		tv_lrc = (TextView) findViewById(R.id.listenText_lyricView_textView);
+		tv_nameShow = (TextView) findViewById(R.id.listen_write_textView_nameShow);
+
+		initData();
+	}
+
+	private void initData()
+	{
+		OkHttpUtils.get().url(Util.SERVERADDRESS).build().execute(new Callback < String >()
+		{
+			@Override
+			public void onError(Call arg0 , Exception arg1 , int arg2 )
+			{
+			}
+
+			@Override
+			public void onResponse(String arg0 , int arg1 )
+			{
+				initSpinner();
+				Log.d("执行LOG" ,"我执行了" + arg0);
+			}
+
+			@Override
+			public String parseNetworkResponse(Response arg0 , int arg1 ) throws Exception
+			{
+				String response = arg0.body().string().trim();
+				JSONObject jsonObject = new JSONObject(response);
+				String source = jsonObject.getString("source");
+				String lyric = jsonObject.getString("lyric");
+				String name = jsonObject.getString("name");
+				play_list.clear();
+				play_list_copy.clear();
+				for(int i = 1 ; i <= 8 ; i ++ )
+				{
+					myAudio = new MyAudio();
+					myAudio.setId(i);
+					myAudio.setName(name + i);
+					String lyric_copy = lyric.substring(0 ,lyric.lastIndexOf("/") + 1) + "00" + i + ".lrc";
+					myAudio.setLyric(lyric_copy);
+					String source_copy = source.substring(0 ,source.lastIndexOf("/") + 1) + "00" + i + ".mp3";
+					myAudio.setSource(source_copy);
+					play_list.add(myAudio);
+					play_list_copy.add(myAudio.getName());
+				}
+
+				Log.d("执行LOG" ,play_list.toString() + "\n" + play_list_copy.toString() + "\n");
+				return "initData";
+			}
+		});
+	}
+
+	public String getName(String url )
+	{
+		return url.contains("/") ? url.substring(url.lastIndexOf("/") + 1 ,url.lastIndexOf(".")) : url.substring(0 ,url.lastIndexOf("."));
+	}
+
+	private void initSpinner()
+	{
+		ArrayAdapter < String > adapter;
+		adapter = new ArrayAdapter < String >(getApplicationContext() , R.layout.spinner_item , R.id.spinnerItem_textView , play_list_copy);
+
+		spinner.setAdapter(adapter);
+		spinner.setOnItemSelectedListener(new OnItemSelectedListener()
+		{
+			@Override
+			public void onItemSelected(AdapterView < ? > arg0 , View arg1 , int arg2 , long arg3 )
+			{
+				currIndex = arg2;
+				start();
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView < ? > arg0 )
+			{
+			}
+		});
+	}
+
 	private void initLyric()
 	{
-		int flag = 0;
-
+		lyricsPath = play_list.get(currIndex).getLyric();
+		new LrcFileDownloader(lyricsPath);
+		lyricsPath = Util.LYRICSPATH + lyricsPath.substring(lyricsPath.lastIndexOf("/"));
+		int flag = Util.lyricEnglishShow;
 		mLrcRead = new LrcRead();
 		mLyricView = (LyricView) findViewById(R.id.listenText_lyricShow);
 		try
@@ -156,7 +222,7 @@ public class ListenWrite extends Activity implements Runnable , OnCompletionList
 			}
 			else
 			{
-				String defaultLyricPath = Util.lyricsPath + "defaultLyric.lrc";
+				String defaultLyricPath = Util.LYRICSPATH + "defaultLyric.lrc";
 				File defaultLyricPathFile = new File(defaultLyricPath);
 				if( !defaultLyricPathFile.exists() || !defaultLyricPathFile.getParentFile().exists())
 				{
@@ -184,13 +250,12 @@ public class ListenWrite extends Activity implements Runnable , OnCompletionList
 
 	private void initDefaultLyric()
 	{
-		int flag = 0;
-
+		int flag = Util.lyricEnglishShow;
 		mLrcRead = new LrcRead();
 		mLyricView = (LyricView) findViewById(R.id.listenText_lyricShow);
 		try
 		{
-			String defaultLyricPath = Util.lyricsPath + "defaultText.lrc";
+			String defaultLyricPath = Util.LYRICSPATH + "defaultText.lrc";
 			File defaultLyricPathFile = new File(defaultLyricPath);
 			if( !defaultLyricPathFile.exists() || !defaultLyricPathFile.getParentFile().exists())
 			{
@@ -210,10 +275,7 @@ public class ListenWrite extends Activity implements Runnable , OnCompletionList
 		}
 		LyricList = mLrcRead.GetLyricContent();
 		mLyricView.setSentenceEntities(LyricList);
-		// tv_lrc.setText("正在听写...");
 		mLyricView.setBackground(getResources().getDrawable(R.drawable.ic_launcher));
-		// mHandler.post(mRunnable);
-		// myHandler.post(myRunnable);
 	}
 
 	Handler mHandler = new Handler();
@@ -313,57 +375,6 @@ public class ListenWrite extends Activity implements Runnable , OnCompletionList
 		return index;
 	}
 
-	private void initPlayView()
-	{
-		// spinner
-		spinner = (Spinner) findViewById(R.id.listenText_spinner);
-		btnPlay = (ImageButton) findViewById(R.id.media_play);
-		seekBar = (SeekBar) findViewById(R.id.listenText_seekBar);
-		seekBar.setOnSeekBarChangeListener(this);
-		tv_currTime = (TextView) findViewById(R.id.listenText_textView_curr_time);
-		tv_totalTime = (TextView) findViewById(R.id.listenText_textView_total_time);
-		tv_lrc = (TextView) findViewById(R.id.listenText_lyricView_textView);
-		tv_nameShow = (TextView) findViewById(R.id.listen_write_textView_nameShow);
-
-		mp.setOnBufferingUpdateListener(this);
-		play_list.add(source1);
-		play_list_copy.add(getName(source1));
-		play_list.add(source2);
-		play_list_copy.add(getName(source2));
-		play_list.add(source3);
-		play_list_copy.add(getName(source3));
-		play_list.add(source4);
-		play_list_copy.add(getName(source4));
-
-		ArrayAdapter < String > adapter;
-		adapter = new ArrayAdapter < String >(getApplicationContext() , R.layout.spinner_item , R.id.spinnerItem_textView , play_list_copy);
-
-		spinner.setAdapter(adapter);
-		spinner.setOnItemSelectedListener(new OnItemSelectedListener()
-		{
-
-			@Override
-			public void onItemSelected(AdapterView < ? > arg0 , View arg1 , int arg2 , long arg3 )
-			{
-				currIndex = arg2;
-				start();
-			}
-
-			@Override
-			public void onNothingSelected(AdapterView < ? > arg0 )
-			{
-			}
-		});
-
-		// initLyric();
-
-	}
-
-	public String getName(String url )
-	{
-		return url.contains("/") ? url.substring(url.lastIndexOf("/") + 1 ,url.lastIndexOf(".")) : url.substring(0 ,url.lastIndexOf("."));
-	}
-
 	public Handler hander = new Handler()
 	{
 		@SuppressLint("HandlerLeak")
@@ -383,7 +394,6 @@ public class ListenWrite extends Activity implements Runnable , OnCompletionList
 	public void showText(View v )
 	{
 		showText();
-		Toast.makeText(getApplicationContext() ,"显示词语..." ,Toast.LENGTH_SHORT).show();
 	}
 
 	private int text_currentState = 0;
@@ -392,19 +402,18 @@ public class ListenWrite extends Activity implements Runnable , OnCompletionList
 	{
 		switch(text_currentState)
 		{
-			case 0:// 不显示
+			case 0:
 				initDefaultLyric();
 				text_currentState = 1;
+				Toast.makeText(getApplicationContext() ,"隐藏词语..." ,Toast.LENGTH_SHORT).show();
 				break;
 
-			case 1:// 显示
+			case 1:
 				initLyric();
-
 				text_currentState = 0;
-
+				Toast.makeText(getApplicationContext() ,"显示词语..." ,Toast.LENGTH_SHORT).show();
+				break;
 		}
-		// TODO Auto-generated method stub显示词语
-
 	}
 
 	public void settingFinishTime(long time )
@@ -426,69 +435,10 @@ public class ListenWrite extends Activity implements Runnable , OnCompletionList
 
 	public void detailSetting(View v )
 	{
-		// TODO setting听写设置
 		intent = new Intent();
-		// Toast.makeText(getApplicationContext() ,"听写"
-		// ,Toast.LENGTH_SHORT).show();
 		intent.putExtra("selected" ,selected);
 		intent.setClass(getApplicationContext() ,PlaySetting.class);
-		if(NetUtil.getNetworkState(getApplicationContext()) == NetUtil.NETWORK_NONE)
-		{
-			Toast.makeText(getApplicationContext() ,"请检查网络连接" ,Toast.LENGTH_SHORT).show();
-		}
-		else
-			// if( !new
-			// ServerUtil().execute(Util.serverAddress).equals("success"))
-			// {
-			// Toast.makeText(getApplicationContext() ,"服务器未开启 !\n请联系网络管理员."
-			// ,Toast.LENGTH_SHORT).show();
-			// }
-			// else
-			startActivity(intent);
-
-		// final PopupMenu popup = new PopupMenu(this , v);
-		// getMenuInflater().inflate(R.menu.time_setting ,popup.getMenu());
-		// popup.show();
-		// popup.setOnMenuItemClickListener(new
-		// PopupMenu.OnMenuItemClickListener()
-		// {
-		// @Override
-		// public boolean onMenuItemClick(MenuItem item )
-		// {
-		// item.setCheckable(true);
-		// switch(item.getItemId())
-		// {
-		// case R.id.action_5:
-		// settingFinishTime(5 * 60);
-		// selectedId = R.id.action_5;
-		// break;
-		//
-		// case R.id.action_15:
-		// settingFinishTime(15 * 60);
-		// selectedId = R.id.action_15;
-		// break;
-		//
-		// case R.id.action_30:
-		// settingFinishTime(30 * 60);
-		// selectedId = R.id.action_30;
-		// break;
-		//
-		// case R.id.action_60:
-		// settingFinishTime(60 * 60);
-		// selectedId = R.id.action_60;
-		// break;
-		//
-		// default:
-		// selectedId = R.id.action_oo;
-		// break;
-		//
-		// }
-		// Toast.makeText(getApplicationContext() ,"【" + item.getTitle() + "】"
-		// ,Toast.LENGTH_SHORT).show();
-		// return true;
-		// }
-		// });
-		// popup.getMenu().findItem(selectedId).setChecked(true);
+		startActivity(intent);
 	}
 
 	// 播放按钮
@@ -528,7 +478,6 @@ public class ListenWrite extends Activity implements Runnable , OnCompletionList
 
 	public void previous()
 	{
-		// Log.d("LOG" ,currIndex + "");
 		if(currIndex >= 1 && play_list.size() > 0)
 		{
 			currIndex -- ;
@@ -554,7 +503,6 @@ public class ListenWrite extends Activity implements Runnable , OnCompletionList
 
 	public void next()
 	{
-		// Log.d("LOG" ,currIndex + "");
 		if(currIndex < play_list.size() - 1)
 		{
 			++ currIndex;
@@ -569,7 +517,6 @@ public class ListenWrite extends Activity implements Runnable , OnCompletionList
 			else
 				if(currIndex == play_list.size() - 1)
 				{
-					// initSeekBar();
 					Toast.makeText(getApplicationContext() ,"当前已经是最后一首了" ,Toast.LENGTH_SHORT).show();
 					currIndex = -1;
 					next();
@@ -585,28 +532,26 @@ public class ListenWrite extends Activity implements Runnable , OnCompletionList
 	// 开始播放
 	public void start()
 	{
-		Log.d("LOG" ,"start()" + currIndex + 1 + ":" + play_list.size());
+		// Log.d("LOG" ,"start()" + currIndex + 1 + ":" + play_list.size());
 		if(play_list.size() > 0 && currIndex < play_list.size())
 		{
-			String SongPath = play_list.get(currIndex);
+			String SongPath = play_list.get(currIndex).getSource();
 			mp.reset();
 			try
 			{
-				// TODO start()
-				AssetManager assetManager = getAssets();
-				AssetFileDescriptor afd = assetManager.openFd(SongPath);
-				mp.setDataSource(afd.getFileDescriptor());
+				// AssetManager assetManager = getAssets();
+				// AssetFileDescriptor afd = assetManager.openFd(SongPath);
+				// mp.setDataSource(afd.getFileDescriptor());
 
-				// mp.setDataSource(SongPath);
+				mp.setDataSource(SongPath);
 				mp.prepare();
 				mp.start();
 				Log.d("LOG" ,SongPath);
 				initSeekBar();
 				es.execute(this);
-				// tv_showName.setText(name);
 				btnPlay.setImageResource(R.drawable.play_start);
 				play_currentState = PAUSE;
-				initDefaultLyric();
+				showText();
 				text_currentState = 1;
 			}
 			catch(Exception e)
@@ -719,30 +664,6 @@ public class ListenWrite extends Activity implements Runnable , OnCompletionList
 	public void onStopTrackingTouch(SeekBar seekBar )
 	{
 	}
-
-	// @Override
-	// public boolean onMenuOpened(int featureId , Menu menu )
-	// {
-	// if(featureId == Window.FEATURE_ACTION_BAR && menu != null)
-	// {
-	// if(menu.getClass().getSimpleName().equals("MenuBuilder"))
-	// {
-	// try
-	// {
-	// Method m = menu.getClass().getDeclaredMethod("setOptionalIconsVisible"
-	// ,Boolean.TYPE);
-	// m.setAccessible(true);
-	// m.invoke(menu ,true);
-	// }
-	// catch(Exception e)
-	// {
-	// Toast.makeText(this ,"overflow 展开显示item图标异常" ,Toast.LENGTH_LONG).show();
-	// }
-	// }
-	// }
-	//
-	// return super.onMenuOpened(featureId ,menu);
-	// }
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu )

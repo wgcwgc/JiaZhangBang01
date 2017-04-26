@@ -10,7 +10,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import android.os.AsyncTask;
 import android.util.Log;
 
-public class ServerUtil extends AsyncTask < String , String , String >
+public class ServerIsOpenUtil extends AsyncTask < String , String , String >
 {
 
 	/**

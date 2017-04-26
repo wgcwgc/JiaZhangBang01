@@ -16,6 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:background="#696969"
+            android:spinnerMode="dialog"
             android:gravity="top" />
 
         <ImageView
@@ -46,7 +47,7 @@
             android:layout_height="match_parent"
             android:layout_gravity="center_horizontal"
             android:gravity="center_horizontal|center_vertical"
-            android:text="@string/hello_world"
+            android:text="@string/empty_string"
             android:lineSpacingExtra="30sp"
             android:textColor="#25CB73"
             android:textSize="22sp" />

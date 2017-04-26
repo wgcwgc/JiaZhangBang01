@@ -3,15 +3,11 @@
  */
 package com.runcom.jiazhangbang.reciteText;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
+import okhttp3.Call;
+import okhttp3.Response;
+
 import org.json.JSONObject;
 
 import android.app.ActionBar;
@@ -36,6 +32,8 @@ import com.baoyz.swipemenulistview.SwipeMenuItem;
 import com.baoyz.swipemenulistview.SwipeMenuListView;
 import com.baoyz.swipemenulistview.SwipeMenuListView.OnMenuItemClickListener;
 import com.baoyz.swipemenulistview.SwipeMenuListView.OnSwipeListener;
+import com.gr.okhttp.OkHttpUtils;
+import com.gr.okhttp.callback.Callback;
 import com.runcom.jiazhangbang.R;
 import com.runcom.jiazhangbang.util.NetUtil;
 import com.runcom.jiazhangbang.util.Util;
@@ -51,9 +49,9 @@ public class ReciteText extends Activity
 	Intent intent = new Intent();
 	int selected;
 
-	String audio , lyric , name;
+	String source , lyric , name;
 	private SwipeMenuListView listView;
-	MyText myAudio = new MyText();
+	MyText myText = new MyText();
 	ArrayList < MyText > textList = new ArrayList < MyText >();
 	MyListViewAdapter adapter;
 
@@ -73,18 +71,59 @@ public class ReciteText extends Activity
 		actionbar.setDisplayShowCustomEnabled(true);
 		actionbar.setTitle("±³¿ÎÎÄ  " + selected + "Äê¼¶");
 
-		listView = (SwipeMenuListView) findViewById(R.id.recitText_swipeMenu_listView);
+		initData();
+	}
 
+	private void initData()
+	{
 		if(NetUtil.getNetworkState(getApplicationContext()) == NetUtil.NETWORK_NONE)
 		{
 			Toast.makeText(getApplicationContext() ,"Çë¼ì²éÍøÂçÁ¬½Ó" ,Toast.LENGTH_SHORT).show();
 		}
+		else
+			OkHttpUtils.get().url(Util.SERVERADDRESS).build().execute(new Callback < String >()
+			{
+				@Override
+				public void onError(Call arg0 , Exception arg1 , int arg2 )
+				{
+				}
 
-		new GetThread_getList().start();
+				@Override
+				public void onResponse(String arg0 , int arg1 )
+				{
+					initListView();
+				}
+
+				@Override
+				public String parseNetworkResponse(Response arg0 , int arg1 ) throws Exception
+				{
+					JSONObject jsonObject = new JSONObject(arg0.body().string());
+					source = jsonObject.getString("source");
+					lyric = jsonObject.getString("lyric");
+					name = jsonObject.getString("name");
+					textList.clear();
+					for(int i = 0 ; i < 16 ; i ++ )
+					{
+						int index = (i % 8 + 1);
+						myText = new MyText();
+						lyric = lyric.substring(0 ,lyric.lastIndexOf("/")) + "/00" + index + ".lrc";
+						myText.setLyric(lyric);
+						myText.setName(name + (i + 1));
+						myText.setMode("È«ÎÄ±³ËÐ" + (i + 1));
+						myText.setSource(source.substring(0 ,source.lastIndexOf("/")) + "/00" + index + ".mp3");
+						textList.add(myText);
+					}
+					return null;
+				}
+			});
+	}
+
+	private void initListView()
+	{
+		listView = (SwipeMenuListView) findViewById(R.id.recitText_swipeMenu_listView);
 		adapter = new MyListViewAdapter(getApplicationContext() , textList);
 		listView.setAdapter(adapter);
 		adapter.notifyDataSetChanged();
-
 		listView.setOnItemClickListener(new OnItemClickListener()
 		{
 
@@ -113,16 +152,11 @@ public class ReciteText extends Activity
 			@Override
 			public void onSwipeStart(int arg0 )
 			{
-				// flag = false;
 			}
 
 			@Override
 			public void onSwipeEnd(int arg0 )
 			{
-				// Toast.makeText(getContext() ,"arg0: " + arg0 +
-				// "onSwipeEnd..." ,Toast.LENGTH_SHORT).show();
-				// flag = true;
-				// Log.d("LOG" , flag + "End");
 			}
 		});
 
@@ -138,15 +172,6 @@ public class ReciteText extends Activity
 				openItem.setTitleSize(18);
 				openItem.setTitleColor(Color.BLACK);
 				menu.addMenuItem(openItem);
-
-				// SwipeMenuItem deleteItem = new SwipeMenuItem(getContext());
-				// deleteItem.setBackground(new ColorDrawable(Color.rgb(0xA9
-				// ,0xA9 ,0xEF)));
-				// deleteItem.setWidth(dp2px(90));
-				// deleteItem.setTitle("Delete");
-				// deleteItem.setTitleSize(18);
-				// deleteItem.setTitleColor(Color.BLACK);
-				// menu.addMenuItem(deleteItem);
 
 				SwipeMenuItem shareItem = new SwipeMenuItem(getApplicationContext());
 				shareItem.setBackground(new ColorDrawable(Color.rgb(0xF9 ,0x3F ,0x25)));
@@ -165,18 +190,14 @@ public class ReciteText extends Activity
 			@Override
 			public boolean onMenuItemClick(int position , SwipeMenu menu , int index )
 			{
-				// String s = (String) adapter.getItem(position);
 				switch(index)
 				{
 					case 0:
 						Toast.makeText(getApplicationContext() ,"Äúµã»÷ÁË" + textList.get(position).getName().toString() ,Toast.LENGTH_SHORT).show();
 						Intent open_intent = new Intent(getApplicationContext() , ReciteTextMain.class);
 						String source = textList.get(position).getSource();
-						// source = "http://abv.cn/music/ºì¶¹.mp3";// Ç§Ç§ãÚ¸è ºì¶¹
-						// ¹â»ÔËêÔÂ.mp3
 						open_intent.putExtra("source" ,source);
 						String lyric = textList.get(position).getLyric();
-						// lyric = "http://abv.cn/music/Íõ·Æ_ºì¶¹.lrc";
 						open_intent.putExtra("lyric" ,lyric);
 						String name = textList.get(position).getName();
 						open_intent.putExtra("name" ,name);
@@ -198,62 +219,6 @@ public class ReciteText extends Activity
 				return false;
 			}
 		});
-
-	}
-
-	class GetThread_getList extends Thread
-	{
-
-		public GetThread_getList()
-		{
-		}
-
-		@Override
-		public void run()
-		{
-			String url = "http://172.16.0.63:8080/wgc/List00.jsp?type=0";
-			HttpGet httpGet = new HttpGet(url);
-			try
-			{
-				HttpClient httpClient = new DefaultHttpClient();
-				// HttpClient httpClient =
-				// SSLSocketFactoryEx.getNewHttpClient();
-				HttpResponse response = httpClient.execute(httpGet);
-				if(response.getStatusLine().getStatusCode() == 200)
-				{
-					HttpEntity entity = response.getEntity();
-
-					BufferedReader reader = new BufferedReader(new InputStreamReader(entity.getContent()));
-					String line = "";
-					String returnLine = "";
-					while((line = reader.readLine()) != null)
-					{
-						returnLine += line;
-						// System.out.println("*" + line + "*\n");
-					}
-					JSONObject jsonObject = new JSONObject(returnLine);
-					audio = jsonObject.getString("audio");
-					lyric = jsonObject.getString("lyric");
-					name = jsonObject.getString("name");
-					textList.clear();
-					for(int i = 1 ; i < 17 ; i ++ )
-					{
-						myAudio = new MyText();
-						lyric = lyric.substring(0 ,lyric.lastIndexOf("/")) + "/00" + i + ".lrc";
-						myAudio.setLyric(lyric);
-						myAudio.setName(name + i);
-						myAudio.setMode("È«ÎÄ±³ËÐ" + i);
-						myAudio.setSource(audio.substring(0 ,audio.lastIndexOf("/")) + "/00" + i + ".mp3");
-						textList.add(myAudio);
-					}
-				}
-			}
-			catch(Exception e)
-			{
-				e.printStackTrace();
-				Log.d("LOG" ,"bug");
-			}
-		};
 	}
 
 	@Override
