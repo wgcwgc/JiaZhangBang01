@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.runcom.jiazhangbang.R;
 import com.runcom.jiazhangbang.util.SDCardHelper;
+import com.runcom.jiazhangbang.util.Util;
 
 /**
  * @author Administrator
@@ -36,6 +37,7 @@ public class MyTask extends AsyncTask < String , Void , byte [] >
 {
 	private Context context;
 	private ProgressDialog pDialog;
+	private String path = Util.PICTURESPATH;
 	private String fileName;
 
 	public MyTask(Context context)
@@ -49,6 +51,16 @@ public class MyTask extends AsyncTask < String , Void , byte [] >
 	public MyTask(Context context , String fileName)
 	{
 		this.context = context;
+		this.fileName = fileName;
+		pDialog = new ProgressDialog(context);
+		pDialog.setIcon(R.drawable.ic_launcher);
+		pDialog.setMessage("图片加载中...");
+	}
+	
+	public MyTask(Context context , String path , String fileName)
+	{
+		this.context = context;
+		this.path = path;
 		this.fileName = fileName;
 		pDialog = new ProgressDialog(context);
 		pDialog.setIcon(R.drawable.ic_launcher);
@@ -108,7 +120,7 @@ public class MyTask extends AsyncTask < String , Void , byte [] >
 			// Bitmap bitmap = BitmapFactory.decodeByteArray(result, 0,
 			// result.length);
 			// imageView_main_img.setImageBitmap(bitmap);
-			if(SDCardHelper.saveFileToSDCard(result ,"&abc_record/pictures/" ,fileName))
+			if(SDCardHelper.saveFileToSDCard(result , path ,fileName))
 			{// 调用自己封装的方法保存文件 到SD卡中
 				Toast.makeText(context ,"图片保存OK！" ,Toast.LENGTH_LONG).show();
 			}

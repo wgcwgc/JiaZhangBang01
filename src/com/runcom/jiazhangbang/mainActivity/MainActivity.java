@@ -14,8 +14,10 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.iflytek.cloud.SpeechUtility;
 import com.runcom.jiazhangbang.R;
 import com.runcom.jiazhangbang.Chinese.Chinese;
+import com.runcom.jiazhangbang.util.Text2Speech;
 import com.umeng.analytics.MobclickAgent;
 
 public class MainActivity extends Activity
@@ -37,6 +39,8 @@ public class MainActivity extends Activity
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+
+		SpeechUtility.createUtility(this ,"appid=590aeb53");
 
 		arrayAdapter = ArrayAdapter.createFromResource(this ,R.array.classes ,R.layout.simple_spinner_item);
 		arrayAdapter.setDropDownViewResource(R.layout.simple_spinner_dropdown_item);
@@ -64,7 +68,6 @@ public class MainActivity extends Activity
 				Chinese_textView.setText(selected + "年级语文");
 				math_textView.setText(selected + "年级数学");
 				English_textView.setText(selected + "年级英语");
-				Toast.makeText(getApplicationContext() ,"arg0: " + arg0.getSelectedItem().toString() + "\nspinner: " + spinner.getSelectedItem().toString() ,Toast.LENGTH_LONG).show();
 				initImageView(selected);
 			}
 
@@ -78,10 +81,6 @@ public class MainActivity extends Activity
 		math_imageView = (ImageView) findViewById(R.id.math_imageView);
 		English_imageView = (ImageView) findViewById(R.id.English_imageView);
 
-		// Chinese_imageView.setBackground(getResources().getDrawable(R.drawable.main_first_up));
-		// math_imageView.setBackground(getResources().getDrawable(R.drawable.main_first_up));
-		// English_imageView.setBackground(getResources().getDrawable(R.drawable.main_first_up));
-
 		initImageView(selected);
 
 		Chinese_imageView.setOnClickListener(new OnClickListener()
@@ -90,9 +89,7 @@ public class MainActivity extends Activity
 			@Override
 			public void onClick(View v )
 			{
-				// Toast.makeText(getApplicationContext() ,selected + "年级语文"
-				// ,Toast.LENGTH_SHORT).show();
-
+				new Text2Speech(getApplicationContext() , selected + "年级语文").play();
 				Intent intent = new Intent();
 				intent.setClass(getApplicationContext() ,Chinese.class);
 				intent.putExtra("selected" ,selected);
@@ -110,6 +107,8 @@ public class MainActivity extends Activity
 				Toast.makeText(getApplicationContext() ,selected + "年级数学" ,Toast.LENGTH_SHORT).show();
 				// new MyTask(MainActivity.this ,
 				// urlString.substring(urlString.lastIndexOf("/"))).execute(urlString);
+				// 1.创建SpeechSynthesizer对象, 第二个参数：本地合成时传InitListener
+				new Text2Speech(getApplicationContext() , selected + "年级数学").play();
 			}
 		});
 
@@ -121,6 +120,7 @@ public class MainActivity extends Activity
 			{
 				// TODO Auto-generated method stub
 				Toast.makeText(getApplicationContext() ,selected + "年级英语" ,Toast.LENGTH_SHORT).show();
+				new Text2Speech(getApplicationContext() , selected + "年级英语").play();
 
 				// String filepath = SDCardHelper.getSDCardPath() +
 				// File.separator + "&abc_record/pictures" + File.separator +

@@ -162,6 +162,7 @@ public class ListenText extends Activity implements Runnable , OnCompletionListe
 					myAudio.setId(i);
 					myAudio.setName(name + i);
 					String lyric_copy = lyric.substring(0 ,lyric.lastIndexOf("/") + 1) + "00" + i + ".lrc";
+					new LrcFileDownloader(lyric_copy).start();
 					myAudio.setLyric(lyric_copy);
 					String source_copy = source.substring(0 ,source.lastIndexOf("/") + 1) + "00" + i + ".mp3";
 					myAudio.setSource(source_copy);
@@ -224,7 +225,6 @@ public class ListenText extends Activity implements Runnable , OnCompletionListe
 	private void initLyric()
 	{
 		lyricsPath = play_list.get(currIndex).getLyric();
-		new LrcFileDownloader(lyricsPath);
 		lyricsPath = Util.LYRICSPATH + lyricsPath.substring(lyricsPath.lastIndexOf("/") + 1);
 		int flag = Util.lyricEnglishShow;
 		mLrcRead = new LrcRead();
@@ -510,7 +510,6 @@ public class ListenText extends Activity implements Runnable , OnCompletionListe
 			else
 				if(currIndex == play_list.size() - 1)
 				{
-					// initSeekBar();
 					Toast.makeText(getApplicationContext() ,"当前已经是最后一首了" ,Toast.LENGTH_SHORT).show();
 					currIndex = -1;
 					next();

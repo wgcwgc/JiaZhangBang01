@@ -156,9 +156,8 @@ public class SDCardHelper
 
 		if(isSDCardMounted())
 		{
-
 			Log.i(TAG ,"==isSDCardMounted==TRUE");
-			File file = new File(getSDCardPath() + File.separator + dir);
+			File file = new File(dir);
 
 			Log.i(TAG ,"==file:" + file.toString() + file.exists());
 			if( !file.exists())
